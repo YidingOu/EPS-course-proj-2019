@@ -1,1 +1,1 @@
-# EPS-course-proj-2019
+# Carnegie Mellon University Engineering Privacy in Software #
