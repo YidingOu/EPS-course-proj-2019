@@ -1,4 +1,4 @@
-
+//https://bootsnipp.com/snippets/z8l2X
          $(function() {
            $("form[name='login']").validate({
              rules: {
