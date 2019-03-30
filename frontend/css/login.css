@@ -1,9 +1,10 @@
         body{
-        padding-top:4.2rem;
-		padding-bottom:4.2rem;
-		background:rgba(0, 0, 0, 0.76);
+            padding-top:4.2rem;
+		  padding-bottom:4.2rem;
+		  background:rgba(0, 0, 0, 0.76);
+          background: lavender !important;
         }
-        a{
+        a {
          text-decoration:none !important;
          }
          h1,h2,h3{
@@ -30,7 +31,8 @@
          text-transform:uppercase;
          }
          .mybtn{
-         border-radius:50px;
+            border-radius:50px !important;
+            background: #3379b7 !important;
          }
         
          .login-or {
@@ -56,15 +58,6 @@
          margin-top: 0px !important;
          margin-bottom: 0px !important;
          }
-         .google {
-         color:#666;
-         width:100%;
-         height:40px;
-         text-align:center;
-         outline:none;
-         border: 1px solid lightgrey;
-         }
           form .error {
          color: #ff0000;
          }
-         #second{display:none;}
