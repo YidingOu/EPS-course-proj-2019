@@ -2,6 +2,7 @@
 
 # Running spring boot application
 The wrapper should work with different operating systems such as:
+
 1
 ./mvnw clean install
 And the following command for Batch:
