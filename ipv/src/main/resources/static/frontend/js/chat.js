@@ -11,11 +11,17 @@ $(document).ready(function() {
             return sendMessage(getMessageText());
         }
     });
+    $(document).keyup(function(e) {
+        //console.log("key");
+         if (e.key === "Escape") { 
+            redirect();
+        }
+    });
     var posts = getPosts();
     drawPosts(posts);
-    //sendTestMessages();
 })
 
+/** Defines message object */
 Message = function (arg) {
     this.text = arg.text, this.sender_id = arg.sender_id;
     this.draw = function (_this) {
@@ -82,8 +88,19 @@ function sendMessage(text) {
         text: text,
         sender_id: uid
     });
+    //send message to server, draw on success 
     message.draw();
     return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+}
+
+/** Perform a series of redirects to google.com */
+function redirect() {
+    console.log("redirect");
+}
+
+/** Sends @param location to the server */ 
+function sendLocation(location) {
+    return;
 }
 
 /** Creates 2 messages for testing */

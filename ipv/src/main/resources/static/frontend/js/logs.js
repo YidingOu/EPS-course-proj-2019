@@ -1,11 +1,11 @@
 $(document).ready(function() {
-	getStaff();
+	getLogs();
 });
 
 
 /** Makes an ajax request to the server to get information
- *  on the current staff (username, start date, case assigned).
+ *  on the logs (timestamp, action, user, staff, IP).
  *  Populates html. */
-function getStaff() {
+function getLogs() {
 	return; 
 }
