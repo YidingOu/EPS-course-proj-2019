@@ -3,7 +3,8 @@
 uid = getUid();
 
 $(document).ready(function() {
-    $('.send_message').click(function (e) {
+    alert("Worried that someone might be looking over your shoulder? Press the Esc key twice for an automatic redirection to google.com");
+    $('.send_message').click(function () {
         return sendMessage(getMessageText());
     });
     $('.message_input').keyup(function (e) {
@@ -11,11 +12,23 @@ $(document).ready(function() {
             return sendMessage(getMessageText());
         }
     });
+    $(document).keyup(function(e) {
+         if (e.key === "Escape") { 
+            $(document).keyup(function(e) {
+                if (e.key === "Escape") { 
+                    redirect();
+                }
+            })
+        }
+    });
+    $('.send_location').click(function() {
+        sendLocation();
+    })
     var posts = getPosts();
     drawPosts(posts);
-    //sendTestMessages();
 })
 
+/** Defines message object */
 Message = function (arg) {
     this.text = arg.text, this.sender_id = arg.sender_id;
     this.draw = function (_this) {
@@ -82,8 +95,26 @@ function sendMessage(text) {
         text: text,
         sender_id: uid
     });
+    //send message to server, draw on success 
     message.draw();
     return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+}
+
+/** Perform a series of redirects to google.com */
+function redirect() {
+    console.log("redirect");
+    window.location.href = "http://google.com";
+    window.location.href = "http://google.com";
+    window.location.href = "http://google.com";
+    window.location.href = "http://google.com";
+    window.location.href = "http://google.com";
+}
+
+/** Prompts user to input location and sends information to server. */ 
+function sendLocation() {
+    var location = prompt("Please enter the location you wish to share. " +
+        "This information is strictly confidential and will be automatically deleted after a week.");
+    return;
 }
 
 /** Creates 2 messages for testing */

@@ -1,39 +1,38 @@
 //https://bootsnipp.com/snippets/z8l2X
-         $(function() {
-           $("form[name='login']").validate({
-             rules: {
-               
-               username: {
-                 required: true,
-               },
-               password: {
-                 required: true,
-               }
-             },
-              username: {
-                required: "Please enter your username",
-              
-               password: {
-                required: "Please enter password",
-               }
-               
-             },
-             submitHandler: function(form) {
-               form.submit();
-             }
-           });
-         });
-         
-
-
+ 
+/** Performs validation of login form, ensures that username 
+ *  and password fields are not empty. 
+ */
 $(function() {
-  
+   $("form[name='login']").validate({
+     rules: {
+       username: {
+         required: true,
+       },
+       password: {
+         required: true,
+       }
+     },
+      username: {
+        required: "Please enter your username",
+      
+       password: {
+        required: "Please enter password",
+       }
+       
+     },
+     submitHandler: submitLogin()
+   });
+ });
+
+/** Performs validation of registration form, ensures that username 
+ *  and password fields are not empty, and that passwords provided match.
+ */
+$(function() {
   $("form[name='registration']").validate({
     rules: {
-      username: "required",
-      email: {
-        required: true,
-        email: true
+      username: {
+        required: true
       },
       password: {
         required: true,
@@ -43,7 +42,6 @@ $(function() {
         equalTo: "#password"
       }
     },
-    
     messages: {
       username: "Please provide a username",
       password: {
@@ -53,48 +51,51 @@ $(function() {
       email: "Please enter a valid email address",
       password_cfm: "Passwords must match!"
     },
-  
-    submitHandler: function(form) {
-      form.submit();
-    }
+    submitHandler: submitRegistration()
   });
 });
 
-$( document ).ready(function() {
-    
-  submitLogin();
-  submitRegistration();
+/**
+ * Retrieves input data from a form and returns it as a JSON object.
+ * @param  {HTMLFormControlsCollection} elements  the form elements
+ * @return {Object}  form data as an object literal
+ */
+const formToJSON = elements => [].reduce.call(elements, (data, element) => {
+  data[element.name] = element.value;
+  return data;
+}, {});
 
 
-});
-
+/** Submits information in login form to server */ 
 function submitLogin() {
   $("#login_form").submit(function(event){
     event.preventDefault(); //prevent default action 
     var post_url = $(this).attr("action"); //get form action url
-    var request_method = $(this).attr("method"); //get form GET/POST method
+    var request_method = $(this).attr("method"); 
     var form_data = $(this).serialize(); //Encode form elements for submission
-    
+
     $.ajax({
       url : post_url,
-      type: request_method,
-      data : form_data
+      method: request_method,
+      data : form_data,
+      datatype: 'json'
     }).done(function(response){ //
       alert(response)
     });
   });
 }
 
+/** Submits information in registraion form to server */ 
 function submitRegistration() {
   $("#reg_form").submit(function(event){
     event.preventDefault(); //prevent default action 
     var post_url = $(this).attr("action"); //get form action url
-    var request_method = $(this).attr("method"); //get form GET/POST method
+    var request_method = $(this).attr("method"); 
     var form_data = $(this).serialize(); //Encode form elements for submission
     
     $.ajax({
       url : post_url,
-      type: request_method,
+      method: request_method,
       data : form_data
     }).done(function(response){ //
       alert(response)
