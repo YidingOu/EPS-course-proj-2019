@@ -55,6 +55,17 @@ $(function() {
   });
 });
 
+/**
+ * Retrieves input data from a form and returns it as a JSON object.
+ * @param  {HTMLFormControlsCollection} elements  the form elements
+ * @return {Object}  form data as an object literal
+ */
+const formToJSON = elements => [].reduce.call(elements, (data, element) => {
+  data[element.name] = element.value;
+  return data;
+}, {});
+
+
 /** Submits information in login form to server */ 
 function submitLogin() {
   $("#login_form").submit(function(event){
@@ -62,11 +73,12 @@ function submitLogin() {
     var post_url = $(this).attr("action"); //get form action url
     var request_method = $(this).attr("method"); 
     var form_data = $(this).serialize(); //Encode form elements for submission
-    
+
     $.ajax({
       url : post_url,
-      type: request_method,
-      data : form_data
+      method: request_method,
+      data : form_data,
+      datatype: 'json'
     }).done(function(response){ //
       alert(response)
     });
@@ -83,7 +95,7 @@ function submitRegistration() {
     
     $.ajax({
       url : post_url,
-      type: request_method,
+      method: request_method,
       data : form_data
     }).done(function(response){ //
       alert(response)
