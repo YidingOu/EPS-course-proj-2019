@@ -3,7 +3,8 @@
 uid = getUid();
 
 $(document).ready(function() {
-    $('.send_message').click(function (e) {
+    alert("Worried that someone might be looking over your shoulder? Press the Esc key twice for an automatic redirection to google.com");
+    $('.send_message').click(function () {
         return sendMessage(getMessageText());
     });
     $('.message_input').keyup(function (e) {
@@ -12,11 +13,17 @@ $(document).ready(function() {
         }
     });
     $(document).keyup(function(e) {
-        //console.log("key");
          if (e.key === "Escape") { 
-            redirect();
+            $(document).keyup(function(e) {
+                if (e.key === "Escape") { 
+                    redirect();
+                }
+            })
         }
     });
+    $('.send_location').click(function() {
+        sendLocation();
+    })
     var posts = getPosts();
     drawPosts(posts);
 })
@@ -96,10 +103,17 @@ function sendMessage(text) {
 /** Perform a series of redirects to google.com */
 function redirect() {
     console.log("redirect");
+    window.location.href = "http://google.com";
+    window.location.href = "http://google.com";
+    window.location.href = "http://google.com";
+    window.location.href = "http://google.com";
+    window.location.href = "http://google.com";
 }
 
-/** Sends @param location to the server */ 
-function sendLocation(location) {
+/** Prompts user to input location and sends information to server. */ 
+function sendLocation() {
+    var location = prompt("Please enter the location you wish to share. " +
+        "This information is strictly confidential and will be automatically deleted after a week.");
     return;
 }
 
