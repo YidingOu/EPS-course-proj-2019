@@ -14,51 +14,51 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name="user")
+@Table(name = "User")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private int id;
-	
-	@Column(name="name")
+
+	@Column(name = "name")
 	private String name;
-	
-	@Column(name="displayname")
+
+	@Column(name = "displayname")
 	private String displayName;
-	
-	@Column(name="role")
+
+	@Column(name = "role")
 	private int role;
-	
-	@Column(name="salt")
+
+	@Column(name = "salt")
 	private String salt;
-	
-	@Column(name="pass")
+
+	@Column(name = "pass")
 	private String pass;
-	
-//	@OneToOne(mappedBy = "post")
-//	private Post post;
-//	
-//	@OneToMany(mappedBy = "post")
-//	private List<Post> postForStaff;
-//
-//	public Post getPost() {
-//		return post;
-//	}
-//
-//	public void setPost(Post post) {
-//		this.post = post;
-//	}
-//
-//	public List<Post> getPostForStaff() {
-//		return postForStaff;
-//	}
-//
-//	public void setPostForStaff(List<Post> postForStaff) {
-//		this.postForStaff = postForStaff;
-//	}
+
+	// @OneToOne(mappedBy = "post")
+	// private Post post;
+	//
+	// @OneToMany(mappedBy = "post")
+	// private List<Post> postForStaff;
+	//
+	// public Post getPost() {
+	// return post;
+	// }
+	//
+	// public void setPost(Post post) {
+	// this.post = post;
+	// }
+	//
+	// public List<Post> getPostForStaff() {
+	// return postForStaff;
+	// }
+	//
+	// public void setPostForStaff(List<Post> postForStaff) {
+	// this.postForStaff = postForStaff;
+	// }
 
 	@Override
 	public String toString() {
@@ -113,9 +113,5 @@ public class User {
 	public void setPass(String pass) {
 		this.pass = pass;
 	}
-	
-	
-	
-	
 
 }
