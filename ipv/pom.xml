@@ -12,6 +12,7 @@
 	<artifactId>ipv</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ipv</name>
+	<packaging>jar</packaging>
 	<description>IPV communication platform project</description>
 
 	<properties>
