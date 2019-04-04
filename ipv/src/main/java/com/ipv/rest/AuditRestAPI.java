@@ -29,7 +29,7 @@ public class AuditRestAPI {
 		return service.findAll();
 	}
 
-	@GetMapping("{id}")
+	@GetMapping("/getByUser{id}")
 	public Audit get(@PathVariable int id) {
 		
 		Audit audit = service.findById(id);
