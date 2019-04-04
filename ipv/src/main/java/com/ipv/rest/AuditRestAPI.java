@@ -1,5 +1,6 @@
 package com.ipv.rest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,9 @@ public class AuditRestAPI {
 		return service.findAll();
 	}
 
-	@GetMapping("/getByUser{id}")
-	public Audit get(@PathVariable int id) {
-		
-		Audit audit = service.findById(id);
-		if (audit == null) {
-			throw new NotFoundException("Audit id not found - " + id);
-		}
-		return audit;
+	@GetMapping("/get_user/{id}")
+	public List<Audit> get(@PathVariable int id) {
+		return Arrays.asList();
 	}
 	
 	@PostMapping
