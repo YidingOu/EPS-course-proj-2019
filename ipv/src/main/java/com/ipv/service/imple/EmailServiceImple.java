@@ -23,7 +23,7 @@ import com.ipv.service.EmailService;
  * 
  */
 @Service
-public class EmailServiceImple2 extends BaseImple<Email> implements EmailService{
+public class EmailServiceImple extends BaseImple<Email> implements EmailService{
 	
 	//Spring Dependency injection
 	@Autowired
@@ -33,6 +33,11 @@ public class EmailServiceImple2 extends BaseImple<Email> implements EmailService
 	@PostConstruct
 	public void initParent() {
 	  super.repository = emailRepository;
+	}
+	
+	//sending vadlidating email
+	private void sendValidatingEmail() {
+		
 	}
 
 }

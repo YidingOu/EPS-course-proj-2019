@@ -60,5 +60,6 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 		String dbPass = user.getPass();
 		return dbPass.equals(dbPass);
 	}
+	
 
 }
