@@ -14,7 +14,14 @@ import com.ipv.entity.Contact;
 import com.ipv.exception.NotFoundException;
 import com.ipv.service.ContactService;
 
-
+/**
+ * 
+ * The REST API layer, injected the service, providing the connections for the frontend
+ * 
+ * The path start from /contacts
+ * For the interactions related to the contact entity
+ * 
+ */
 @RestController
 @RequestMapping("/contacts")
 public class ContactRestAPI {
@@ -22,6 +29,7 @@ public class ContactRestAPI {
 	@Autowired
 	private ContactService service;
 	
+	//get entity by contact id
 	@GetMapping("{id}")
 	public Contact get(@PathVariable int id) {
 		
@@ -32,11 +40,13 @@ public class ContactRestAPI {
 		return contact;
 	}
 	
+	//get entity by associated post id
 	@GetMapping("/by_post/{id}")
 	public Contact getByPost(@PathVariable int id) {
 		return null;
 	}
 	
+	//create the contact
 	@PostMapping
 	public Contact add(@RequestBody Contact contact) {
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
@@ -45,13 +55,14 @@ public class ContactRestAPI {
 		return contact;
 	}
 	
-	
+	//update the contact
 	@PutMapping
 	public Contact update(@RequestBody Contact contact) {
 		service.save(contact);
 		return contact;
 	}
 	
+	//delete the contact
 	@DeleteMapping("{id}")
 	public String delete(@PathVariable int id) {
 		

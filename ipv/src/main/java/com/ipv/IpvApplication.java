@@ -3,6 +3,9 @@ package com.ipv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/*
+ * The entrance of the application
+ * */
 @SpringBootApplication
 public class IpvApplication {
 

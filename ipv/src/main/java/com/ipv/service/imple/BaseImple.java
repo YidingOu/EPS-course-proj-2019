@@ -5,10 +5,22 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * 
+ * Data persistence business logic layer
+ * The interface-implementation architechture is required by the Spring framework (the multiple implementation is allowed)
+ * The service implementations implement the actual methods and will be injected into required components(like other services or restAPI layer)
+ * 
+ * There are many common method between the services(like CRUD), so the common part is define in a BaseImple
+ * The actual service implements will get the methods by extends this BaseService
+ * The E is the Entity type of the service
+ * 
+ */
 public class BaseImple <E> {
-
+	
+	//JpaRepository, will be override by the children
 	public JpaRepository<E, Integer> repository;
-
+	
 	public List<E> findAll() {
 		return repository.findAll();
 	}

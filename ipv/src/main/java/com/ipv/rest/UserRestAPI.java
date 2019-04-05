@@ -17,9 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ipv.entity.User;
 import com.ipv.exception.NotFoundException;
 import com.ipv.service.UserService;
-import com.ipv.wrapper.ValidateResponseWapper;
+import com.ipv.util.Constant;
+import com.ipv.util.wrapper.ValidateResponseWapper;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+/**
+ * 
+ * The REST API layer, injected the service, providing the connections for the frontend
+ * 
+ * The path start from /users
+ * For the interactions related to the user entity
+ * 
+ */
+@CrossOrigin(origins = "*", maxAge = 3600) //cors issue, for the development usage
 @RestController
 @RequestMapping("/users")
 public class UserRestAPI {
@@ -27,6 +36,7 @@ public class UserRestAPI {
 	@Autowired
 	private UserService service;
 	
+	//get all users for the admin
 	@GetMapping
 	public List<User> findAll() {
 		List<User> list = service.findAll();
@@ -34,11 +44,13 @@ public class UserRestAPI {
 		return list;
 	}
 	
+	//get all staffs
 	@GetMapping("/staffs")
 	public List<User> findAllStaffs() {
 		return Arrays.asList();
 	}
 
+	//get user by id
 	@GetMapping("{id}")
 	public User get(@PathVariable int id) {
 		
@@ -50,6 +62,7 @@ public class UserRestAPI {
 		return user;
 	}
 	
+	// create an user, the function will be completed later
 	@PostMapping
 	public User add(@RequestBody User user) {
 		
@@ -61,12 +74,14 @@ public class UserRestAPI {
 		return user;
 	}
 	
+	// validate
 	@PostMapping("/validate")
 	public ValidateResponseWapper validate(@RequestBody User user) {
-		int result = service.validate(user.getId(), user.getPass()) ? 1 : 0;
-		return new ValidateResponseWapper(result, user.getId());
+		int result = service.validate(user.getId(), user.getPass()) ? Constant.SUCCESS : Constant.FAIL;
+		return new ValidateResponseWapper(result, user.getId(), null);
 	}
 	
+	// update password for the user
 	@PutMapping("/update_pass")
 	public User update(@RequestBody User user) {
 		User olduser = service.findById(user.getId());
@@ -79,6 +94,7 @@ public class UserRestAPI {
 		return olduser;
 	}
 	
+	// delete a user (delete account)
 	@DeleteMapping("{id}")
 	public String delete(@PathVariable int id) {
 		
@@ -90,6 +106,7 @@ public class UserRestAPI {
 		return "Deleted User id - " + id;
 	}
 	
+	// removing the password and salt when user is returned
 	private void processUser(User user) {
 		user.setPass(null);
 		user.setSalt(null);

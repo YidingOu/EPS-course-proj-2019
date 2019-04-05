@@ -1,5 +1,7 @@
 package com.ipv.rest;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,14 @@ import com.ipv.entity.Conversation;
 import com.ipv.exception.NotFoundException;
 import com.ipv.service.ConversationService;
 
-
+/**
+ * 
+ * The REST API layer, injected the service, providing the connections for the frontend
+ * 
+ * The path start from /conversations
+ * For the interactions related to the conversation entity
+ * 
+ */
 @RestController
 @RequestMapping("/conversations")
 public class ConversationRestAPI {
@@ -22,6 +31,7 @@ public class ConversationRestAPI {
 	@Autowired
 	private ConversationService service;
 	
+	//get conversations by id
 	@GetMapping("{id}")
 	public Conversation get(@PathVariable int id) {
 		
@@ -32,11 +42,13 @@ public class ConversationRestAPI {
 		return conversation;
 	}
 	
+	//get conversations by the hosted post id
 	@GetMapping("/by_post/{id}")
-	public Conversation getByPost(@PathVariable int id) {
+	public List<Conversation> getByPost(@PathVariable int id) {
 		return null;
 	}
 	
+	//create the conversation
 	@PostMapping
 	public Conversation add(@RequestBody Conversation conversation) {
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
@@ -45,13 +57,14 @@ public class ConversationRestAPI {
 		return conversation;
 	}
 	
-	
+	//update the conversation
 	@PutMapping
 	public Conversation update(@RequestBody Conversation conversation) {
 		service.save(conversation);
 		return conversation;
 	}
 	
+	//delete the conversation
 	@DeleteMapping("{id}")
 	public String delete(@PathVariable int id) {
 		

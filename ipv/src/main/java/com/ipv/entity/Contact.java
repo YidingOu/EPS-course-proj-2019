@@ -1,19 +1,18 @@
 package com.ipv.entity;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+/*
+ * The data mapping class -> DB.TABLE into Spring Entity Bean
+ * The relationships (One-One, One-Many ect, will be added later)
+ * 
+ * */
 @Entity
 @Table(name="contact")
 @JsonIgnoreProperties(ignoreUnknown = true)

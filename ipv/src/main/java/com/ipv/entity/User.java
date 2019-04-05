@@ -1,18 +1,19 @@
 package com.ipv.entity;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/*
+ * The data mapping class -> DB.TABLE into Spring Entity Bean
+ * The relationships (One-One, One-Many ect, will be added later)
+ * 
+ * */
 @Entity
 @Table(name = "User")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -28,7 +29,8 @@ public class User {
 
 	@Column(name = "displayname")
 	private String displayName;
-
+	
+	// -1 when the user is not active by the email validation
 	@Column(name = "role")
 	private int role;
 

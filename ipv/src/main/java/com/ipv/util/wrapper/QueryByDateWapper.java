@@ -1,7 +1,12 @@
-package com.ipv.wrapper;
+package com.ipv.util.wrapper;
 
 import java.util.Date;
 
+/**
+ * 
+ * The model for the response of the query by date
+ * 
+ */
 public class QueryByDateWapper {
 	int id;
 	Date start;

@@ -1,22 +1,19 @@
 package com.ipv.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-/**
- * @author yang
- *
- */
+/*
+ * The data mapping class -> DB.TABLE into Spring Entity Bean
+ * The relationships (One-One, One-Many ect, will be added later)
+ * 
+ * */
 @Entity
 @Table(name="post")
 @JsonIgnoreProperties(ignoreUnknown = true)

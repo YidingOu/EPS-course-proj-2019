@@ -2,6 +2,12 @@ package com.ipv.exception;
 
 public class NotFoundException extends RuntimeException {
 
+	/**
+	 * Customized exception for record not fund
+	 * The more exceptions will be added later
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public NotFoundException() {
 	}
 
@@ -17,8 +23,7 @@ public class NotFoundException extends RuntimeException {
 		super(message, cause);
 	}
 
-	public NotFoundException(String message, Throwable cause, boolean enableSuppression,
-			boolean writableStackTrace) {
+	public NotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 

@@ -1,5 +1,9 @@
-package com.ipv.wrapper;
-
+package com.ipv.util.wrapper;
+/**
+ * 
+ * The model for the error response
+ * 
+ */
 public class ErrorResponseWrapper {
 
 	private int status;
