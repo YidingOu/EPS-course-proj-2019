@@ -19,5 +19,10 @@ public class AuditServiceImple extends BaseImple<Audit> implements AuditService{
 	public void initParent() {
 	  super.repository = auditRepository;
 	}
+	
+	//A scheduling function that deleting the expired logs
+	private void logExpiring() {
+		
+	}
 
 }
