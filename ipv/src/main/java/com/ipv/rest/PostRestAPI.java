@@ -1,5 +1,6 @@
 package com.ipv.rest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ipv.entity.Post;
 import com.ipv.exception.NotFoundException;
 import com.ipv.service.PostService;
+import com.ipv.wrapper.QueryByDateWapper;
 
 
 @RestController
@@ -37,6 +39,16 @@ public class PostRestAPI {
 			throw new NotFoundException("Post id not found - " + id);
 		}
 		return post;
+	}
+	
+	@GetMapping("/by_user/{id}")
+	public Post getByUser(@PathVariable int id) {
+		return null;
+	}
+	
+	@PostMapping("/by_staff")
+	public List<Post> getByUser(@RequestBody QueryByDateWapper requeryByDateBody) {
+		return Arrays.asList();
 	}
 	
 	@PostMapping

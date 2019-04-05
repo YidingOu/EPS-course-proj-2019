@@ -27,12 +27,18 @@ public class Conversation {
 	@Column(name="postid")
 	private int postId;
 	
+	@Column(name="userid")
+	private int userId;
+	
 	@Column(name="data")
 	private String data;
 
 	@Column(name="date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
+	
+	@Column(name="reply")
+	private int reply;
 
 	@PrePersist
 	void createdAt() {

@@ -1,4 +1,4 @@
-package com.ipv.exception;
+package com.ipv.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,4 +17,5 @@ public class CORSConfig {
             }
         };
     }
+    
 }

@@ -1,7 +1,5 @@
 package com.ipv.rest;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +22,6 @@ public class ContactRestAPI {
 	@Autowired
 	private ContactService service;
 	
-	@GetMapping
-	public List<Contact> findAll() {
-		return service.findAll();
-	}
-
 	@GetMapping("{id}")
 	public Contact get(@PathVariable int id) {
 		
@@ -37,6 +30,11 @@ public class ContactRestAPI {
 			throw new NotFoundException("Contact id not found - " + id);
 		}
 		return contact;
+	}
+	
+	@GetMapping("/by_post/{id}")
+	public Contact getByPost(@PathVariable int id) {
+		return null;
 	}
 	
 	@PostMapping

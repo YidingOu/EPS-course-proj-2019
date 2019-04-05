@@ -1,7 +1,5 @@
 package com.ipv.rest;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +22,6 @@ public class ConversationRestAPI {
 	@Autowired
 	private ConversationService service;
 	
-	@GetMapping
-	public List<Conversation> findAll() {
-		return service.findAll();
-	}
-
 	@GetMapping("{id}")
 	public Conversation get(@PathVariable int id) {
 		
@@ -37,6 +30,11 @@ public class ConversationRestAPI {
 			throw new NotFoundException("Conversation id not found - " + id);
 		}
 		return conversation;
+	}
+	
+	@GetMapping("/by_post/{id}")
+	public Conversation getByPost(@PathVariable int id) {
+		return null;
 	}
 	
 	@PostMapping

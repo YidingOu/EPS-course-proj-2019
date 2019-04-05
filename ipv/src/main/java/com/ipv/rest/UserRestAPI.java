@@ -1,5 +1,6 @@
 package com.ipv.rest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,11 @@ public class UserRestAPI {
 		list.stream().forEach(user -> processUser(user));
 		return list;
 	}
+	
+	@GetMapping("/staffs")
+	public List<User> findAllStaffs() {
+		return Arrays.asList();
+	}
 
 	@GetMapping("{id}")
 	public User get(@PathVariable int id) {
@@ -61,7 +67,7 @@ public class UserRestAPI {
 		return new ValidateResponseWapper(result, user.getId());
 	}
 	
-	@PutMapping("/pass")
+	@PutMapping("/update_pass")
 	public User update(@RequestBody User user) {
 		User olduser = service.findById(user.getId());
 		if (olduser == null) {
