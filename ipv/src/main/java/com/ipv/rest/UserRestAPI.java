@@ -32,10 +32,10 @@ import com.ipv.util.wrapper.ValidateResponseWapper;
 @RestController
 @RequestMapping("/users")
 public class UserRestAPI {
-	
+
 	@Autowired
 	private UserService service;
-	
+
 	//get all users for the admin
 	@GetMapping
 	public List<User> findAll() {
@@ -43,17 +43,11 @@ public class UserRestAPI {
 		list.stream().forEach(user -> processUser(user));
 		return list;
 	}
-	
-	//get all staffs
-	@GetMapping("/staffs")
-	public List<User> findAllStaffs() {
-		return Arrays.asList();
-	}
 
 	//get user by id
 	@GetMapping("{id}")
 	public User get(@PathVariable int id) {
-		
+
 		User user = service.findById(id);
 		if (user == null) {
 			throw new NotFoundException("User id not found - " + id);
@@ -61,11 +55,11 @@ public class UserRestAPI {
 		processUser(user);
 		return user;
 	}
-	
+
 	// create an user, the function will be completed later
 	@PostMapping
 	public User add(@RequestBody User user) {
-		
+
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
 		user.setId(0);
 		user.setSalt("randomstring");
@@ -73,14 +67,28 @@ public class UserRestAPI {
 		processUser(user);
 		return user;
 	}
-	
+
 	// validate
 	@PostMapping("/validate")
 	public ValidateResponseWapper validate(@RequestBody User user) {
-		int result = service.validate(user.getId(), user.getPass()) ? Constant.SUCCESS : Constant.FAIL;
+		int result = service.validate(user.getName(), user.getPass()) ? Constant.SUCCESS : Constant.FAIL;
+
 		return new ValidateResponseWapper(result, user.getId(), null);
 	}
-	
+
+	//get all staffs
+	@GetMapping("/staffs")
+	public List<User> findAllStaffs() {
+		return Arrays.asList();
+	}
+
+	// validate for staffs
+	@PostMapping("staffs/validate")
+	public ValidateResponseWapper validateStaff(@RequestBody User user) {
+		int result = service.validateStaff(user.getName(), user.getPass());
+		return new ValidateResponseWapper(result, user.getId(), null);
+	}
+
 	// update password for the user
 	@PutMapping("/update_pass")
 	public User update(@RequestBody User user) {
@@ -93,11 +101,11 @@ public class UserRestAPI {
 		processUser(olduser);
 		return olduser;
 	}
-	
+
 	// delete a user (delete account)
 	@DeleteMapping("{id}")
 	public String delete(@PathVariable int id) {
-		
+
 		User user = service.findById(id);
 		if (user == null) {
 			throw new NotFoundException("user id not found - " + id);
@@ -105,13 +113,13 @@ public class UserRestAPI {
 		service.deleteById(id);
 		return "Deleted User id - " + id;
 	}
-	
+
 	// removing the password and salt when user is returned
 	private void processUser(User user) {
 		user.setPass(null);
 		user.setSalt(null);
 	}
-	
+
 }
 
 

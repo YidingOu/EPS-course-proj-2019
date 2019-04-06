@@ -15,5 +15,7 @@ import com.ipv.entity.User;
 public interface UserService extends BaseService<User>{
 	
 	//interface for the password validation
-	public boolean validate(int id, String pass);
+	public boolean validate(String string, String pass);
+
+	public int validateStaff(String name, String pass);
 }

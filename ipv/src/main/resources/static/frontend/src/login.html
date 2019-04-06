@@ -23,7 +23,7 @@
                             <p> Login now to chat anonymously with a staff member. </p>
 						</div>
 					</div>
-					<form id="login_form" action="www.facebowls.net/users/validate" method="post" name="login">
+					<form id="login_form" action="/users/validate" method="post" name="login">
 						<div class="form-group">
 							<label>Username</label>
                             <input name="username"  class="form-control" id="username" placeholder="Enter Username">
@@ -32,6 +32,7 @@
                             <label>Password</label>
                             <input type="password" name="password" id="password" class="form-control" placeholder="Enter Password">
                         </div>
+                        <div id="login_error"></div>
                         <br>
                         <div class="col-md-12 text-center ">
                             <button id="login_btn" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Login</button>

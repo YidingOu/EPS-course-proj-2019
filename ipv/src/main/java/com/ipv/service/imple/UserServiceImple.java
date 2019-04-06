@@ -45,20 +45,29 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	 * 
 	 * */
 	@Override
-	public boolean validate(int id, String pass) {
-		Optional<User> result = repository.findById(id);
-		if (result.isPresent()) {
-			if (checkPass(result.get())) {
-				return true;
-			}
-		}
-		return false;
+	public boolean validate(String name, String pass) {
+		User user = userRepository.findByName(name);
+		return checkPass(user, pass);
 	}
 	
 	//A complete function with hashing and checking will be updated later
-	private boolean checkPass(User user) {
+	private boolean checkPass(User user, String pass) {
+		
 		String dbPass = user.getPass();
-		return dbPass.equals(dbPass);
+		System.out.println(dbPass);
+		System.out.println(pass);
+		return dbPass.equals(pass);
+	}
+
+	@Override
+	public int validateStaff(String name, String pass) {
+		User user = userRepository.findByName(name);
+		if (user.getRole() < 1 || !checkPass(user, pass)) { // not staff or fail
+			return 0;
+		} else {
+			return user.getRole();
+		}
+		
 	}
 	
 
