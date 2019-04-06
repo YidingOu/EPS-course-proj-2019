@@ -4,7 +4,8 @@
  *  and password fields are not empty. 
  */
 $(function() {
-   $("form[name='login']").validate({
+   /*Quick solution Should be optimized later*/
+   $("form[name='user_login']").validate({
      rules: {
        username: {
          required: true,
@@ -21,9 +22,33 @@ $(function() {
        }
        
      },
-     submitHandler: submitLogin()
+     submitHandler: submitUserLogin()
    });
+   
  });
+
+$(function() {
+	   /*Quick solution Should be optimized later*/
+	   $("form[name='staff_login']").validate({
+		     rules: {
+		       username: {
+		         required: true,
+		       },
+		       password: {
+		         required: true,
+		       }
+		     },
+		      username: {
+		        required: "Please enter your username",
+		      
+		       password: {
+		        required: "Please enter password",
+		       }
+		       
+		     },
+		     submitHandler: submitStaffLogin()
+		   });
+	 });
 
 /** Performs validation of registration form, ensures that username 
  *  and password fields are not empty, and that passwords provided match.
@@ -67,8 +92,8 @@ const formToJSON = elements => [].reduce.call(elements, (data, element) => {
 
 
 /** Submits information in login form to server */ 
-function submitLogin() {
-  $("#login_form").submit(function(event){
+function submitUserLogin() {
+  $("#user_login_form").submit(function(event){
     event.preventDefault(); //prevent default action 
     var post_url = $(this).attr("action"); //get form action url
     var request_method = $(this).attr("method"); 
@@ -77,6 +102,8 @@ function submitLogin() {
     		name:$("#username").val(),  
     		pass:$("#password").val()
     };
+    
+    
     $.ajax({
         type: request_method,
         contentType: "application/json",
@@ -84,7 +111,7 @@ function submitLogin() {
         data: JSON.stringify(form_data),
         dataType: 'json',
         cache: false,
-        timeout: 600,
+        timeout: 60000,
         success: function (data) {
         	console.log("success");
         	$(location).attr("href", main_url);
@@ -92,6 +119,7 @@ function submitLogin() {
         },
         error: function (e) {
         	console.log("fail");
+        	console.log(JSON.stringify(e));
         	$("#login_error").html("The login failed");
 
         }
@@ -100,7 +128,7 @@ function submitLogin() {
 }
 
 /** Submits information in login form to server */ 
-function submitLogin() {
+function submitStaffLogin() {
   $("#staff_login_form").submit(function(event){
     event.preventDefault(); //prevent default action 
 //    var post_url = $(this).attr("action"); //get form action url
