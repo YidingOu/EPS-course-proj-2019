@@ -1,10 +1,16 @@
 package com.ipv.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -29,7 +35,7 @@ public class User {
 
 	@Column(name = "displayname")
 	private String displayName;
-	
+
 	// -1 when the user is not active by the email validation
 	@Column(name = "role")
 	private int role;
@@ -40,32 +46,53 @@ public class User {
 	@Column(name = "pass")
 	private String pass;
 
-	// @OneToOne(mappedBy = "post")
-	// private Post post;
-	//
-	// @OneToMany(mappedBy = "post")
-	// private List<Post> postForStaff;
-	//
-	// public Post getPost() {
-	// return post;
-	// }
-	//
-	// public void setPost(Post post) {
-	// this.post = post;
-	// }
-	//
-	// public List<Post> getPostForStaff() {
-	// return postForStaff;
-	// }
-	//
-	// public void setPostForStaff(List<Post> postForStaff) {
-	// this.postForStaff = postForStaff;
-	// }
+	@OneToOne(mappedBy = "user", 
+			targetEntity=Email.class,
+			cascade = CascadeType.ALL,
+			fetch = FetchType.EAGER)
+	private Email email;
 
+	@OneToOne(mappedBy = "user",
+			cascade = CascadeType.ALL,
+			fetch = FetchType.EAGER)
+	private Post post;
+
+	@OneToMany(mappedBy = "staff",
+			fetch = FetchType.LAZY,
+			cascade = {CascadeType.DETACH,
+					CascadeType.MERGE,
+					CascadeType.PERSIST,
+					CascadeType.REFRESH})
+	private List<Post> postForStaff;
+	
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", displayName=" + displayName + ", role=" + role + ", salt="
 				+ salt + ", pass=" + pass + "]";
+	}
+
+	public Post getPost() {
+		return post;
+	}
+
+	public void setPost(Post post) {
+		this.post = post;
+	}
+
+	public List<Post> getPostForStaff() {
+		return postForStaff;
+	}
+
+	public void setPostForStaff(List<Post> postForStaff) {
+		this.postForStaff = postForStaff;
+	}
+
+	public Email getEmail() {
+		return email;
+	}
+
+	public void setEmail(Email email) {
+		this.email = email;
 	}
 
 	public int getId() {

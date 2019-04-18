@@ -2,11 +2,14 @@ package com.ipv.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -45,6 +48,16 @@ public class Email {
 	
 	@Column(name="code")
 	private String code;
+	
+	@OneToOne(cascade = {CascadeType.DETACH,
+						CascadeType.MERGE,
+						CascadeType.PERSIST,
+						CascadeType.REFRESH})
+	@JoinColumn(name="userid", 
+				referencedColumnName="id",
+				insertable=false, 
+				updatable=false)
+	private User user;
 	
 	
 

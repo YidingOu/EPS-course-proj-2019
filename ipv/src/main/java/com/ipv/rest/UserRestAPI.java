@@ -71,10 +71,7 @@ public class UserRestAPI {
 	// validate
 	@PostMapping("/validate")
 	public ValidateResponseWapper validate(@RequestBody User user) {
-		System.out.println(user);
 		int result = service.validate(user.getName(), user.getPass()) ? Constant.SUCCESS : Constant.FAIL;
-		System.out.println("------------");
-		System.out.println(result);
 		return new ValidateResponseWapper(result, user.getId(), null);
 	}
 

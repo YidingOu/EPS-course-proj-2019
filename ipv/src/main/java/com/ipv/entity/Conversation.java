@@ -48,6 +48,32 @@ public class Conversation {
 	void createdAt() {
 		this.date = new Date();
 	}
+	
+	
+
+	public int getUserId() {
+		return userId;
+	}
+
+
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+
+
+	public int getReply() {
+		return reply;
+	}
+
+
+
+	public void setReply(int reply) {
+		this.reply = reply;
+	}
+
+
 
 	public int getId() {
 		return id;

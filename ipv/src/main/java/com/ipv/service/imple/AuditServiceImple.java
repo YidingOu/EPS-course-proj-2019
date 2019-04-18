@@ -32,7 +32,7 @@ public class AuditServiceImple extends BaseImple<Audit> implements AuditService{
 	//After the injection is done, override the repository in the super class
 	@PostConstruct
 	public void initParent() {
-	  super.repository = auditRepository;
+		super.repository = auditRepository;
 	}
 	
 	//A scheduling function that deleting the expired logs

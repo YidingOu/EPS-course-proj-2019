@@ -1,10 +1,14 @@
 package com.ipv.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -29,40 +33,54 @@ public class Post {
 
 	@Column(name="staffid")
 	private int staffId;
-	
+
 	@Column(name="status")
 	private String status;
-	
+
 	@Column(name="updated")
 	private int updated;
-	
+
 	@Column(name="key")
 	private String key;
-	
-//	@OneToOne(cascade=CascadeType.ALL)
-//	@JoinColumn(name="userid")
-//	private User user;
-//	
-//	@ManyToOne
-//	@JoinColumn(name="staffid")
-//	private User staff;
-//	
-//
-//	public User getUser() {
-//		return user;
-//	}
-//
-//	public void setUser(User user) {
-//		this.user = user;
-//	}
-//
-//	public User getStaff() {
-//		return staff;
-//	}
-//
-//	public void setStaff(User staff) {
-//		this.staff = staff;
-//	}
+
+	@OneToOne(cascade = {
+			CascadeType.DETACH,
+			CascadeType.MERGE,
+			CascadeType.PERSIST,
+			CascadeType.REFRESH})
+	@JoinColumn(name="userid", 
+	referencedColumnName="id",
+	insertable=false, 
+	updatable=false)
+	private User user;
+
+	@ManyToOne(cascade = {
+			CascadeType.DETACH,
+			CascadeType.MERGE,
+			CascadeType.PERSIST,
+			CascadeType.REFRESH})
+	@JoinColumn(name="staffid", 
+	referencedColumnName="id",
+	insertable=false, 
+	updatable=false)
+	private User staff;
+
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public User getStaff() {
+		return staff;
+	}
+
+	public void setStaff(User staff) {
+		this.staff = staff;
+	}
 
 	public int getId() {
 		return id;
