@@ -104,10 +104,6 @@ function sendMessage(text) {
 function redirect() {
     console.log("redirect");
     window.location.href = "http://google.com";
-    window.location.href = "http://google.com";
-    window.location.href = "http://google.com";
-    window.location.href = "http://google.com";
-    window.location.href = "http://google.com";
 }
 
 /** Prompts user to input location and sends information to server. */ 
