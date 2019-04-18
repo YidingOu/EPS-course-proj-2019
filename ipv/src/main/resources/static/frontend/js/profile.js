@@ -74,7 +74,6 @@ function saveChanges() {
     };
     console.log(form_data)
     
-    
     $.ajax({
         type: request_method,
         contentType: "application/json",
