@@ -19,6 +19,7 @@ import com.ipv.exception.NotFoundException;
 import com.ipv.service.UserService;
 import com.ipv.util.Constant;
 import com.ipv.util.wrapper.ValidateResponseWapper;
+import org.springframework.security.crypto.keygen.*;
 
 /**
  * 
@@ -62,7 +63,8 @@ public class UserRestAPI {
 
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
 		user.setId(0);
-		user.setSalt("randomstring");
+		String salt = KeyGenerators.string().generateKey();
+		user.setSalt(salt);
 		service.save(user);
 		processUser(user);
 		return user;
@@ -118,6 +120,8 @@ public class UserRestAPI {
 		user.setPass(null);
 		user.setSalt(null);
 	}
+
+
 
 }
 

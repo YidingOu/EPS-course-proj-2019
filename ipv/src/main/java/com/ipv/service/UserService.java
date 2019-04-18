@@ -18,4 +18,6 @@ public interface UserService extends BaseService<User>{
 	public boolean validate(String string, String pass);
 
 	public int validateStaff(String name, String pass);
+
+	public User saltPassword(User usr);
 }
