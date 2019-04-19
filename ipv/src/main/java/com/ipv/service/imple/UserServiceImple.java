@@ -69,6 +69,12 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 		}
 		
 	}
+
+	@Override
+	public User saltPassword(User usr) {
+
+		return userRepository.save(usr);
+	}
 	
 
 }
