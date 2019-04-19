@@ -16,7 +16,13 @@ $(document).ready(function() {
 
 /** Gets the uid of the current user */
 function getUid() {
-	return 1; 
+	try {
+        return localStorage.getItem('uid');
+    } catch(error) {
+        alert("Session expired, please login again. ")
+        $(location).attr("href", "login.html");
+    }
+    return;
 }
 
 /** Draws the alert confirmation box and sends an ajax request to delete account 
@@ -68,11 +74,11 @@ function saveChanges() {
     var request_method = "PUT"; 
     var main_url = "/frontend/src/main.html";
     var form_data = {
-		displayName:$("#username").val(),  
 		pass:$("#password").val(),
-		name:$("#firstname").val() + " " + $("#lastname").val()
+		name:$("#username").val(),
+		id:uid
     };
-    console.log(form_data)
+    console.log(form_data);
     
     $.ajax({
         type: request_method,

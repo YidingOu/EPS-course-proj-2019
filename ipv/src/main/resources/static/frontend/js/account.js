@@ -114,14 +114,14 @@ function submitUserLogin() {
         timeout: 60000,
         success: function (data) {
         	console.log("success");
+          localStorage.uid = data.id;
         	$(location).attr("href", main_url);
 
         },
         error: function (e) {
         	console.log("fail");
         	console.log(JSON.stringify(e));
-        	$("#login_error").html("The login failed");
-
+        	alert("Login failed, please try again.");
         }
     });
   });
@@ -154,12 +154,12 @@ function submitStaffLogin() {
         	} else if (data.state == 2) {
         		$(location).attr("href", admin_url);
         	} else {
-        		$("#login_error").html("The login failed");
+        		alert("Login failed, please try again.");
         	}
         },
         error: function (e) {
         	console.log("fail");
-        	$("#login_error").html("The login failed");
+        	alert("Login failed, please try again.");
 
         }
     });

@@ -24,8 +24,10 @@ $(document).ready(function() {
     $('.send_location').click(function() {
         sendLocation();
     })
-    var posts = getPosts();
-    drawPosts(posts);
+    var posts = getPosts(uid);
+    if (posts) {
+        drawPosts(posts);
+    }
 })
 
 /** Defines message object */
@@ -46,17 +48,42 @@ Message = function (arg) {
     return this;
 };
 
-/** Returns the uid of the current user (as stored in cookie) */
+/** Returns the uid of the current user (as stored in localstorage) */
 function getUid() {
-    return 1; 
+    try {
+        return localStorage.getItem('uid');
+    } catch(error) {
+        alert("Session expired, please login again. ")
+        $(location).attr("href", "login.html");
+    }
+    return;
 }
 
 /** Gets the chat history of the user with staff
     Returns: array of messages
 */
-function getPosts() {
-    var posts = [];
-    message1 = new Message({
+function getPosts(userId) {
+    var post_url = "/posts/by_user/" + userId;
+    var request_method = "GET"; 
+    
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: post_url,
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log("success");
+            //populate messages
+            return getMessages(data.id);
+        },
+        error: function (e) {
+            console.log("fail");
+            alert("Session expired. Please login again. "); //TO CHANGE?
+            $(location).attr("href", "login.html");
+        }
+    });
+    /*message1 = new Message({
         text: "Hi, i want to find out about something",
         sender_id : 1
     });
@@ -65,7 +92,38 @@ function getPosts() {
         sender_id: 2
     });
     posts.push(message1, message2);
-    return posts;
+    return posts;*/
+}
+
+/** Gets messages from the same conversation (ie same post id) */
+function getMessages(postId) {
+    var posts = [];
+    var post_url = "/conversations/by_post/" + postId;
+    var request_method = "GET"; 
+    
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: post_url,
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log("success");
+            for (var i=0; i<data.length; i++) {
+                msg = new Message({
+                    text: data[i].data,
+                    sender_id : data[i].userId
+                });
+                posts.push(msg);
+            }
+            return posts;
+        },
+        error: function (e) {
+            console.log("fail");
+            alert("Session expired. Please login again. "); //TO CHANGE?
+            $(location).attr("href", "login.html");
+        }
+    });
 }
 
 /** Draws all posts */
