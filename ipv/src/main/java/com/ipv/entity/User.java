@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -52,17 +53,10 @@ public class User {
 			fetch = FetchType.EAGER)
 	private Email email;
 
-	@OneToOne(mappedBy = "user",
-			cascade = CascadeType.ALL,
-			fetch = FetchType.EAGER)
+	@Transient
 	private Post post;
 
-	@OneToMany(mappedBy = "staff",
-			fetch = FetchType.LAZY,
-			cascade = {CascadeType.DETACH,
-					CascadeType.MERGE,
-					CascadeType.PERSIST,
-					CascadeType.REFRESH})
+	@Transient
 	private List<Post> postForStaff;
 	
 	@Override

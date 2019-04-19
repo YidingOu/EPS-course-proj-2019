@@ -1,15 +1,15 @@
 package com.ipv.service.imple;
 
-import java.util.Optional;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ipv.entity.User;
+import com.ipv.reporsitory.PostRepository;
 import com.ipv.reporsitory.UserRepository;
 import com.ipv.service.UserService;
+import com.ipv.util.Util;
 
 /**
  * 
@@ -31,6 +31,9 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private PostRepository postRepository;
+	
 	//After the injection is done, override the repository in the super class
 	@PostConstruct
 	public void initParent() {
@@ -45,9 +48,15 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	 * 
 	 * */
 	@Override
-	public boolean validate(String name, String pass) {
+	public User validate(String name, String pass) {
 		User user = userRepository.findByName(name);
-		return checkPass(user, pass);
+		if (checkPass(user, pass)) {
+			Util.processUser(user);
+			user.setPost(postRepository.findByUserId(user.getId()));
+			return user;
+		} else {
+			return null;
+		}
 	}
 	
 	//A complete function with hashing and checking will be updated later
@@ -60,12 +69,14 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	}
 
 	@Override
-	public int validateStaff(String name, String pass) {
+	public User validateStaff(String name, String pass) {
 		User user = userRepository.findByName(name);
 		if (user.getRole() < 1 || !checkPass(user, pass)) { // not staff or fail
-			return 0;
+			return null;
 		} else {
-			return user.getRole();
+			Util.processUser(user);
+			user.setPostForStaff(postRepository.findByStaffId(user.getId()));
+			return user;
 		}
 		
 	}

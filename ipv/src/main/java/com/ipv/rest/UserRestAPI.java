@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ipv.entity.User;
 import com.ipv.exception.NotFoundException;
 import com.ipv.service.UserService;
-import com.ipv.util.Constant;
+import com.ipv.util.Util;
 import com.ipv.util.wrapper.ValidateResponseWapper;
-import org.springframework.security.crypto.keygen.*;
 
 /**
  * 
@@ -41,7 +41,7 @@ public class UserRestAPI {
 	@GetMapping
 	public List<User> findAll() {
 		List<User> list = service.findAll();
-		list.stream().forEach(user -> processUser(user));
+		list.stream().forEach(user -> Util.processUser(user));
 		return list;
 	}
 
@@ -53,7 +53,7 @@ public class UserRestAPI {
 		if (user == null) {
 			throw new NotFoundException("User id not found - " + id);
 		}
-		processUser(user);
+		Util.processUser(user);
 		return user;
 	}
 
@@ -66,15 +66,16 @@ public class UserRestAPI {
 		String salt = KeyGenerators.string().generateKey();
 		user.setSalt(salt);
 		service.save(user);
-		processUser(user);
+		Util.processUser(user);
 		return user;
 	}
 
 	// validate
 	@PostMapping("/validate")
 	public ValidateResponseWapper validate(@RequestBody User user) {
-		int result = service.validate(user.getName(), user.getPass()) ? Constant.SUCCESS : Constant.FAIL;
-		return new ValidateResponseWapper(result, user.getId(), null);
+		User resultUser = service.validate(user.getName(), user.getPass());
+		return resultUser != null ? new ValidateResponseWapper(1, resultUser, "Success") : 
+			new ValidateResponseWapper(0, null, "The althentication failed");
 	}
 
 	//get all staffs
@@ -86,8 +87,9 @@ public class UserRestAPI {
 	// validate for staffs
 	@PostMapping("staffs/validate")
 	public ValidateResponseWapper validateStaff(@RequestBody User user) {
-		int result = service.validateStaff(user.getName(), user.getPass());
-		return new ValidateResponseWapper(result, user.getId(), null);
+		User resultUser = service.validateStaff(user.getName(), user.getPass());
+		return resultUser != null ? new ValidateResponseWapper(resultUser.getRole(), resultUser, "Success") : 
+			new ValidateResponseWapper(0, null, "The althentication failed");
 	}
 
 	// update password for the user
@@ -99,7 +101,7 @@ public class UserRestAPI {
 		}
 		olduser.setPass(user.getPass());
 		service.save(olduser);
-		processUser(olduser);
+		Util.processUser(olduser);
 		return olduser;
 	}
 
@@ -114,13 +116,6 @@ public class UserRestAPI {
 		service.deleteById(id);
 		return "Deleted User id - " + id;
 	}
-
-	// removing the password and salt when user is returned
-	private void processUser(User user) {
-		user.setPass(null);
-		user.setSalt(null);
-	}
-
 
 
 }

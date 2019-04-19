@@ -1,5 +1,7 @@
 package com.ipv.util.wrapper;
 
+import com.ipv.entity.User;
+
 /**
  * 
  * The model for the response of the validation
@@ -7,13 +9,13 @@ package com.ipv.util.wrapper;
  */
 public class ValidateResponseWapper {
 	int state;
-	int id;
+	User entity;
 	String message;
 	
-	public ValidateResponseWapper(int state, int id, String message) {
+	public ValidateResponseWapper(int state, User entity, String message) {
 		super();
 		this.state = state;
-		this.id = id;
+		this.entity = entity;
 		this.message = message;
 	}
 	
@@ -34,11 +36,15 @@ public class ValidateResponseWapper {
 	public void setState(int state) {
 		this.state = state;
 	}
-	public int getId() {
-		return id;
+
+
+	public User getEntity() {
+		return entity;
 	}
-	public void setId(int id) {
-		this.id = id;
+
+
+	public void setEntity(User entity) {
+		this.entity = entity;
 	}
 	
 	

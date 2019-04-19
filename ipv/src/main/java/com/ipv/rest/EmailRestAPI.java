@@ -33,7 +33,7 @@ public class EmailRestAPI {
 	//validate the code of the email validation
 	@GetMapping("validate/{code}")
 	public ValidateResponseWapper validateCode(@PathVariable String code) {
-		return new ValidateResponseWapper(Constant.SUCCESS, 1, null);
+		return new ValidateResponseWapper(Constant.SUCCESS, null, null);
 	}
 	
 	//get email by id

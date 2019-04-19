@@ -1,5 +1,7 @@
 package com.ipv.reporsitory;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ipv.entity.Post;
@@ -12,5 +14,9 @@ import com.ipv.entity.Post;
  * 
  */
 public interface PostRepository extends JpaRepository<Post, Integer>{
+	
+	public Post findByUserId(int id);
+	
+	public List<Post> findByStaffId(int id);
 
 }
