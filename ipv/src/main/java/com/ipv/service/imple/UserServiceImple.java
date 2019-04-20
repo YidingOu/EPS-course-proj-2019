@@ -1,5 +1,7 @@
 package com.ipv.service.imple;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,8 +104,15 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 
 	@Override
 	public int loadBalancerForGettingAStaffId() {
-		// TODO Auto-generated method stub
-		return 2;
+		List<User> staffList = userRepository.findByRole(1);
+		User min = null;
+		for (User staff : staffList) {
+			staff.setPostForStaff(postRepository.findByStaffId(staff.getId()));
+			if (min == null || staff.getPostForStaff().size() < min.getPostForStaff().size()) {
+				min = staff;
+			}
+		}
+		return min.getId();
 	}
 	
 

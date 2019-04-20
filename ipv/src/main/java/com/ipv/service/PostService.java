@@ -1,5 +1,7 @@
 package com.ipv.service;
 
+import java.util.List;
+
 import com.ipv.entity.Post;
 
 /**
@@ -14,6 +16,7 @@ import com.ipv.entity.Post;
  */
 public interface PostService extends BaseService<Post>{
 	public Post getByUserId(int userId); 
+	public List<Post> getByStaffId(int id);
 	public Post initPost(int userId); 
 	public Post pause(int id);
 	public Post resume(int id);

@@ -1,5 +1,7 @@
 package com.ipv.service.imple;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,5 +111,10 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 			post.setConversations(conversationRepository.findByPostId(post.getId()));
 		}
 		return post;
+	}
+
+	@Override
+	public List<Post> getByStaffId(int id) {
+		return postRepository.findByStaffId(id);
 	}
 }

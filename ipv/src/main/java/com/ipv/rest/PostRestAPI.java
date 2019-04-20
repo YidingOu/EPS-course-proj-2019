@@ -1,6 +1,5 @@
 package com.ipv.rest;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import com.ipv.entity.Post;
 import com.ipv.exception.NotFoundException;
 import com.ipv.service.AuditService;
 import com.ipv.service.PostService;
-import com.ipv.util.wrapper.QueryByDateWapper;
 
 /**
  * 
@@ -57,13 +55,30 @@ public class PostRestAPI {
 	//get the post by user id
 	@GetMapping("/by_user/{id}")
 	public Post getByUser(@PathVariable int id) {
-		return null;
+		Post post = service.getByUserId(id);
+		if (post == null) {
+			throw new NotFoundException("Post id not found - " + id);
+		}
+		return post;
+	}
+	
+	//get the post by user id
+	@GetMapping("/transfer/{postId}/{newStaffId}")
+	public Post postTransfer(@PathVariable int postId, @PathVariable int newStaffId) {
+		Post post = service.findById(postId);
+		if (post == null) {
+			throw new NotFoundException("Post id not found - " + postId);
+		}
+		
+		post.setStaffId(newStaffId);
+		service.save(post);
+		return post;
 	}
 
 	//get the posts by staff id
-	@PostMapping("/by_staff")
-	public List<Post> getByUser(@RequestBody QueryByDateWapper requeryByDateBody) {
-		return Arrays.asList();
+	@GetMapping("/by_staff/{id}")
+	public List<Post> getStaffId(@PathVariable int id) {
+		return service.getByStaffId(id);
 	}
 
 	//create a post
