@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ipv.entity.User;
 import com.ipv.exception.NotFoundException;
+import com.ipv.service.AuditService;
 import com.ipv.service.UserService;
 import com.ipv.util.Util;
 import com.ipv.util.wrapper.ValidateResponseWapper;
@@ -35,6 +36,9 @@ public class UserRestAPI {
 
 	@Autowired
 	private UserService service;
+	
+	@Autowired
+	private AuditService auditService;
 
 	//get all users for the admin
 	@GetMapping
@@ -64,6 +68,10 @@ public class UserRestAPI {
 		user.setId(0);
 		service.save(user);
 		Util.processUser(user);
+		
+		//Add audit
+		auditService.addAudit(user.getId(), null, "User created with id = " + user.getId());
+		
 		return user;
 	}
 
@@ -71,8 +79,16 @@ public class UserRestAPI {
 	@PostMapping("/validate")
 	public ValidateResponseWapper validate(@RequestBody User user) {
 		User resultUser = service.validate(user.getName(), user.getPass());
-		return resultUser != null ? new ValidateResponseWapper(1, resultUser, "Success") : 
-			new ValidateResponseWapper(0, null, "The althentication failed");
+		if (resultUser != null) {
+			//Add audit
+			auditService.addAudit(user.getId(), null, "User logins success with id = " + user.getId());
+			return new ValidateResponseWapper(1, resultUser, "Success");
+		} else {
+			//Add audit
+			auditService.addAudit(user.getId(), null, "User logins failed with id = " + user.getId());
+			return new ValidateResponseWapper(0, null, "The althentication failed");
+		}
+		
 	}
 
 	//get all staffs
@@ -85,8 +101,15 @@ public class UserRestAPI {
 	@PostMapping("staffs/validate")
 	public ValidateResponseWapper validateStaff(@RequestBody User user) {
 		User resultUser = service.validateStaff(user.getName(), user.getPass());
-		return resultUser != null ? new ValidateResponseWapper(resultUser.getRole(), resultUser, "Success") : 
-			new ValidateResponseWapper(0, null, "The althentication failed");
+		if (resultUser != null) {
+			//Add audit
+			auditService.addAudit(user.getId(), null, "Staff logins success with id = " + user.getId());
+			return new ValidateResponseWapper(resultUser.getRole(), resultUser, "Success");
+		} else {
+			//Add audit
+			auditService.addAudit(user.getId(), null, "Staff logins failed with id = " + user.getId());
+			return new ValidateResponseWapper(0, null, "The althentication failed");
+		}
 	}
 
 	// update password for the user
@@ -99,6 +122,10 @@ public class UserRestAPI {
 		olduser.setPass(user.getPass());
 		service.save(olduser);
 		Util.processUser(olduser);
+		
+		//Add audit
+		auditService.addAudit(user.getId(), null, "User updated password with id = " + user.getId());
+		
 		return olduser;
 	}
 
@@ -111,6 +138,10 @@ public class UserRestAPI {
 			throw new NotFoundException("user id not found - " + id);
 		}
 		service.deleteById(id);
+		
+		//Add audit
+		auditService.addAudit(user.getId(), null, "User is deleted with id = " + user.getId());
+		
 		return "Deleted User id - " + id;
 	}
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ipv.entity.Post;
 import com.ipv.exception.NotFoundException;
+import com.ipv.service.AuditService;
 import com.ipv.service.PostService;
 import com.ipv.util.wrapper.QueryByDateWapper;
 
@@ -32,6 +33,9 @@ public class PostRestAPI {
 
 	@Autowired
 	private PostService service;
+	
+	@Autowired
+	private AuditService auditService;
 
 	//get all posts
 	@GetMapping
@@ -68,6 +72,12 @@ public class PostRestAPI {
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
 		post.setId(0);
 		service.save(post);
+		
+		//Add audit
+		auditService.addAudit(post.getUserId(), post.getId(), 
+				"Post created with id = " + post.getId() + 
+				" and User id = " + post.getUserId() + 
+				" and Staff id = " + post.getStaffId());
 		return post;
 	}
 
@@ -75,6 +85,13 @@ public class PostRestAPI {
 	@PutMapping
 	public Post update(@RequestBody Post post) {
 		service.save(post);
+		
+		//Add audit
+		auditService.addAudit(post.getUserId(), post.getId(), 
+				"Post updated with id = " + post.getId() + 
+				" and User id = " + post.getUserId() + 
+				" and Staff id = " + post.getStaffId());
+		
 		return post;
 	}
 
@@ -86,24 +103,37 @@ public class PostRestAPI {
 			throw new NotFoundException("post id not found - " + id);
 		}
 		service.deleteById(id);
+		
+		//Add audit
+		auditService.addAudit(post.getUserId(), post.getId(), 
+				"Post delete with id = " + post.getId() + 
+				" and User id = " + post.getUserId() + 
+				" and Staff id = " + post.getStaffId());
+		
 		return "Deleted Post id - " + id;
 	}
 
 	//pause the post
 	@GetMapping("/pause/{id}")
 	public Post pause(@PathVariable int id) {
+		//Add audit
+		auditService.addAudit(null, id, "Post paused with id = " + id );
 		return service.pause(id);
 	}
 
 	//resume the post
 	@GetMapping("/resume/{id}")
 	public Post resume(@PathVariable int id) {
+		//Add audit
+		auditService.addAudit(null, id, "Post resumed with id = " + id );
 		return service.resume(id);
 	}
 
-	//pause the post
+	//close the post
 	@GetMapping("/close/{id}")
 	public Post close(@PathVariable int id) {
+		//Add audit
+		auditService.addAudit(null, id, "Post closed with id = " + id );
 		return service.close(id);
 	}
 

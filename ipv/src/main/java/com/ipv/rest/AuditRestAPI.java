@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,15 +37,15 @@ public class AuditRestAPI {
 	}
 	
 	//querying logs by user id and the date range
-	@PostMapping("/by_user")
-	public List<Audit> getByUser(@RequestBody QueryByDateWapper requeryByDateBody) {
-		return Arrays.asList();
+	@GetMapping("/by_user/{id}")
+	public List<Audit> getByUser(@PathVariable int id) {
+		return service.findByUserId(id);
 	}
 	
 	//querying logs by staff id and the date range
-	@PostMapping("/by_staff")
-	public List<Audit> getByStaff(@RequestBody QueryByDateWapper requeryByDateBody) {
-		return Arrays.asList();
+	@GetMapping("/by_staff/{id}")
+	public List<Audit> getByStaff(@PathVariable int id) {
+		return service.findByPostId(id);
 	}
 	
 	

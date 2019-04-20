@@ -39,11 +39,27 @@ public class Audit {
 	@Column(name="date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
+	
+	@Column(name="action")
+	private String action;
 
 	@PrePersist
 	void createdAt() {
 		this.date = new Date();
 	}
+	
+
+	public String getAction() {
+		return action;
+	}
+
+
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+
 
 	public int getId() {
 		return id;

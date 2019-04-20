@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ipv.entity.Contact;
 import com.ipv.exception.NotFoundException;
+import com.ipv.service.AuditService;
 import com.ipv.service.ContactService;
 
 /**
@@ -28,6 +29,9 @@ public class ContactRestAPI {
 	
 	@Autowired
 	private ContactService service;
+	
+	@Autowired
+	private AuditService auditService;
 	
 	//get entity by contact id
 	@GetMapping("{id}")
@@ -56,6 +60,10 @@ public class ContactRestAPI {
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
 		contact.setId(0);
 		service.save(contact);
+		
+		// Add audit
+		auditService.addAudit(null, contact.getPostId(), 
+				"Contact id = " + contact.getId() + " created with Post id = " +contact.getPostId());
 		return contact;
 	}
 	
@@ -63,6 +71,10 @@ public class ContactRestAPI {
 	@PutMapping
 	public Contact update(@RequestBody Contact contact) {
 		service.save(contact);
+		
+		// Add audit
+		auditService.addAudit(null, contact.getPostId(), 
+				"Contact id = " + contact.getId() + " updated with Post id = " +contact.getPostId());
 		return contact;
 	}
 	
@@ -75,6 +87,10 @@ public class ContactRestAPI {
 			throw new NotFoundException("contact id not found - " + id);
 		}
 		service.deleteById(id);
+		
+		// Add audit
+		auditService.addAudit(null, contact.getPostId(), 
+				"Contact id = " + contact.getId() + " deleted with Post id = " +contact.getPostId());
 		return "Deleted Contact id - " + id;
 	}
 	

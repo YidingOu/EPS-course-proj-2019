@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ipv.entity.Conversation;
 import com.ipv.exception.NotFoundException;
+import com.ipv.service.AuditService;
 import com.ipv.service.ConversationService;
 
 /**
@@ -30,6 +31,9 @@ public class ConversationRestAPI {
 	
 	@Autowired
 	private ConversationService service;
+	
+	@Autowired
+	private AuditService auditService;
 	
 	//get conversations by id
 	@GetMapping("{id}")
@@ -54,6 +58,12 @@ public class ConversationRestAPI {
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
 		conversation.setId(0);
 		service.save(conversation);
+		
+		// Add audit
+		auditService.addAudit(conversation.getUserId(), conversation.getPostId(), 
+				"Conversation created with Post id = " + conversation.getPostId() + 
+				" and User id = " + conversation.getUserId());
+		
 		return conversation;
 	}
 	
@@ -61,6 +71,12 @@ public class ConversationRestAPI {
 	@PutMapping
 	public Conversation update(@RequestBody Conversation conversation) {
 		service.save(conversation);
+		
+		// Add audit
+		auditService.addAudit(conversation.getUserId(), conversation.getPostId(), 
+				"Conversation id = " + conversation.getId() + " updated with Post id = " + conversation.getPostId() + 
+				" and User id = " + conversation.getUserId());
+		
 		return conversation;
 	}
 	
@@ -73,6 +89,12 @@ public class ConversationRestAPI {
 			throw new NotFoundException("conversation id not found - " + id);
 		}
 		service.deleteById(id);
+		
+		// Add audit
+		auditService.addAudit(conversation.getUserId(), conversation.getPostId(), 
+				"Conversation id = " + conversation.getId() + " deleted with Post id = " + conversation.getPostId() + 
+				" and User id = " + conversation.getUserId());
+		
 		return "Deleted Conversation id - " + id;
 	}
 	

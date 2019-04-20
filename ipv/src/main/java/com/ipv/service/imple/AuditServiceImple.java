@@ -1,5 +1,7 @@
 package com.ipv.service.imple;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,29 @@ public class AuditServiceImple extends BaseImple<Audit> implements AuditService{
 	//A scheduling function that deleting the expired logs
 	private void logExpiring() {
 		
+	}
+
+	@Override
+	public void addAudit(Integer userId, Integer postId, String action) {
+		Audit audit = new Audit();
+		audit.setAction(action);
+		if (userId != null) {
+			audit.setUserId(userId);
+		}
+		if (postId != null) {
+			audit.setUserId(postId);
+		}
+		auditRepository.save(audit);
+	}
+
+	@Override
+	public List<Audit> findByPostId(int id) {
+		return auditRepository.findByPostId(id);
+	}
+
+	@Override
+	public List<Audit> findByUserId(int id) {
+		return auditRepository.findByUserId(id);
 	}
 
 }

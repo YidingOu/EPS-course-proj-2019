@@ -1,5 +1,7 @@
 package com.ipv.service;
 
+import java.util.List;
+
 import com.ipv.entity.Audit;
 
 /**
@@ -13,4 +15,7 @@ import com.ipv.entity.Audit;
  * 
  */
 public interface AuditService extends BaseService<Audit>{
+	public void addAudit(Integer userId, Integer postId, String action);
+	public List<Audit> findByPostId(int id);
+	public List<Audit> findByUserId(int id);
 }

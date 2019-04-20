@@ -1,5 +1,7 @@
 package com.ipv.reporsitory;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ipv.entity.Audit;
@@ -12,5 +14,6 @@ import com.ipv.entity.Audit;
  * 
  */
 public interface AuditRepository extends JpaRepository<Audit, Integer>{
-
+	public List<Audit> findByPostId(int id);
+	public List<Audit> findByUserId(int id);
 }
