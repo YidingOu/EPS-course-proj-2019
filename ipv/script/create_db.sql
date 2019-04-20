@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `pivdb`.`post` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `status` INT NOT NULL,
   `updated` TINYINT(10) NOT NULL,
-  `key` VARCHAR(20) NULL,
+  `postkey` VARCHAR(20) NULL,
   `userId` INT NOT NULL,
   `staffId` INT NOT NULL,
   PRIMARY KEY (`id`),

@@ -3,11 +3,14 @@ package com.ipv.service.imple;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
 
+import com.ipv.entity.Post;
 import com.ipv.entity.User;
 import com.ipv.reporsitory.PostRepository;
 import com.ipv.reporsitory.UserRepository;
+import com.ipv.service.PostService;
 import com.ipv.service.UserService;
 import com.ipv.util.Util;
 
@@ -33,6 +36,9 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	
 	@Autowired
 	private PostRepository postRepository;
+	
+	@Autowired
+	private PostService postService;
 	
 	//After the injection is done, override the repository in the super class
 	@PostConstruct
@@ -63,8 +69,6 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	private boolean checkPass(User user, String pass) {
 		
 		String dbPass = user.getPass();
-		System.out.println(dbPass);
-		System.out.println(pass);
 		return dbPass.equals(pass);
 	}
 
@@ -80,11 +84,26 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 		}
 		
 	}
+	
+	public User save(User user) {
+		String salt = KeyGenerators.string().generateKey();
+		user.setSalt(salt);
+		user = repository.save(user);
+		Post post = postService.initPost(user.getId());
+		user.setPost(post);
+		return user;
+	}
 
 	@Override
 	public User saltPassword(User usr) {
 
 		return userRepository.save(usr);
+	}
+
+	@Override
+	public int loadBalancerForGettingAStaffId() {
+		// TODO Auto-generated method stub
+		return 2;
 	}
 	
 

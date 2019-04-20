@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.ipv.entity.Post;
 import com.ipv.reporsitory.PostRepository;
 import com.ipv.service.PostService;
+import com.ipv.service.UserService;
+import com.ipv.util.Constant;
 
 /**
  * 
@@ -29,9 +31,24 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 	@Autowired
 	private PostRepository postRepository;
 	
+	@Autowired
+	private UserService userService;
+	
 	//After the injection is done, override the repository in the super class
 	@PostConstruct
 	public void initParent() {
 	  super.repository = postRepository;
+	}
+
+	@Override
+	public Post initPost(int userId) {
+		Post post = new Post();
+		post.setId(0);
+		post.setUserId(userId);
+		post.setStaffId(userService.loadBalancerForGettingAStaffId());
+		post.setStatus(Constant.POST_STATUS_NEW);
+		post.setUpdated(Constant.POST_UPDATE_NO);
+		post.setKey("");
+		return postRepository.save(post);
 	}
 }

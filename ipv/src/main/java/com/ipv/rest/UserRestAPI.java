@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,8 +62,6 @@ public class UserRestAPI {
 
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
 		user.setId(0);
-		String salt = KeyGenerators.string().generateKey();
-		user.setSalt(salt);
 		service.save(user);
 		Util.processUser(user);
 		return user;

@@ -20,4 +20,6 @@ public interface UserService extends BaseService<User>{
 	public User validateStaff(String name, String pass);
 
 	public User saltPassword(User usr);
+	
+	public int loadBalancerForGettingAStaffId();
 }
