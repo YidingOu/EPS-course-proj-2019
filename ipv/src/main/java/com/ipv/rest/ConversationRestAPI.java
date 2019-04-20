@@ -45,7 +45,7 @@ public class ConversationRestAPI {
 	//get conversations by the hosted post id
 	@GetMapping("/by_post/{id}")
 	public List<Conversation> getByPost(@PathVariable int id) {
-		return null;
+		return service.findByPostId(id);
 	}
 	
 	//create the conversation

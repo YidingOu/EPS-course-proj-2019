@@ -13,5 +13,9 @@ import com.ipv.entity.Post;
  * 
  */
 public interface PostService extends BaseService<Post>{
+	public Post getByUserId(int userId); 
 	public Post initPost(int userId); 
+	public Post pause(int id);
+	public Post resume(int id);
+	public Post close(int id);
 }

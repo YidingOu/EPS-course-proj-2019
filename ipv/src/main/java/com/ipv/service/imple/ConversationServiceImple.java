@@ -1,13 +1,21 @@
 package com.ipv.service.imple;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ipv.entity.Conversation;
+import com.ipv.entity.Post;
+import com.ipv.entity.User;
 import com.ipv.reporsitory.ConversationRepository;
+import com.ipv.reporsitory.PostRepository;
+import com.ipv.reporsitory.UserRepository;
 import com.ipv.service.ConversationService;
+import com.ipv.util.Constant;
 
 /**
  * 
@@ -29,10 +37,41 @@ public class ConversationServiceImple extends BaseImple<Conversation> implements
 	@Autowired
 	private ConversationRepository conversationRepository;
 	
+	@Autowired
+	private PostRepository postRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	
 	//After the injection is done, override the repository in the super class
 	@PostConstruct
 	public void initParent() {
 	  super.repository = conversationRepository;
+	}
+	
+	@Override
+	public List<Conversation> findByPostId(int id) {
+		return conversationRepository.findByPostId(id);
+	}
+	
+	@Override
+	public Conversation save(Conversation conversation){
+		conversation.setDate(new Date());
+		User user = userRepository.findById(conversation.getUserId()).get();
+		Post post = postRepository.findById(conversation.getPostId()).get();
+		if (user.getRole() == 0) {
+			conversation.setReply(Constant.CONVERSATION_FROM_USER);
+			post.setUpdated(Constant.POST_UPDATE_FROM_USER);
+		} else {
+			conversation.setReply(Constant.CONVERSATION_FROM_STAFF);
+			post.setStatus(Constant.POST_STATUS_ON_GOING);
+			post.setUpdated(Constant.POST_UPDATE_FROM_STAFF);
+		}
+		postRepository.save(post);
+		conversation = repository.save(conversation);
+		return conversation;
+				
 	}
 
 

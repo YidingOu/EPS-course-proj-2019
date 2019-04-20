@@ -12,5 +12,6 @@ import com.ipv.entity.Contact;
  * 
  */
 public interface ContactRepository extends JpaRepository<Contact, Integer>{
+	public Contact findByPostId(int id);
 
 }

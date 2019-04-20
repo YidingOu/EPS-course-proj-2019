@@ -13,4 +13,5 @@ import com.ipv.entity.Contact;
  * 
  */
 public interface ContactService extends BaseService<Contact>{
+	public Contact findByPostId(int id);
 }

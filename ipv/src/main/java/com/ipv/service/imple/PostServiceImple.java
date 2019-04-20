@@ -3,9 +3,11 @@ package com.ipv.service.imple;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
 
 import com.ipv.entity.Post;
+import com.ipv.reporsitory.ConversationRepository;
 import com.ipv.reporsitory.PostRepository;
 import com.ipv.service.PostService;
 import com.ipv.service.UserService;
@@ -32,6 +34,9 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 	private PostRepository postRepository;
 	
 	@Autowired
+	private ConversationRepository conversationRepository;
+	
+	@Autowired
 	private UserService userService;
 	
 	//After the injection is done, override the repository in the super class
@@ -48,7 +53,61 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 		post.setStaffId(userService.loadBalancerForGettingAStaffId());
 		post.setStatus(Constant.POST_STATUS_NEW);
 		post.setUpdated(Constant.POST_UPDATE_NO);
-		post.setKey("");
 		return postRepository.save(post);
+	}
+	
+	@Override
+	public Post findById(int id){
+		Post post = super.findById(id);
+		if (post != null) {
+			post.setConversations(conversationRepository.findByPostId(id));
+		}
+		return post;
+	}
+
+	@Override
+	public Post pause(int id) {
+		Post post = findById(id);
+		post.setKey(KeyGenerators.string().generateKey());
+		post.setStatus(Constant.POST_STATUS_PAUSED);
+		encrypt(post);
+		repository.save(post);
+		return post;
+	}
+
+	@Override
+	public Post resume(int id) {
+		Post post = findById(id);
+		post.setStatus(Constant.POST_STATUS_ON_GOING);
+		decrypt(post);
+		repository.save(post);
+		return post;
+	}
+
+	@Override
+	public Post close(int id) {
+		Post post = findById(id);
+		post.setStatus(Constant.POST_STATUS_CLOSED);
+		repository.save(post);
+		return post;
+	}
+	
+	private void decrypt(Post post) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private void encrypt(Post post) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Post getByUserId(int userId) {
+		Post post = postRepository.findByUserId(userId);
+		if (post != null) {
+			post.setConversations(conversationRepository.findByPostId(post.getId()));
+		}
+		return post;
 	}
 }

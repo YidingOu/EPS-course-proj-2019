@@ -1,5 +1,7 @@
 package com.ipv.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -45,8 +47,18 @@ public class Post {
 
 	@Transient
 	private User staff;
-
 	
+	@Transient
+	private List<Conversation> conversations;
+	
+	public List<Conversation> getConversations() {
+		return conversations;
+	}
+
+	public void setConversations(List<Conversation> conversations) {
+		this.conversations = conversations;
+	}
+
 	public User getUser() {
 		return user;
 	}

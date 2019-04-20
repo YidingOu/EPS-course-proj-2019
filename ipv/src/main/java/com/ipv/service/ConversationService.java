@@ -1,5 +1,7 @@
 package com.ipv.service;
 
+import java.util.List;
+
 import com.ipv.entity.Conversation;
 
 /**
@@ -13,4 +15,5 @@ import com.ipv.entity.Conversation;
  * 
  */
 public interface ConversationService extends BaseService<Conversation>{
+	public List<Conversation> findByPostId(int id);
 }

@@ -29,39 +29,39 @@ import com.ipv.util.wrapper.QueryByDateWapper;
 @RestController
 @RequestMapping("/posts")
 public class PostRestAPI {
-	
+
 	@Autowired
 	private PostService service;
-	
+
 	//get all posts
 	@GetMapping
 	public List<Post> findAll() {
 		return service.findAll();
 	}
-	
+
 	//get post by id
 	@GetMapping("{id}")
 	public Post get(@PathVariable int id) {
-		
+
 		Post post = service.findById(id);
 		if (post == null) {
 			throw new NotFoundException("Post id not found - " + id);
 		}
 		return post;
 	}
-	
+
 	//get the post by user id
 	@GetMapping("/by_user/{id}")
 	public Post getByUser(@PathVariable int id) {
 		return null;
 	}
-	
+
 	//get the posts by staff id
 	@PostMapping("/by_staff")
 	public List<Post> getByUser(@RequestBody QueryByDateWapper requeryByDateBody) {
 		return Arrays.asList();
 	}
-	
+
 	//create a post
 	@PostMapping
 	public Post add(@RequestBody Post post) {
@@ -70,18 +70,17 @@ public class PostRestAPI {
 		service.save(post);
 		return post;
 	}
-	
+
 	//update a post
 	@PutMapping
 	public Post update(@RequestBody Post post) {
 		service.save(post);
 		return post;
 	}
-	
+
 	//delete post
 	@DeleteMapping("{id}")
 	public String delete(@PathVariable int id) {
-		
 		Post post = service.findById(id);
 		if (post == null) {
 			throw new NotFoundException("post id not found - " + id);
@@ -89,7 +88,25 @@ public class PostRestAPI {
 		service.deleteById(id);
 		return "Deleted Post id - " + id;
 	}
-	
+
+	//pause the post
+	@GetMapping("/pause/{id}")
+	public Post pause(@PathVariable int id) {
+		return service.pause(id);
+	}
+
+	//resume the post
+	@GetMapping("/resume/{id}")
+	public Post resume(@PathVariable int id) {
+		return service.resume(id);
+	}
+
+	//pause the post
+	@GetMapping("/close/{id}")
+	public Post close(@PathVariable int id) {
+		return service.close(id);
+	}
+
 }
 
 

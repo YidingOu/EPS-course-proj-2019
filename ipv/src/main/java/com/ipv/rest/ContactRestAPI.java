@@ -43,7 +43,11 @@ public class ContactRestAPI {
 	//get entity by associated post id
 	@GetMapping("/by_post/{id}")
 	public Contact getByPost(@PathVariable int id) {
-		return null;
+		Contact contact = service.findByPostId(id);
+		if (contact == null) {
+			throw new NotFoundException("Contact id not found - " + id);
+		}
+		return contact;
 	}
 	
 	//create the contact

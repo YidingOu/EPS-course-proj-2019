@@ -35,4 +35,9 @@ public class ContactServiceImple extends BaseImple<Contact> implements ContactSe
 	  super.repository = contactRepository;
 	}
 
+	@Override
+	public Contact findByPostId(int id) {
+		return contactRepository.findByPostId(id);
+	}
+
 }
