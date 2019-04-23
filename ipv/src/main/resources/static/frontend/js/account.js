@@ -61,7 +61,7 @@ $(function() {
       },
       password: {
         required: true,
-        minlength: 1
+        minlength: 1      //TODO: change to min length of 8
       },
       password_cfm: {
         equalTo: "#password"
@@ -73,7 +73,6 @@ $(function() {
         required: "Please provide a password",
         minlength: "Your password must be at least 8 characters long"
       },
-      email: "Please enter a valid email address",
       password_cfm: "Passwords must match!"
     },
     submitHandler: submitRegistration()
@@ -191,7 +190,8 @@ function submitRegistration() {
 
         },
         error: function (e) {
-        	$("#re_error").html("The registion failed (duplicated name)");
+          console.log(e);
+        	alert("Tht username is taken, please try a different username. ");
 
         }
     });

@@ -1,9 +1,11 @@
 //adapted from https://bootsnipp.com/snippets/ZlkBn
 
 uid = getUid();
+postId = null;
 
 $(document).ready(function() {
-    alert("Worried that someone might be looking over your shoulder? Press the Esc key twice for an automatic redirection to google.com");
+    alert("Worried that someone might be looking over your shoulder? " + 
+            "Press the Esc key twice for an automatic redirection to google.com");
     $('.send_message').click(function () {
         return sendMessage(getMessageText());
     });
@@ -30,7 +32,9 @@ $(document).ready(function() {
     }
 })
 
-/** Defines message object */
+/** Defines message object with a draw function that assigns it its position 
+ *  based on the user who posted the message (ie if sender is user, message appears
+ *  on the right, else message appears on the left.) */
 Message = function (arg) {
     this.text = arg.text, this.sender_id = arg.sender_id;
     this.draw = function (_this) {
@@ -75,7 +79,8 @@ function getPosts(userId) {
         success: function (data) {
             console.log("success");
             //populate messages
-            return getMessages(data.id);
+            postId = data.id;
+            return getMessages(postId);
         },
         error: function (e) {
             console.log("fail");
@@ -83,16 +88,7 @@ function getPosts(userId) {
             $(location).attr("href", "login.html");
         }
     });
-    /*message1 = new Message({
-        text: "Hi, i want to find out about something",
-        sender_id : 1
-    });
-    message2 = new Message({
-        text: "Hi, I am the staff, what can I help you with?",
-        sender_id: 2
-    });
-    posts.push(message1, message2);
-    return posts;*/
+    return;
 }
 
 /** Gets messages from the same conversation (ie same post id) */
@@ -120,7 +116,7 @@ function getMessages(postId) {
         },
         error: function (e) {
             console.log("fail");
-            alert("Session expired. Please login again. "); //TO CHANGE?
+            alert("Session expired. Please login again. "); 
             $(location).attr("href", "login.html");
         }
     });
@@ -154,13 +150,46 @@ function sendMessage(text) {
         sender_id: uid
     });
     //send message to server, draw on success 
-    message.draw();
-    return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+    if (addPost(message)) {
+         message.draw();
+        return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+    }
+   return;
+}
+
+/** Creates a new post using @param message and sends it to the server */
+function addPost(message) {
+    var url = "/conversations/" + postId;
+    var request_method = "POST"; 
+    var post_data = {
+        data: message.text,
+        postId: postId,
+        id:uid
+    };
+    
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: url,
+        data: JSON.stringify(post_data),
+        dataType: 'json',
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log("success");
+            return true;
+        },
+        error: function (e) {
+            console.log("fail");
+            alert("Error, please try again."); 
+            return false;
+        }
+    });
+    return false;
 }
 
 /** Perform a series of redirects to google.com */
 function redirect() {
-    console.log("redirect");
     window.location.href = "http://google.com";
 }
 
@@ -168,16 +197,6 @@ function redirect() {
 function sendLocation() {
     var location = prompt("Please enter the location you wish to share. " +
         "This information is strictly confidential and will be automatically deleted after a week.");
+    // TODO 
     return;
-}
-
-/** Creates 2 messages for testing */
-function sendTestMessages() {
-    sendMessage('Hello Philip! :)');
-        setTimeout(function () {
-            return sendMessage('Hi Sandy! How are youHi Sandy! How are you?Hi Sandy! How are youHi Sandy! How are youHi Sandy! How are youHi Sandy! How are youHi Sandy! How are youHi Sandy! How are youHi Sandy! How are youHi Sandy! How are youHi Sandy! How are youHi Sandy! How are youHi Sandy! How are youHi Sandy! How are you');
-        }, 1000);
-        return setTimeout(function () {
-            return sendMessage('I\'m fine, thank you!');
-        }, 2000);
 }

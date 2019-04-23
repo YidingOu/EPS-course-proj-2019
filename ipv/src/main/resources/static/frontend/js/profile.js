@@ -12,6 +12,7 @@ $(document).ready(function() {
 		saveChanges();
 	});
 	uid = getUid();
+	populateUsername()
 });
 
 /** Gets the uid of the current user */
@@ -24,6 +25,57 @@ function getUid() {
     }
     return;
 }
+
+/** Populates the username field with the username of the current user */
+function populateUsername() {
+	var url = "users/" + uid;
+    var request_method = "GET";
+
+	$.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: url,
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+        	console.log("success");
+        	$("#username").val(data.name);
+        },
+        error: function (e) {
+        	console.log("fail");
+        	console.log(JSON.stringify(e));
+        	alert("Error, please refresh page.")
+        }
+    });
+}
+
+/** Performs validation of profile update form, ensures that name, username 
+ *  and password fields are not empty, and that passwords provided match.
+ */
+$(function() {
+  $("form[name='profile']").validate({
+    rules: {
+      username: {
+        required: true
+      },
+      password: {
+        required: true,
+        minlength: 1	//TODO: change to min length of 8
+      },
+      password_cfm: {
+        equalTo: "#password"
+      }
+    },
+    messages: {
+      username: "Please provide a username",
+      password: {
+        required: "Please provide a password",
+        minlength: "Your password must be at least 8 characters long"
+      },
+    },
+    submitHandler: saveChanges()
+  });
+});
 
 /** Draws the alert confirmation box and sends an ajax request to delete account 
  *  upon confirmation. 
@@ -63,6 +115,7 @@ function deleteAccount() {
 function pauseAccount() {
 	var cfm = confirm ("Are you sure you want to pause your account?"); 
 	if (cfm) { // User Pressed Yes, pause account 
+		//TODO 
 		return;
 	}
 	return;

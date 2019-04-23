@@ -15,7 +15,8 @@
 	<div class="wrapper">
 		<div class="chat_window">	    
 			<div class="top_menu">
-				<div class="nav about"><a href="index.html">About Us</a></div>
+				<div class="nav about"><a href="login.html">Log out</a></div>
+				<div class="nav about"><a href="about.html">About Us</a></div>
 				<div class="title nav">Account Settings</div>
 				<div class="nav account"><a href="profile.html"><i class="now-ui-icons users_single-02"></i></a></div>
 			</div>
@@ -27,24 +28,12 @@
 	                            <h5 class="title">Edit Profile</h5>
 	                        </div>
 	                        <div class="card-body">
-	                            <form>
+	                            <form name="profile">
 	                                <div class="row">
-	                                    <div class="col-md-4 pr-1">
-	                                        <div class="form-group">
-	                                            <label>First Name</label>
-	                                            <input type="text" class="form-control" placeholder="First Name" value="Username" id="firstname">
-	                                        </div>
-	                                    </div>
-	                                    <div class="col-md-4 px-1">
-	                                        <div class="form-group">
-	                                            <label>Last Name</label>
-	                                            <input type="text" class="form-control" placeholder="Last Name" value="1" id="lastname">
-	                                        </div>
-	                                    </div>
-	                                    <div class="col-md-4 pl-1">
+	                                    <div class="col-md-12">
 	                                        <div class="form-group">
 	                                            <label>Username</label>
-	                                            <input type="text" class="form-control" placeholder="Username" id="username" value="username1">
+	                                            <input type="text" class="form-control" placeholder="Username" id="username">
 	                                        </div>
 	                                    </div>
 	                                </div>
@@ -52,7 +41,7 @@
 	                                	<div class="col-md-12">
 	                                		<div class="form-group">
 	                                            <label>Password</label>
-	                                            <input type="password" class="form-control" placeholder="Password" id="password" value="password">
+	                                            <input type="password" class="form-control" placeholder="Password" id="password">
 	                                        </div>
 	                                	</div>
 	                                </div>
@@ -60,7 +49,7 @@
 	                                	<div class="col-md-12">
 	                                		 <div class="form-group">
 	                                            <label>Confirm Password</label>
-	                                            <input type="password" class="form-control" placeholder="Password" value="password">
+	                                            <input id="password_cfm" type="password" class="form-control" placeholder="Confirm Password">
 	                                        </div>
 	                                	</div>
 	                                </div>
