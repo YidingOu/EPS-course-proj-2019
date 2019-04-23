@@ -49,15 +49,15 @@ public class Email {
 	@Column(name="code")
 	private String code;
 	
-	@OneToOne(cascade = {CascadeType.DETACH,
-						CascadeType.MERGE,
-						CascadeType.PERSIST,
-						CascadeType.REFRESH})
-	@JoinColumn(name="userid", 
-				referencedColumnName="id",
-				insertable=false, 
-				updatable=false)
-	private User user;
+//	@OneToOne(cascade = {CascadeType.DETACH,
+//						CascadeType.MERGE,
+//						CascadeType.PERSIST,
+//						CascadeType.REFRESH})
+//	@JoinColumn(name="userid", 
+//				referencedColumnName="id",
+//				insertable=false, 
+//				updatable=false)
+//	private User user;
 	
 	
 

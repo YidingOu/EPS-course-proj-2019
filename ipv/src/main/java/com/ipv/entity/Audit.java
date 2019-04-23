@@ -36,7 +36,7 @@ public class Audit {
 	@Column(name="postid")
 	private int postId;
 
-	@Column(name="date")
+	@Column(name="date_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 	
@@ -48,6 +48,17 @@ public class Audit {
 		this.date = new Date();
 	}
 	
+	
+	
+
+	@Override
+	public String toString() {
+		return "Audit [id=" + id + ", userId=" + userId + ", postId=" + postId + ", date=" + date + ", action=" + action
+				+ "]";
+	}
+
+
+
 
 	public String getAction() {
 		return action;

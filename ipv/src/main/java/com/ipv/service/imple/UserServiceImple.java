@@ -59,7 +59,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	public User validate(String name, String pass) {
 		User user = userRepository.findByName(name);
 		if (checkPass(user, pass)) {
-			Util.processUser(user);
+			Util.processUser(user, userRepository);
 			user.setPost(postRepository.findByUserId(user.getId()));
 			return user;
 		} else {
@@ -80,7 +80,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 		if (user.getRole() < 1 || !checkPass(user, pass)) { // not staff or fail
 			return null;
 		} else {
-			Util.processUser(user);
+			Util.processUser(user, userRepository);
 			user.setPostForStaff(postRepository.findByStaffId(user.getId()));
 			return user;
 		}
@@ -113,6 +113,11 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 			}
 		}
 		return min.getId();
+	}
+
+	@Override
+	public UserRepository getUserRepository() {
+		return this.userRepository;
 	}
 	
 

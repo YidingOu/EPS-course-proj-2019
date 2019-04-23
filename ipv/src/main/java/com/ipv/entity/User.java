@@ -9,7 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -34,8 +33,11 @@ public class User {
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "displayname")
-	private String displayName;
+	@Column(name = "first_name")
+	private String firstName;
+	
+	@Column(name = "last_name")
+	private String lastName;
 
 	// -1 when the user is not active by the email validation
 	@Column(name = "role")
@@ -47,11 +49,11 @@ public class User {
 	@Column(name = "pass")
 	private String pass;
 
-	@OneToOne(mappedBy = "user", 
-			targetEntity=Email.class,
-			cascade = CascadeType.ALL,
-			fetch = FetchType.EAGER)
-	private Email email;
+//	@OneToOne(mappedBy = "user", 
+//			targetEntity=Email.class,
+//			cascade = CascadeType.ALL,
+//			fetch = FetchType.EAGER)
+//	private Email email;
 
 	@Transient
 	private Post post;
@@ -61,7 +63,7 @@ public class User {
 	
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", displayName=" + displayName + ", role=" + role + ", salt="
+		return "User [id=" + id + ", name=" + name + ", firstname=" + firstName + ", role=" + role + ", salt="
 				+ salt + ", pass=" + pass + "]";
 	}
 
@@ -81,13 +83,13 @@ public class User {
 		this.postForStaff = postForStaff;
 	}
 
-	public Email getEmail() {
-		return email;
-	}
-
-	public void setEmail(Email email) {
-		this.email = email;
-	}
+//	public Email getEmail() {
+//		return email;
+//	}
+//
+//	public void setEmail(Email email) {
+//		this.email = email;
+//	}
 
 	public int getId() {
 		return id;
@@ -105,12 +107,21 @@ public class User {
 		this.name = name;
 	}
 
-	public String getDisplayName() {
-		return displayName;
+
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public int getRole() {
