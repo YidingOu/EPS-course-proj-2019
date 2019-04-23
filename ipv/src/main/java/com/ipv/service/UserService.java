@@ -1,6 +1,7 @@
 package com.ipv.service;
 
 import com.ipv.entity.User;
+import com.ipv.reporsitory.UserRepository;
 
 /**
  * 
@@ -22,4 +23,6 @@ public interface UserService extends BaseService<User>{
 	public User saltPassword(User usr);
 	
 	public int loadBalancerForGettingAStaffId();
+	
+	public UserRepository getUserRepository();
 }

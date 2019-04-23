@@ -13,7 +13,7 @@ import com.ipv.entity.User;
  * If the other operations is required, it will be added with JPQL in this interface later
  * 
  */
-public interface UserRepository extends JpaRepository<User, Integer>{
+public interface UserRepository extends JpaRepository<User, Integer>, CustomizedRepository<User>{
 	
 	public User findByName(String name);
 	public List<User> findByRole(int role);

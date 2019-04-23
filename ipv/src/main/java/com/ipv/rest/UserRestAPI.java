@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ipv.entity.User;
 import com.ipv.exception.NotFoundException;
+import com.ipv.reporsitory.UserRepository;
 import com.ipv.service.AuditService;
 import com.ipv.service.UserService;
 import com.ipv.util.Util;
@@ -44,7 +45,8 @@ public class UserRestAPI {
 	@GetMapping
 	public List<User> findAll() {
 		List<User> list = service.findAll();
-		list.stream().forEach(user -> Util.processUser(user));
+		UserRepository userRepository = service.getUserRepository();
+		list.stream().forEach(user -> Util.processUser(user, userRepository));
 		return list;
 	}
 
@@ -56,7 +58,7 @@ public class UserRestAPI {
 		if (user == null) {
 			throw new NotFoundException("User id not found - " + id);
 		}
-		Util.processUser(user);
+		Util.processUser(user, service.getUserRepository());
 		return user;
 	}
 
@@ -67,7 +69,6 @@ public class UserRestAPI {
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
 		user.setId(0);
 		service.save(user);
-		Util.processUser(user);
 		
 		//Add audit
 		auditService.addAudit(user.getId(), null, "User created with id = " + user.getId());
@@ -81,11 +82,11 @@ public class UserRestAPI {
 		User resultUser = service.validate(user.getName(), user.getPass());
 		if (resultUser != null) {
 			//Add audit
-			auditService.addAudit(user.getId(), null, "User logins success with id = " + user.getId());
+			auditService.addAudit(resultUser.getId(), null, "User logins success with id = " + resultUser.getId());
 			return new ValidateResponseWapper(1, resultUser, "Success");
 		} else {
 			//Add audit
-			auditService.addAudit(user.getId(), null, "User logins failed with id = " + user.getId());
+			auditService.addAudit(resultUser.getId(), null, "User logins failed with id = " + resultUser.getId());
 			return new ValidateResponseWapper(0, null, "The althentication failed");
 		}
 		
@@ -98,16 +99,17 @@ public class UserRestAPI {
 	}
 
 	// validate for staffs
+	@SuppressWarnings("null")
 	@PostMapping("staffs/validate")
 	public ValidateResponseWapper validateStaff(@RequestBody User user) {
 		User resultUser = service.validateStaff(user.getName(), user.getPass());
 		if (resultUser != null) {
 			//Add audit
-			auditService.addAudit(user.getId(), null, "Staff logins success with id = " + user.getId());
+			auditService.addAudit(resultUser.getId(), null, "Staff logins success with id = " + resultUser.getId());
 			return new ValidateResponseWapper(resultUser.getRole(), resultUser, "Success");
 		} else {
 			//Add audit
-			auditService.addAudit(user.getId(), null, "Staff logins failed with id = " + user.getId());
+			auditService.addAudit(resultUser.getId(), null, "Staff logins failed with id = " + resultUser.getId());
 			return new ValidateResponseWapper(0, null, "The althentication failed");
 		}
 	}
@@ -121,7 +123,7 @@ public class UserRestAPI {
 		}
 		olduser.setPass(user.getPass());
 		service.save(olduser);
-		Util.processUser(olduser);
+		Util.processUser(olduser, service.getUserRepository());
 		
 		//Add audit
 		auditService.addAudit(user.getId(), null, "User updated password with id = " + user.getId());
