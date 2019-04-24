@@ -1,12 +1,16 @@
-$(document).ready(function () {
+uid = null
+
+$(document).ready(function() {
     init();
-    $("#delete-btn").click(function () {
+    $("#delete-btn").click(function() {
         deleteAccount();
     });
-    $("#save-btn").click(function () {
+    $("#save-btn").click(function() {
         saveChanges();
     });
-
+    uid = getUid()
+    populateFields();
+    //validate();
 });
 
 $.urlParam = function (name) {
@@ -41,13 +45,24 @@ function init() {
 
 }
 
+/** Gets the uid of the current user */
+function getUid() {
+    try {
+        return parseInt(localStorage.getItem('uid'));
+    } catch(error) {
+        alert("Session expired, please login again. ")
+        $(location).attr("href", "login.html");
+    }
+    return;
+}
+
 /** Draws the alert confirmation box and sends an ajax request to delete account
  *  upon confirmation.
  */
 function deleteAccount() {
-    var cfm = confirm("Are you sure you want to delete your account? This action cannot be undone. ");
+    var cfm = confirm ("Are you sure you want to delete your account? This action cannot be undone. ");
     if (cfm) { // User Pressed Yes, delete account
-        var url = "users/" + uid;
+        var url = "/users/" + uid;
         var request_method = "DELETE";
         var main_url = "/frontend/src/main.html";
 
@@ -64,7 +79,7 @@ function deleteAccount() {
             },
             error: function (e) {
                 console.log("fail");
-                console.log(JSON.stringify(e));
+                console.log(e);
                 alert("Deletion of account failed, please try again.")
             }
         });
@@ -74,8 +89,8 @@ function deleteAccount() {
 }
 
 /** Populates the username field with the username of the current user */
-function populateUsername() {
-    var url = "users/" + uid;
+function populateFields() {
+    var url = "/users/" + uid;
     var request_method = "GET";
 
     $.ajax({
@@ -87,10 +102,12 @@ function populateUsername() {
         success: function (data) {
             console.log("success");
             $("#username").val(data.name);
+            $("#first_name").val(data.firstName);
+            $("#last_name").val(data.lastName);
         },
         error: function (e) {
             console.log("fail");
-            console.log(JSON.stringify(e));
+            console.log(e);
             alert("Error, please refresh page.")
         }
     });
@@ -99,7 +116,7 @@ function populateUsername() {
 /** Performs validation of profile update form, ensures that username
  *  and password fields are not empty, and that passwords provided match.
  */
-$(function () {
+function validate() {
     $("form[name='staff-profile']").validate({
         rules: {
             first_name: {
@@ -131,7 +148,7 @@ $(function () {
         },
         submitHandler: saveChanges()
     });
-});
+};
 
 /** Sends an ajax request to save account changes */
 function saveChanges() {
@@ -139,10 +156,11 @@ function saveChanges() {
     var request_method = "PUT";
     var main_url = "/frontend/src/staff/main.html";
     var form_data = {
-        // TODO: first and last name??
-        pass: $("#password").val(),
-        name: $("#username").val(),
-        id: uid
+        firstName:$("#first_name").val(),
+        lastName:$("#last_name").val(),
+        pass:$("#password").val(),
+        name:$("#username").val(),
+        id:uid
     };
     console.log(form_data);
 
@@ -160,9 +178,9 @@ function saveChanges() {
         },
         error: function (e) {
             console.log("fail");
-            console.log(JSON.stringify(e));
+            console.log(e);
             alert("Your profile failed to update, please try again.")
         }
     });
+    return;
 };
-

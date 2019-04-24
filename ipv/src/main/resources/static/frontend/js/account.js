@@ -119,7 +119,7 @@ function submitUserLogin() {
         },
         error: function (e) {
         	console.log("fail");
-        	console.log(JSON.stringify(e));
+        	console.log(e);
         	alert("Login failed, please try again.");
         }
     });
@@ -150,10 +150,10 @@ function submitStaffLogin() {
         success: function (data) {
         	if (data.state == 1) {
         		$(location).attr("href", staff_url);
-                localStorage.uid = data.id;
+                localStorage.uid = data.entity.id;
         	} else if (data.state == 2) {
         		$(location).attr("href", admin_url);
-            localStorage.uid = data.id;
+            localStorage.uid = data.entity.id;
         	} else {
         		alert("Login failed, please try again.");
         	}
@@ -188,8 +188,8 @@ function submitRegistration() {
         timeout: 600,
         success: function (data) {
         	console.log("success");
-          console.log(data);
-          localStorage.uid = data.id;
+            console.log(data);
+            localStorage.uid = data.id;
         	$(location).attr("href", main_url);
         },
         error: function (e) {

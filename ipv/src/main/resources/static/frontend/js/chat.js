@@ -1,11 +1,14 @@
 //adapted from https://bootsnipp.com/snippets/ZlkBn
 
-uid = getUid();
-postId = null;
+var uid = null;
+var postId = null;
 
 $(document).ready(function() {
-    alert("Worried that someone might be looking over your shoulder? " + 
-            "Press the Esc key twice for an automatic redirection to google.com");
+    uid = getUid();
+    if (isFirstVisit()) {
+        alert("Worried that someone might be looking over your shoulder? " +
+                "Press the Esc key twice for an automatic redirection to google.com");
+    }
     $('.send_message').click(function () {
         return sendMessage(getMessageText());
     });
@@ -32,9 +35,22 @@ $(document).ready(function() {
     }
 })
 
+/** If the local variable first is not set, set it to 1 and return true;
+ *  else return false.
+ */
+function isFirstVisit() {
+    var first = localStorage.getItem("first");
+    if (first == null) {
+        localStorage.first = 1
+        return true;
+    }
+    return false;
+}
+
 /** Defines message object with a draw function that assigns it its position 
  *  based on the user who posted the message (ie if sender is user, message appears
- *  on the right, else message appears on the left.) */
+ *  on the right, else message appears on the left.)
+ */
 Message = function (arg) {
     this.text = arg.text, this.sender_id = arg.sender_id;
     this.draw = function (_this) {
@@ -55,7 +71,7 @@ Message = function (arg) {
 /** Returns the uid of the current user (as stored in localstorage) */
 function getUid() {
     try {
-        return localStorage.getItem('uid');
+        return parseInt(localStorage.getItem('uid'));
     } catch(error) {
         alert("Session expired, please login again. ")
         $(location).attr("href", "login.html");
@@ -78,17 +94,32 @@ function getPosts(userId) {
         timeout: 60000,
         success: function (data) {
             console.log("success");
-            //populate messages
+            while (data.status == 10) {
+                //conversation is paused
+                console.log("is paused");
+                //TODO
+                var pwd = prompt("Please input your password if you would like " +
+                "to resume your conversation with the shelter: ");
+                if (resumeConversation(pwd)) getPosts(userId);
+                else alert("Incorrect password, please try again. ")
+            }
             postId = data.id;
             return getMessages(postId);
         },
         error: function (e) {
             console.log("fail");
+            console.log(e);
             alert("Session expired. Please login again. "); //TO CHANGE?
             $(location).attr("href", "login.html");
         }
     });
     return;
+}
+
+/** Resumes the conversation with the shelter by invoking the api */
+function resumeConversation(pwd) {
+    //TODO
+    return false;
 }
 
 /** Gets messages from the same conversation (ie same post id) */
@@ -199,6 +230,32 @@ function redirect() {
 function sendLocation() {
     var location = prompt("Please enter the location you wish to share. " +
         "This information is strictly confidential and will be automatically deleted after a week.");
-    // TODO 
+    var url = "/contacts";
+    var request_method = "POST";
+    var post_data = {
+        address: location,
+        postId: postId
+    };
+
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: url,
+        data: JSON.stringify(post_data),
+        dataType: 'json',
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log("success");
+            return true;
+        },
+        error: function (e) {
+            console.log("fail");
+            console.log(e);
+            alert("Error, please try again.");
+            return false;
+        }
+    });
+    return false;
     return;
 }
