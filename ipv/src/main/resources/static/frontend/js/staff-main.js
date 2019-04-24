@@ -1,6 +1,8 @@
 //adapted from https://bootsnipp.com/snippets/ZlkBn
 
-var uid = null;
+var uid = null;       //user id of current user
+var convos = [[]];    //list of lists of msgs (index aligns with list of users)
+var currChat = -1      //index of current chat being viewed
 
 $(document).ready(function() {
     $('.send_message').click(function () {
@@ -12,15 +14,30 @@ $(document).ready(function() {
         }
     });
     uid = getUid();
-    populateView(["u1", "u2"], [[]]);
+    test();
+    populateView(["u1", "u2"]);
 })
+
+function test() {
+    var convo = {
+                    "data": "hi",
+                    "userId": 1
+                };
+    convos[0].push(convo);
+    convo = {
+                    "data": "bye",
+                    "userId": 9
+                };
+    convos[0].push(convo);
+    console.log(convos);
+}
+
 
 /** Gets all chat messages and users that the staff is chatting with */
 function getChatDetails() {
     var url = "/posts/by_staff/" + uid;
     var request_method = "GET";
     var users = [];
-    var convos = [];
 
     $.ajax({
         type: request_method,
@@ -52,12 +69,11 @@ function getChatDetails() {
  *  Populates the chat box depending on the current username clicked
  *  on the nav bar.
  *  @param users: list of usernames the staff is chatting with
- *  @param convos: list of lists of msgs (index aligns with list of users)
  */
-function populateView(users, convos) {
+function populateView(users) {
     var htmlString = "";
     for (var i=0; i<users.length; i++) {
-        htmlString += '<li id="user' + i + '">' +
+        htmlString += '<li id="user' + i + '" onclick="populateChat(' + i + ')">' +
                         '<a href="#">' +
                             '<i class="now-ui-icons users_single-02"></i>' +
                             '<p>' + users[i] + '</p>' +
@@ -77,23 +93,28 @@ function populateView(users, convos) {
     if (users.length >= 1) {
         $("#chat_user").html(users[0]);
         console.log(convos);
-        populateChat(0, convos);
+        populateChat(0);
     }
 }
 
-/** Populate the chat box with the conversation with the user of @param uid.
+/** Populate the chat box with the conversation with the user of @param userIndex.
  *  If the chat is paused, staff should not be able to view the conversation
  *  but view the text "This chat is currently paused" in the chat box.
  */
-function populateChat(userIndex, convos) {
+function populateChat(userIndex) {
+    if (userIndex == currChat) return;
+    $("#user" + currChat).removeClass("active");
+    currChat = userIndex;
+    $("#user" + userIndex).addClass("active");
     var posts = [];
     console.log(convos);
     for (var j=0; j<convos[userIndex].length; j++) {
         var msg = new Message({
-                text: convos[userIndex].data,
-                sender_id : convos[userIndex].userId
+                text: convos[userIndex][j].data,
+                sender_id : convos[userIndex][j].userId
             });
         posts.push(msg);
+        console.log(msg);
     }
     drawPosts(posts);
 }
@@ -144,9 +165,11 @@ function getPosts() {
     return posts;
 }
 
-/** Draws all posts */
+/** Draws all posts (where posts are of message objects) */
 function drawPosts(posts) {
+    console.log(posts);
     for (var i=0; i<posts.length; i++) {
+        console.log(posts[i].text);
         posts[i].draw();
     }
 }
