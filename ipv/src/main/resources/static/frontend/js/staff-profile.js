@@ -1,4 +1,5 @@
 uid = null
+PWD_LEN = 1 //TODO: change after testing
 
 $(document).ready(function() {
 	$("#delete-btn").click(function() {
@@ -80,6 +81,18 @@ function populateFields() {
     });
 }
 
+/** Checks to ensure valid fields for a profile update:
+ *  (i) username, first name, last name, password fields are not empty
+ *  (ii) password is the same as the confirmed password
+ */
+function validFields() {
+    if ($("#password").val() == null || $("#username").val() == null
+    || $("#first_name") == null || $("#last_name") == null ) return false;
+    if ($("#password").val().length < PWD_LEN) return false;
+    if ($("#password").val() != $("#password_cfm").val()) return false;
+    return true;
+}
+
 /** Performs validation of profile update form, ensures that username 
  *  and password fields are not empty, and that passwords provided match.
  */
@@ -97,7 +110,7 @@ function validate() {
       },
       password: {
         required: true,
-        minlength: 1		//TODO: change to min length of 8
+        minlength: PWD_LEN
       },
       password_cfm: {
         equalTo: "#password"

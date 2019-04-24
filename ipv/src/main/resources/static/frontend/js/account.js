@@ -3,6 +3,9 @@
 /** Performs validation of login form, ensures that username 
  *  and password fields are not empty. 
  */
+
+PWD_LEN = 1;    //TODO: increase after testing
+
 $(function() {
    /*Quick solution Should be optimized later*/
    $("form[name='user_login']").validate({
@@ -61,7 +64,7 @@ $(function() {
       },
       password: {
         required: true,
-        minlength: 1      //TODO: change to min length of 8
+        minlength: PWD_LEN
       },
       password_cfm: {
         equalTo: "#password"
@@ -79,19 +82,21 @@ $(function() {
   });
 });
 
-/**
- * Retrieves input data from a form and returns it as a JSON object.
- * @param  {HTMLFormControlsCollection} elements  the form elements
- * @return {Object}  form data as an object literal
+/** Checks to ensure valid fields for a form of @param type
+ *  (either "login" or "registration"
  */
-const formToJSON = elements => [].reduce.call(elements, (data, element) => {
-  data[element.name] = element.value;
-  return data;
-}, {});
-
+function validFields(type) {
+    if ($("#password").val() == null || $("#username").val() == null) return false;
+    if (type == "registration") {
+        if ($("#password").val().length < PWD_LEN) return false;
+        if ($("#password").val() != $("#password_cfm").val()) return false;
+    }
+    return true;
+}
 
 /** Submits information in login form to server */ 
 function submitUserLogin() {
+  if (!validFields("login")) return;
   $("#user_login_form").submit(function(event){
     event.preventDefault(); //prevent default action 
     var post_url = $(this).attr("action"); //get form action url
@@ -128,9 +133,9 @@ function submitUserLogin() {
 
 /** Submits information in login form to server */ 
 function submitStaffLogin() {
+  if (!validFields("login")) return;
   $("#staff_login_form").submit(function(event){
-    event.preventDefault(); //prevent default action 
-//    var post_url = $(this).attr("action"); //get form action url
+    event.preventDefault(); //prevent default action
     var post_url = "/users/staffs/validate"; //get form action url
     var request_method = $(this).attr("method"); 
     var staff_url = "/frontend/src/staff/main.html";
@@ -153,7 +158,7 @@ function submitStaffLogin() {
                 localStorage.uid = data.entity.id;
         	} else if (data.state == 2) {
         		$(location).attr("href", admin_url);
-            localStorage.uid = data.entity.id;
+                localStorage.uid = data.entity.id;
         	} else {
         		alert("Login failed, please try again.");
         	}
@@ -167,15 +172,16 @@ function submitStaffLogin() {
   });
 }
 
-/** Submits information in registraion form to server */ 
+/** Submits information in registration form to server */
 function submitRegistration() {
+  if (validFields("registration")) return;
   $("#reg_form").submit(function(event){
-    event.preventDefault(); //prevent default action 
+    event.preventDefault(); //prevent default action
     var post_url = $(this).attr("action"); //get form action url
-    var request_method = $(this).attr("method"); 
+    var request_method = $(this).attr("method");
     var main_url = "/frontend/src/main.html";
     var form_data = {
-    		name:$("#username").val(),  
+    		name:$("#username").val(),
     		pass:$("#password").val()
     };
     $.ajax({
@@ -193,7 +199,7 @@ function submitRegistration() {
         	$(location).attr("href", main_url);
         },
         error: function (e) {
-          console.log(e);
+            console.log(e);
         	alert("The username is taken, please try a different username.");
         }
     });

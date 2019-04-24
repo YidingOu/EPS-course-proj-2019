@@ -1,5 +1,5 @@
 
-var = uid = null;
+var uid = null;
 
 $(document).ready(function() {
 	$("#delete-btn").click(function() {
@@ -29,6 +29,7 @@ function getUid() {
 
 /** Populates the username field with the username of the current user */
 function populateUsername() {
+    console.log(uid);
 	var url = "/users/" + uid;
     var request_method = "GET";
 
