@@ -2,20 +2,51 @@ uid = null
 PWD_LEN = 1 //TODO: change after testing
 
 $(document).ready(function() {
-	$("#delete-btn").click(function() {
-		deleteAccount();
-	});
-	$("#save-btn").click(function() {
-		saveChanges();
-	});
-	uid = getUid()
-	populateFields();
-	//validate();
+    init();
+    $("#delete-btn").click(function() {
+        deleteAccount();
+    });
+    $("#save-btn").click(function() {
+        saveChanges();
+    });
+    uid = getUid()
+    //validate();
 });
+
+$.urlParam = function (name) {
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)')
+        .exec(window.location.search);
+
+    return (results !== null) ? results[1] || 0 : false;
+}
+
+/** Populates the first name, last name, username fields of the current user */
+function init() {
+    var id = $.urlParam('id');
+    $.ajax({
+        type: "GET",
+        contentType: "application/json",
+        url: "/users/" + id,
+        dataType: 'json',
+        cache: false,
+        timeout: 600,
+        success: function (data) {
+            console.log(data);
+            $("#username").val(data.name);
+            $("#first-name").val(data.firstName);
+            $("#last-name").val(data.lastName);
+        },
+        error: function (e) {
+            console.log(e);
+            alert("Error, please refresh page.");
+        }
+    });
+
+}
 
 /** Gets the uid of the current user */
 function getUid() {
-	try {
+    try {
         return parseInt(localStorage.getItem('uid'));
     } catch(error) {
         alert("Session expired, please login again. ")
@@ -24,61 +55,36 @@ function getUid() {
     return;
 }
 
-/** Draws the alert confirmation box and sends an ajax request to delete account 
- *  upon confirmation. 
+/** Draws the alert confirmation box and sends an ajax request to delete account
+ *  upon confirmation.
  */
 function deleteAccount() {
-	var cfm = confirm ("Are you sure you want to delete your account? This action cannot be undone. "); 
-	if (cfm) { // User Pressed Yes, delete account 
-	    var url = "/users/" + uid;
-	    var request_method = "DELETE";
-	    var main_url = "/frontend/src/main.html";
-	    
-	    $.ajax({
-	        type: request_method,
-	        contentType: "application/json",
-	        url: url,
-	        cache: false,
-	        timeout: 60000,
-	        success: function (data) {
-	        	console.log("success");
-	        	$(location).attr("href", main_url);
+    var cfm = confirm ("Are you sure you want to delete your account? This action cannot be undone. ");
+    if (cfm) { // User Pressed Yes, delete account
+        var url = "/users/" + uid;
+        var request_method = "DELETE";
+        var main_url = "/frontend/src/main.html";
 
-	        },
-	        error: function (e) {
-	        	console.log("fail");
-	        	console.log(e);
-	        	alert("Deletion of account failed, please try again.")
-	        }
-	    });
-		return;
-	}
-	return;
-}
+        $.ajax({
+            type: request_method,
+            contentType: "application/json",
+            url: url,
+            cache: false,
+            timeout: 60000,
+            success: function (data) {
+                console.log("success");
+                $(location).attr("href", main_url);
 
-/** Populates the username field with the username of the current user */
-function populateFields() {
-	var url = "/users/" + uid;
-    var request_method = "GET";
-
-	$.ajax({
-        type: request_method,
-        contentType: "application/json",
-        url: url,
-        cache: false,
-        timeout: 60000,
-        success: function (data) {
-        	console.log("success");
-        	$("#username").val(data.name);
-        	$("#first_name").val(data.firstName);
-        	$("#last_name").val(data.lastName);
-        },
-        error: function (e) {
-        	console.log("fail");
-        	console.log(e);
-        	alert("Error, please refresh page.")
-        }
-    });
+            },
+            error: function (e) {
+                console.log("fail");
+                console.log(e);
+                alert("Deletion of account failed, please try again.")
+            }
+        });
+        return;
+    }
+    return;
 }
 
 /** Checks to ensure valid fields for a profile update:
@@ -132,18 +138,18 @@ function validate() {
 
 /** Sends an ajax request to save account changes */
 function saveChanges() {
-	var post_url = "/users/update_pass"
-    var request_method = "PUT"; 
+    var post_url = "/users/update_pass"
+    var request_method = "PUT";
     var main_url = "/frontend/src/staff/main.html";
     var form_data = {
-    	firstName:$("#first_name").val(),
+        firstName:$("#first_name").val(),
         lastName:$("#last_name").val(),
-		pass:$("#password").val(),
-		name:$("#username").val(),
-		id:uid
+        pass:$("#password").val(),
+        name:$("#username").val(),
+        id:uid
     };
     console.log(form_data);
-    
+
     $.ajax({
         type: request_method,
         contentType: "application/json",
@@ -153,15 +159,14 @@ function saveChanges() {
         cache: false,
         timeout: 60000,
         success: function (data) {
-        	console.log("success");
-        	$(location).attr("href", main_url);
+            console.log("success");
+            $(location).attr("href", main_url);
         },
         error: function (e) {
-        	console.log("fail");
-        	console.log(e);
-        	alert("Your profile failed to update, please try again.")
+            console.log("fail");
+            console.log(e);
+            alert("Your profile failed to update, please try again.")
         }
     });
-	return;
+    return;
 };
-
