@@ -1,5 +1,5 @@
 
-uid = null;
+var = uid = null;
 
 $(document).ready(function() {
 	$("#delete-btn").click(function() {
@@ -12,6 +12,7 @@ $(document).ready(function() {
 		saveChanges();
 	});
 	uid = getUid();
+	//validate();
 	populateUsername()
 });
 
@@ -152,6 +153,7 @@ function saveChanges() {
 		name:$("#username").val(),
 		id:uid
     };
+    console.log($("#password").val());
     console.log(form_data);
     
     $.ajax({
