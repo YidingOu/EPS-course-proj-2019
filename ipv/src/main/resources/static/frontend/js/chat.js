@@ -116,6 +116,7 @@ function getMessages(postId) {
         },
         error: function (e) {
             console.log("fail");
+            console.log(e)
             alert("Session expired. Please login again. "); 
             $(location).attr("href", "login.html");
         }
@@ -159,12 +160,12 @@ function sendMessage(text) {
 
 /** Creates a new post using @param message and sends it to the server */
 function addPost(message) {
-    var url = "/conversations/" + postId;
+    var url = "/conversations";
     var request_method = "POST"; 
     var post_data = {
         data: message.text,
         postId: postId,
-        id:uid
+        userId:uid
     };
     
     $.ajax({
@@ -181,6 +182,7 @@ function addPost(message) {
         },
         error: function (e) {
             console.log("fail");
+            console.log(e);
             alert("Error, please try again."); 
             return false;
         }

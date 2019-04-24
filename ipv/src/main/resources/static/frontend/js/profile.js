@@ -144,7 +144,6 @@ function saveChanges() {
         success: function (data) {
         	console.log("success");
         	$(location).attr("href", main_url);
-
         },
         error: function (e) {
         	console.log("fail");

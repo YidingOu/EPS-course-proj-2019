@@ -102,7 +102,6 @@ function submitUserLogin() {
     		pass:$("#password").val()
     };
     
-    
     $.ajax({
         type: request_method,
         contentType: "application/json",
@@ -112,8 +111,9 @@ function submitUserLogin() {
         cache: false,
         timeout: 60000,
         success: function (data) {
-        	console.log("success");
-          localStorage.uid = data.id;
+            console.log("success");
+            localStorage.uid = data.entity.id;
+            //console.log(JSON.stringify(data));
         	$(location).attr("href", main_url);
 
         },
@@ -150,8 +150,10 @@ function submitStaffLogin() {
         success: function (data) {
         	if (data.state == 1) {
         		$(location).attr("href", staff_url);
+                localStorage.uid = data.id;
         	} else if (data.state == 2) {
         		$(location).attr("href", admin_url);
+            localStorage.uid = data.id;
         	} else {
         		alert("Login failed, please try again.");
         	}
@@ -186,13 +188,13 @@ function submitRegistration() {
         timeout: 600,
         success: function (data) {
         	console.log("success");
+          console.log(data);
+          localStorage.uid = data.id;
         	$(location).attr("href", main_url);
-
         },
         error: function (e) {
           console.log(e);
-        	alert("Tht username is taken, please try a different username. ");
-
+        	alert("The username is taken, please try a different username.");
         }
     });
   });
