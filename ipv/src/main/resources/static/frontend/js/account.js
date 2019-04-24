@@ -119,7 +119,7 @@ function submitUserLogin() {
         },
         error: function (e) {
         	console.log("fail");
-        	console.log(JSON.stringify(e));
+        	console.log(e);
         	alert("Login failed, please try again.");
         }
     });
