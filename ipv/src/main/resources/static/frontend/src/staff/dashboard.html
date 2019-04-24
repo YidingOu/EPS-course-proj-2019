@@ -52,7 +52,7 @@
        				<div class="col-md-4">
        					<div class="card" style="background: #6ccac9">
        						<div class="card-header card-info">
-	                            <h5 class="card-number">3</h5> 
+	                            <h5 class="card-number" id='ongoing-cases'>3</h5>
 	                            <i class="now-ui-icons media-1_button-play symbol"></i>
 	                            <h5 class="title">Ongoing Cases</h5>
 	                        </div>
@@ -61,7 +61,7 @@
        				<div class="col-md-4">
        					<div class="card" style="background: #fd7a6e">
        						<div class="card-header card-info">
-	                            <h5 class="card-number">2</h5>
+	                            <h5 class="card-number" id='paused-cases'>2</h5>
 	                            <i class="now-ui-icons media-1_button-pause symbol"></i>
 	                            <h5 class="title">Paused Cases</h5>
 	                        </div>
@@ -70,7 +70,7 @@
        				<div class="col-md-4">
        					<div class="card" style="background: #febe58">
        						<div class="card-header card-info">
-	                            <h5 class="card-number">4</h5>
+	                            <h5 class="card-number" id='closed-cases'>4</h5>
 	                            <i class="now-ui-icons media-1_button-power symbol"></i>
 	                            <h5 class="title">Closed Cases</h5>
 	                        </div>
@@ -88,39 +88,13 @@
 		                                    <thead class="text-primary">
 			                                    <th> Username </th>
 			                                    <th> Start Date </th>
-			                                    <th> Last Update </th>
 			                                    <th> Status </th>
 			                                </thead>
-			                                <tbody>
+			                                <tbody id = 'dashboard-table'>
 			                                	<tr>
 			                                        <td> Username1 </td>
 			                                        <td> 20 March 2019 </td>
-			                                        <td> 30 March 2019 </td>
 			                                        <td> Open </td>
-			                                    </tr>
-			                                    <tr>
-			                                        <td> Username2 </td>
-			                                        <td> 1 August 2008 </td>
-			                                        <td> 3 April 2019 </td>
-			                                        <td> Paused </td>
-			                                    </tr>
-			                                    <tr>
-			                                        <td> Username3 </td>
-			                                        <td> 1 April 2012 </td>
-			                                        <td> 24 May 2013 </td>
-			                                        <td> Open </td>
-			                                    </tr>
-			                                    <tr>
-			                                        <td> Username4 </td>
-			                                        <td> 4 June 2017 </td>
-			                                        <td> 8 May 2018 </td>
-			                                        <td> Open </td>
-			                                    </tr>
-			                                    <tr>
-			                                        <td> Username5 </td>
-			                                        <td> 6 July 2006 </td>
-			                                        <td> 18 December 2015 </td>
-			                                        <td> Paused </td>
 			                                    </tr>
 			                                </tbody>
 			                            </table>

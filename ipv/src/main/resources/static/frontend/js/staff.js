@@ -20,14 +20,14 @@ function getStaff() {
             console.log(data);
 
             var role_map = {
-                0 : 'User',
-                1 : 'Staff',
-                2 : 'Admin'
+                0: 'User',
+                1: 'Staff',
+                2: 'Admin'
             };
 
             var content_html = '';
             for (var i = 0; i < data.length; i++) {
-                content_html += '<td> <a href=\'staff1.html?id='+ data[i].id +' \'> '+ data[i].name +' </a></td>' + '\n';
+                content_html += '<td> <a href=\'staff1.html?id=' + data[i].id + ' \'> ' + data[i].name + ' </a></td>' + '\n';
                 content_html += '<td> ' + role_map[data[i].role] + ' </td>' + '\n';
                 content_html += '</tr>' + '\n';
             }
@@ -37,7 +37,7 @@ function getStaff() {
         },
         error: function (e) {
             console.log(e);
-            alert("The username is taken, please try a different username.");
+            alert("Alert.");
         }
     });
 
