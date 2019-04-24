@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
 
 import com.ipv.entity.Post;
@@ -15,6 +14,8 @@ import com.ipv.reporsitory.UserRepository;
 import com.ipv.service.PostService;
 import com.ipv.service.UserService;
 import com.ipv.util.Util;
+import java.security.*;
+
 
 /**
  * 
@@ -71,7 +72,14 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	private boolean checkPass(User user, String pass) {
 		
 		String dbPass = user.getPass();
-		return dbPass.equals(pass);
+
+		String salt = user.getSalt();
+
+		byte[] byteSalt = salt.getBytes();
+
+		String hashedPass = saltPassword(pass, byteSalt);
+
+		return dbPass.equals(hashedPass);
 	}
 
 	@Override
@@ -88,18 +96,45 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	}
 	
 	public User save(User user) {
-		String salt = KeyGenerators.string().generateKey();
-		user.setSalt(salt);
+		byte[] salt = createSalt();
+		String saltstr = new String(salt);
+		user.setSalt(saltstr);
 		user = repository.save(user);
+		String pwd = user.getPass();
+		String newPwd = saltPassword(pwd, salt);
+		user.setPass(newPwd);
 		Post post = postService.initPost(user.getId());
 		user.setPost(post);
 		return user;
 	}
 
-	@Override
-	public User saltPassword(User usr) {
+	private String saltPassword(String pwd, byte[] salt)  {
+		String result = null;
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			md.update(salt);
+			byte[] bytes = md.digest(pwd.getBytes());
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < bytes.length; i++) {
+				sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+			}
+			result = sb.toString();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
-		return userRepository.save(usr);
+	private byte[] createSalt() {
+		byte[] salt = null;
+		try {
+			SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+			salt = new byte[16];
+			sr.nextBytes(salt);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return salt;
 	}
 
 	@Override

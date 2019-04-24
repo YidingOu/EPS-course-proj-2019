@@ -19,10 +19,9 @@ public interface UserService extends BaseService<User>{
 	public User validate(String string, String pass);
 
 	public User validateStaff(String name, String pass);
-
-	public User saltPassword(User usr);
 	
 	public int loadBalancerForGettingAStaffId();
 	
 	public UserRepository getUserRepository();
+
 }
