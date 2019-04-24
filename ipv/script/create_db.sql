@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `pivdb`.`user` (
   `first_name` VARCHAR(45) NULL DEFAULT NULL,
   `last_name` VARCHAR(45) NULL,
   `role` INT(11) NOT NULL,
-  `pass` VARCHAR(45) NOT NULL,
+  `pass` VARCHAR(256) NOT NULL,
   `salt` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `Name_UNIQUE` (`name` ASC) VISIBLE)

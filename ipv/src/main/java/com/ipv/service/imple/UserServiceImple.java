@@ -15,6 +15,7 @@ import com.ipv.service.PostService;
 import com.ipv.service.UserService;
 import com.ipv.util.Util;
 import java.security.*;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 
 
 /**
@@ -79,6 +80,8 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 
 		String hashedPass = saltPassword(pass, byteSalt);
 
+		System.out.println("hashed pwd:" + hashedPass + " pass: " + dbPass);
+
 		return dbPass.equals(hashedPass);
 	}
 
@@ -96,13 +99,14 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	}
 	
 	public User save(User user) {
-		byte[] salt = createSalt();
-		String saltstr = new String(salt);
-		user.setSalt(saltstr);
-		user = repository.save(user);
+		String salt = KeyGenerators.string().generateKey();
+		user.setSalt(salt);
 		String pwd = user.getPass();
-		String newPwd = saltPassword(pwd, salt);
+		byte[] salts = salt.getBytes();
+		String newPwd = saltPassword(pwd, salts);
+		System.out.println(newPwd);
 		user.setPass(newPwd);
+		user = repository.save(user);
 		Post post = postService.initPost(user.getId());
 		user.setPost(post);
 		return user;
