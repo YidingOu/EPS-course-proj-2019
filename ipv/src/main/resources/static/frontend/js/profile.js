@@ -13,7 +13,7 @@ $(document).ready(function() {
 	});
 	uid = getUid();
 	//validate();
-	populateUsername()
+	populateUsername();
 });
 
 /** Gets the uid of the current user */
@@ -46,7 +46,7 @@ function populateUsername() {
         error: function (e) {
         	console.log("fail");
         	console.log(e);
-        	alert("Error, please refresh page.")
+        	alert("Error, please refresh the page.")
         }
     });
 }

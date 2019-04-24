@@ -1,6 +1,6 @@
 //adapted from https://bootsnipp.com/snippets/ZlkBn
 
-uid = getUid();
+var uid = null;
 
 $(document).ready(function() {
     $('.send_message').click(function () {
@@ -11,9 +11,92 @@ $(document).ready(function() {
             return sendMessage(getMessageText());
         }
     });
-    var posts = getPosts();
-    drawPosts(posts);
+    uid = getUid();
+    populateView(["u1", "u2"], [[]]);
 })
+
+/** Gets all chat messages and users that the staff is chatting with */
+function getChatDetails() {
+    var url = "/posts/by_staff/" + uid;
+    var request_method = "GET";
+    var users = [];
+    var convos = [];
+
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: url,
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log("success");
+            for (var i=0; i<data.length; i++) {
+                var chat = data[i];
+                var user = chat.user.name;
+                var msgs = chat.conversations;
+                users.append(user);
+                convos.append(msgs);
+            }
+            populateView(users, convos);
+        },
+        error: function (e) {
+            console.log("fail");
+            console.log(e);
+            alert("Error, please refresh the page.")
+        }
+    });
+}
+
+/** Populate the side navigation with users staff is chatting with.
+ *  A dot icon is used to indicate unread messages
+ *  Populates the chat box depending on the current username clicked
+ *  on the nav bar.
+ *  @param users: list of usernames the staff is chatting with
+ *  @param convos: list of lists of msgs (index aligns with list of users)
+ */
+function populateView(users, convos) {
+    var htmlString = "";
+    for (var i=0; i<users.length; i++) {
+        htmlString += '<li id="user' + i + '">' +
+                        '<a href="#">' +
+                            '<i class="now-ui-icons users_single-02"></i>' +
+                            '<p>' + users[i] + '</p>' +
+                        '</a>' +
+                      '</li>';
+    }
+    htmlString += '<li>' +
+                    '<a href="./staff-settings.html">' +
+                   	    '<i class="now-ui-icons ui-1_settings-gear-63"></i>' +
+                   	     '<p>Account Settings</p>' +
+                   	'</a>' +
+                  '</li>';
+
+    $("#nav-bar").html(htmlString);
+    $("#user0").addClass("active");
+     //populate chat box, by default show the first conversation
+    if (users.length >= 1) {
+        $("#chat_user").html(users[0]);
+        console.log(convos);
+        populateChat(0, convos);
+    }
+}
+
+/** Populate the chat box with the conversation with the user of @param uid.
+ *  If the chat is paused, staff should not be able to view the conversation
+ *  but view the text "This chat is currently paused" in the chat box.
+ */
+function populateChat(userIndex, convos) {
+    var posts = [];
+    console.log(convos);
+    for (var j=0; j<convos[userIndex].length; j++) {
+        var msg = new Message({
+                text: convos[userIndex].data,
+                sender_id : convos[userIndex].userId
+            });
+        posts.push(msg);
+    }
+    drawPosts(posts);
+}
 
 /** Defines message object */
 Message = function (arg) {
@@ -33,9 +116,15 @@ Message = function (arg) {
     return this;
 };
 
-/** Returns the uid of the current user (as stored in cookie) */
+/** Returns the uid of the current user (as stored in localstorage) */
 function getUid() {
-    return 1; 
+    try {
+          return parseInt(localStorage.getItem('uid'));
+        } catch(error) {
+            alert("Session expired, please login again. ")
+            $(location).attr("href", "login.html");
+        }
+        return;
 }
 
 /** Gets the chat history of the user with staff

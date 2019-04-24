@@ -154,7 +154,7 @@ function getMessages(postId) {
     });
 }
 
-/** Draws all posts */
+/** Draws all posts, where posts are msg objects */
 function drawPosts(posts) {
     for (var i=0; i<posts.length; i++) {
         posts[i].draw();
