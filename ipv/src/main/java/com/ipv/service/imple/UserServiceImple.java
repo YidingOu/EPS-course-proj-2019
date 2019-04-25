@@ -171,6 +171,20 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 		list.addAll(userRepository.findByRole(2));
 		return list;
 	}
+
+
+	@Override
+	public User changePass(User user, String updatePass) {
+		String salt = KeyGenerators.string().generateKey();
+		user.setSalt(salt);
+		byte[] salts = salt.getBytes();
+		String newPwd = saltPassword(updatePass, salts);
+//		System.out.println(newPwd);
+		user.setPass(newPwd);
+		user = repository.save(user);
+		Util.processUser(user, userRepository);
+		return user;
+	}
 	
 
 }

@@ -127,8 +127,8 @@ public class UserRestAPI {
 		if (olduser == null) {
 			throw new NotFoundException("User id not found - " + user.getId());
 		}
-		olduser.setPass(user.getPass());
-		service.save(olduser);
+		
+		olduser = service.changePass(olduser, user.getPass());
 		Util.processUser(olduser, service.getUserRepository());
 		
 		//Add audit
