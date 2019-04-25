@@ -12,6 +12,9 @@ $(document).ready(function() {
 	$("#save-btn").click(function() {
 		saveChanges();
 	});
+	$("#logout").click(function() {
+        logout();
+    });
 	uid = getUid();
 	//validate();
 	populateUsername();
@@ -99,7 +102,7 @@ function deleteAccount() {
 	if (cfm) { // User Pressed Yes, delete account 
 	    var url = "/users/" + uid;
 	    var request_method = "DELETE";
-	    var main_url = "/frontend/src/main.html";
+	    var main_url = "/frontend/src/login.html";
 	    
 	    $.ajax({
 	        type: request_method,
@@ -192,4 +195,10 @@ function saveChanges() {
         }
     });
 	return;
+}
+
+/** Logout by deleting uid in localstorage and authentication token */
+function logout() {
+    //TODO
+    console.log("logout");
 }

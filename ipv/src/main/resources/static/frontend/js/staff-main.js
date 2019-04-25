@@ -14,6 +14,9 @@ $(document).ready(function() {
             return sendMessage(getMessageText());
         }
     });
+    $("#logout").click(function() {
+        logout();
+    });
     uid = getUid();
     test(0);
     test(1);
@@ -251,4 +254,9 @@ function sentMessageToServer(msg) {
         }
     });
     return false;
+}
+
+/** Logout by deleting uid in localstorage and authentication token */
+function logout() {
+    //TODO
 }

@@ -10,6 +10,9 @@ $(document).ready(function() {
     $("#save-btn").click(function() {
         saveChanges();
     });
+    $("#logout").click(function() {
+        logout();
+    });
     uid = getUid();
     init();
     if (getUsernames()) {
@@ -237,3 +240,8 @@ function saveChanges() {
     });
     return;
 };
+
+/** Logout by deleting uid in localstorage and authentication token */
+function logout() {
+    //TODO
+}

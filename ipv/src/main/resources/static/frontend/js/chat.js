@@ -29,6 +29,9 @@ $(document).ready(function() {
     $('.send_location').click(function() {
         sendLocation();
     })
+    $("#logout").click(function() {
+        logout();
+    });
     var posts = getPosts(uid);
     if (posts) {
         drawPosts(posts);
@@ -258,4 +261,9 @@ function sendLocation() {
     });
     return false;
     return;
+}
+
+/** Logout by deleting uid in localstorage and authentication token */
+function logout() {
+    //TODO
 }
