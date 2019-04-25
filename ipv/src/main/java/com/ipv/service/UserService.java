@@ -1,5 +1,7 @@
 package com.ipv.service;
 
+import java.util.List;
+
 import com.ipv.entity.User;
 import com.ipv.reporsitory.UserRepository;
 
@@ -23,5 +25,9 @@ public interface UserService extends BaseService<User>{
 	public int loadBalancerForGettingAStaffId();
 	
 	public UserRepository getUserRepository();
+	
+	public List<User> getNormalUsers();
+	
+	public List<User> getStaffs();
 
 }
