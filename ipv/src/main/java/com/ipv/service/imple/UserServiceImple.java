@@ -104,11 +104,12 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 		String pwd = user.getPass();
 		byte[] salts = salt.getBytes();
 		String newPwd = saltPassword(pwd, salts);
-		System.out.println(newPwd);
+//		System.out.println(newPwd);
 		user.setPass(newPwd);
 		user = repository.save(user);
 		Post post = postService.initPost(user.getId());
 		user.setPost(post);
+		Util.processUser(user, userRepository);
 		return user;
 	}
 
