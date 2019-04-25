@@ -16,6 +16,7 @@ import com.ipv.entity.Post;
 import com.ipv.exception.NotFoundException;
 import com.ipv.service.AuditService;
 import com.ipv.service.PostService;
+import com.ipv.util.wrapper.PostCount;
 
 /**
  * 
@@ -150,6 +151,12 @@ public class PostRestAPI {
 		//Add audit
 		auditService.addAudit(null, id, "Post closed with id = " + id );
 		return service.close(id);
+	}
+	
+	//get the posts by staff id
+	@GetMapping("/count_info")
+	public PostCount getCountInfo() {
+		return service.getCounts();
 	}
 
 }

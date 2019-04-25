@@ -3,6 +3,7 @@ package com.ipv.service;
 import java.util.List;
 
 import com.ipv.entity.Post;
+import com.ipv.util.wrapper.PostCount;
 
 /**
  * 
@@ -21,4 +22,5 @@ public interface PostService extends BaseService<Post>{
 	public Post pause(int id);
 	public Post resume(int id);
 	public Post close(int id);
+	public PostCount getCounts();
 }

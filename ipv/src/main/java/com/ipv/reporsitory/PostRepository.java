@@ -18,5 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Integer>{
 	public Post findByUserId(int id);
 	
 	public List<Post> findByStaffId(int id);
+	
+	public int countByStatus(int status);
 
 }

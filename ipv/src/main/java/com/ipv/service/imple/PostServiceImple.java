@@ -17,6 +17,7 @@ import com.ipv.service.PostService;
 import com.ipv.service.UserService;
 import com.ipv.util.Constant;
 import com.ipv.util.Util;
+import com.ipv.util.wrapper.PostCount;
 
 /**
  * 
@@ -59,7 +60,7 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 		post.setId(0);
 		post.setUserId(userId);
 		post.setStaffId(userService.loadBalancerForGettingAStaffId());
-		post.setStatus(Constant.POST_STATUS_NEW);
+		post.setStatus(Constant.POST_STATUS_ON_GOING);
 		post.setUpdated(Constant.POST_UPDATE_NO);
 		return postRepository.save(post);
 	}
@@ -131,5 +132,14 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 			post.setStaff(staff);
 		}
 		return posts;
+	}
+
+	@Override
+	public PostCount getCounts() {
+		PostCount count = new PostCount();
+		count.setOnGoingPost(postRepository.countByStatus(Constant.POST_STATUS_ON_GOING));
+		count.setClosedPost(postRepository.countByStatus(Constant.POST_STATUS_CLOSED));
+		count.setPausedPost(postRepository.countByStatus(Constant.POST_STATUS_PAUSED));
+		return count;
 	}
 }
