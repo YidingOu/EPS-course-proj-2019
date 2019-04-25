@@ -80,7 +80,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 
 		String hashedPass = saltPassword(pass, byteSalt);
 
-		System.out.println("hashed pwd:" + hashedPass + " pass: " + dbPass);
+//		System.out.println("hashed pwd:" + hashedPass + " pass: " + dbPass);
 
 		return dbPass.equals(hashedPass);
 	}
@@ -104,7 +104,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 		String pwd = user.getPass();
 		byte[] salts = salt.getBytes();
 		String newPwd = saltPassword(pwd, salts);
-//		System.out.println(newPwd);
+		System.out.println("pwd: " + newPwd + " salt: " + salt );
 		user.setPass(newPwd);
 		user = repository.save(user);
 		Post post = postService.initPost(user.getId());
