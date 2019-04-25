@@ -95,7 +95,13 @@ public class UserRestAPI {
 	//get all staffs
 	@GetMapping("/staffs")
 	public List<User> findAllStaffs() {
-		return Arrays.asList();
+		return service.getStaffs();
+	}
+	
+	//get all staffs
+	@GetMapping("/customers")
+	public List<User> findAllNormalUsers() {
+		return service.getNormalUsers();
 	}
 
 	// validate for staffs

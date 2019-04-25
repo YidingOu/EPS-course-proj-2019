@@ -158,6 +158,18 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	public UserRepository getUserRepository() {
 		return this.userRepository;
 	}
+
+	@Override
+	public List<User> getNormalUsers() {
+		return userRepository.findByRole(0);
+	}
+
+	@Override
+	public List<User> getStaffs() {
+		List<User> list = userRepository.findByRole(1);
+		list.addAll(userRepository.findByRole(2));
+		return list;
+	}
 	
 
 }
