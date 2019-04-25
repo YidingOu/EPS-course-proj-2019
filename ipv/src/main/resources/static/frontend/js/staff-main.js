@@ -18,10 +18,11 @@ $(document).ready(function() {
         logout();
     });
     uid = getUid();
-    test(0);
-    test(1);
-    users = {0: "u1", 1: "u2"};
-    populateView();
+    //test(0);
+    //test(1);
+    //users = {0: "u1", 1: "u2"};
+    //populateView();
+    getChatDetails();
 })
 
 /** Gets the current post id that is being viewed (is appended after "#"
@@ -47,7 +48,6 @@ function test(id) {
     convos[id] = arr;
 }
 
-
 /** Gets all chat messages and users that the staff is chatting with */
 function getChatDetails() {
     var url = "/posts/by_staff/" + uid;
@@ -61,6 +61,8 @@ function getChatDetails() {
         timeout: 60000,
         success: function (data) {
             console.log("success");
+            console.log(url);
+            console.log(data);
             for (var i=0; i<data.length; i++) {
                 var chat = data[i];
                 var msgs = chat.conversations;
@@ -72,12 +74,12 @@ function getChatDetails() {
                     });
                     posts.push(msg);
                 }
-                if (chat.user.name != null) {
+                if (chat.user != null) {
                     users[chat.id] = chat.user.name;
                     convos[chat.id] = posts;
                 }
             }
-            populateView();
+            populateView(users);
         },
         error: function (e) {
             console.log("fail");
@@ -87,12 +89,13 @@ function getChatDetails() {
     });
 }
 
-/** Populate the side navigation with users staff is chatting with.
+/** Populate the side navigation with @param users staff is chatting with.
  *  A dot icon is used to indicate unread messages
  *  Populates the chat box depending on the current username clicked
  *  on the nav bar.
+ *  @param users: dictionary of postId to usernames staff is chatting with
  */
-function populateView() {
+function populateView(users) {
     var htmlString = "";
     for (var postId in users) {
         htmlString += '<li id="user' + postId + '" onclick="populateChat(' + postId + ')">' +
@@ -136,9 +139,10 @@ function showNoChatsMsg() {
     "You do not have any ongoing chats. </div>");
 }
 
-/** Populate the chat box with the conversation with the user of @param chatUid.
+/** Populate the chat box with the conversation with the user of @param postId.
  *  If the chat is paused, staff should not be able to view the conversation
  *  but view the text "This chat is currently paused" in the chat box.
+ *  @param postId: id of post that the staff is viewing
  */
 function populateChat(postId) {
     if (postId == currPostId) return;

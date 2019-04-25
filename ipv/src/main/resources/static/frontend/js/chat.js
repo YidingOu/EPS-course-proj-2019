@@ -2,6 +2,7 @@
 
 var uid = null;
 var postId = null;
+var posts = [];
 
 $(document).ready(function() {
     uid = getUid();
@@ -32,10 +33,8 @@ $(document).ready(function() {
     $("#logout").click(function() {
         logout();
     });
-    var posts = getPosts(uid);
-    if (posts) {
-        drawPosts(posts);
-    }
+    getPosts(uid);
+    //posts = test();
 })
 
 /** If the local variable first is not set, set it to 1 and return true;
@@ -107,7 +106,7 @@ function getPosts(userId) {
                 else alert("Incorrect password, please try again. ")
             }
             postId = data.id;
-            return getMessages(postId);
+            getMessages(postId);
         },
         error: function (e) {
             console.log("fail");
@@ -125,7 +124,7 @@ function resumeConversation(pwd) {
     return false;
 }
 
-/** Gets messages from the same conversation (ie same post id) */
+/** Gets messages from the same conversation (ie same post id) and draws to screen */
 function getMessages(postId) {
     var posts = [];
     var post_url = "/conversations/by_post/" + postId;
@@ -139,6 +138,7 @@ function getMessages(postId) {
         timeout: 60000,
         success: function (data) {
             console.log("success");
+            console.log(data);
             for (var i=0; i<data.length; i++) {
                 msg = new Message({
                     text: data[i].data,
@@ -146,7 +146,7 @@ function getMessages(postId) {
                 });
                 posts.push(msg);
             }
-            return posts;
+            drawPosts(posts);
         },
         error: function (e) {
             console.log("fail");
@@ -157,7 +157,23 @@ function getMessages(postId) {
     });
 }
 
-/** Draws all posts, where posts are msg objects */
+function test() {
+    var arr = []
+    var msg = new Message({
+                            text: "hi",
+                            senderId : 1
+                        });
+    arr.push(msg);
+
+    msg = new Message({
+                            text: "bye",
+                            senderId : uid
+                        });
+    arr.push(msg);
+    return arr;
+}
+
+/** Draws all @param posts, where posts are msg objects */
 function drawPosts(posts) {
     for (var i=0; i<posts.length; i++) {
         posts[i].draw();
@@ -184,9 +200,11 @@ function sendMessage(text) {
         text: text,
         senderId: uid
     });
+    console.log("sending");
     //send message to server, draw on success 
     if (addPost(message)) {
-         message.draw();
+        posts.push(message);
+        message.draw();
         return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
     }
    return;
@@ -221,7 +239,7 @@ function addPost(message) {
             return false;
         }
     });
-    return false;
+    return true;
 }
 
 /** Perform a series of redirects to google.com */
