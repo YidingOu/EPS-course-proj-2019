@@ -1,8 +1,13 @@
+
 $(document).ready(function () {
     getStats();
     getCurrentCases();
 });
 
+var statusMap = {
+                10: 'Locked',
+                1: 'Ongoing'
+            };
 
 /** Makes an ajax request to the server to get the number
  *  of ongoing, paused, and closed cases. Populates html. */
@@ -10,61 +15,20 @@ function getStats() {
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/posts",
+        url: "/posts/count_info",
         dataType: 'json',
         cache: false,
         timeout: 600,
         success: function (data) {
             console.log("success");
             console.log(data);
-            var content_html = data.id;
-            document.getElementById("ongoing-cases").innerHTML = content_html;
-
+            $("#ongoing-cases").html(data.onGoingPost);
+            $("#paused-cases").html(data.pausedPost);
+            $("#closed-cases").html(data.closedPost);
         },
         error: function (e) {
             console.log(e);
-            alert("Alert.");
-        }
-    });
-
-    $.ajax({
-        type: "GET",
-        contentType: "application/json",
-        url: "/posts",
-        dataType: 'json',
-        cache: false,
-        timeout: 600,
-        success: function (data) {
-            console.log("success");
-            console.log(data);
-            var content_html = data.id;
-            document.getElementById("paused-cases").innerHTML = content_html;
-
-        },
-        error: function (e) {
-            console.log(e);
-            alert("Alert.");
-        }
-    });
-
-    $.ajax({
-        type: "GET",
-        contentType: "application/json",
-        url: "/posts",
-        dataType: 'json',
-        cache: false,
-        timeout: 600,
-        success: function (data) {
-            console.log("success");
-            console.log(data);
-
-            var content_html = data.id;
-            document.getElementById("closed-cases").innerHTML = content_html;
-
-        },
-        error: function (e) {
-            console.log(e);
-            alert("Alert.");
+            alert("Error, please refresh the page.");
         }
     });
 }
@@ -76,7 +40,7 @@ function getCurrentCases() {
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/users",
+        url: "/users/customers",
         dataType: 'json',
         cache: false,
         timeout: 600,
@@ -86,9 +50,13 @@ function getCurrentCases() {
 
             var content_html = '';
             for (var i = 0; i < data.length; i++) {
-                content_html += '<td> <a href="dashboard.html"> ' + data[i].name + ' </a></td>' + '\n';
-                content_html += '<td> ' + data[i].date + ' </td>' + '\n';
-                content_html += '<td> ' + data[i].status + ' </td>' + '\n';
+                content_html += '<td> <a> ' + data[i].name + ' </a></td>' + '\n';
+                var post = data[i].post;
+                if (post != null) {
+                    content_html += '<td> ' + post.updatedDate + ' </td>' + '\n';
+                    content_html += '<td> ' + post.startDate + ' </td>' + '\n';
+                    content_html += '<td> ' + statusMap[post.status] + ' </td>' + '\n';
+                }
                 content_html += '</tr>' + '\n';
             }
             document.getElementById("dashboard-table").innerHTML = content_html;
@@ -96,7 +64,7 @@ function getCurrentCases() {
         },
         error: function (e) {
             console.log(e);
-            alert("Alert.");
+            alert("Error, please refresh the page.");
         }
     });
 }

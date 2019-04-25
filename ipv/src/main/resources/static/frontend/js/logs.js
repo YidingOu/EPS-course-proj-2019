@@ -10,7 +10,7 @@ function getLogs() {
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/users",
+        url: "/audits",
         // data: JSON.stringify(form_data),
         dataType: 'json',
         cache: false,
@@ -28,8 +28,8 @@ function getLogs() {
             var content_html = '';
             for (var i = 0; i < data.length; i++) {
                 content_html += '<td> ' + data[i].date + ' </td>' + '\n';
-                content_html += '<td> ' + data[i].status + ' </td>' + '\n';
-                content_html += '<td> ' + role_map[data[i].role] + ' </td>' + '\n';
+                content_html += '<td> ' + data[i].action + ' </td>' + '\n';
+                content_html += '<td> ' + data[i].userId + ' </td>' + '\n';
                 content_html += '</tr>' + '\n';
             }
 

@@ -6,8 +6,9 @@ $(document).ready(function () {
 
 
 /** Makes an ajax request to the server to get information
- *  on the current staff (username, start date, case assigned).
- *  Populates html. */
+ *  on the current staff (username, Date Created, Last Update, case assigned).
+ *  Populates html.
+ */
 function getStaff() {
     $.ajax({
         type: "GET",
@@ -40,6 +41,9 @@ function getStaff() {
     });
 }
 
+/** Gets the username of users that the staff of @param staffId is chatting with.
+ *  Populates the table accordingly.
+ */
 function populateCases(staffId) {
     console.log("/posts/by_staff/" + staffId);
     $.ajax({
@@ -72,5 +76,3 @@ function populateCases(staffId) {
         }
     });
 }
-
-//  function arrToStrin

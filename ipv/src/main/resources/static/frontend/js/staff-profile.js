@@ -73,8 +73,8 @@ function init() {
         success: function (data) {
             console.log(data);
             $("#username").val(data.name);
-            $("#first-name").val(data.firstName);
-            $("#last-name").val(data.lastName);
+            $("#first_name").val(data.firstName);
+            $("#last_name").val(data.lastName);
         },
         error: function (e) {
             console.log(e);
@@ -171,6 +171,45 @@ function saveChanges() {
     var post_url = "/users/update_pass"
     var request_method = "PUT";
     var main_url = "/frontend/src/staff/chat.html";
+    var form_data = {
+        firstName:$("#first_name").val(),
+        lastName:$("#last_name").val(),
+        pass:$("#password").val(),
+        name:$("#username").val(),
+        id:uid
+    };
+    console.log(form_data);
+
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: post_url,
+        data: JSON.stringify(form_data),
+        dataType: 'json',
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log("success");
+            $(location).attr("href", main_url);
+        },
+        error: function (e) {
+            console.log("fail");
+            console.log(e);
+            alert("Your profile failed to update, please try again.")
+        }
+    });
+    return;
+};
+
+/** Sends an ajax request to save account changes (for admin account) */
+function saveAdminChanges() {
+    if (!validFields()) {
+        alert("Please fill in all fields and use a password that is at least " + PWD_LEN + " characters long.");
+        return;
+    }
+    var post_url = "/users/update_pass"
+    var request_method = "PUT";
+    var main_url = "/frontend/src/staff/dashboard.html";
     var form_data = {
         firstName:$("#first_name").val(),
         lastName:$("#last_name").val(),
