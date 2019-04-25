@@ -52,11 +52,11 @@ function isFirstVisit() {
  *  on the right, else message appears on the left.)
  */
 Message = function (arg) {
-    this.text = arg.text, this.sender_id = arg.sender_id;
+    this.text = arg.text, this.senderId = arg.senderId;
     this.draw = function (_this) {
         return function () {
             var $message;
-            message_side = (_this.sender_id == uid) ? "right" : "left"
+            message_side = (_this.senderId == uid) ? "right" : "left"
             $message = $($('.message_template').clone().html());
             $message.addClass(message_side).find('.text').html(_this.text);
             $('.messages').append($message);
@@ -139,7 +139,7 @@ function getMessages(postId) {
             for (var i=0; i<data.length; i++) {
                 msg = new Message({
                     text: data[i].data,
-                    sender_id : data[i].userId
+                    senderId : data[i].userId
                 });
                 posts.push(msg);
             }
@@ -176,10 +176,10 @@ function sendMessage(text) {
     }
     $('.message_input').val('');
     $messages = $('.messages');
-    sender_id = uid
+    senderId = uid
     message = new Message({
         text: text,
-        sender_id: uid
+        senderId: uid
     });
     //send message to server, draw on success 
     if (addPost(message)) {

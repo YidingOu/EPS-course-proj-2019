@@ -21,6 +21,13 @@ $(document).ready(function() {
     populateView();
 })
 
+/** Gets the current post id that is being viewed (is appended after "#"
+ *  in the url). If nothing follows the # sign, current post id is set to -1.
+ */
+function getPostIdFromUrl() {
+    return window.location.hash.substring(1) ? (window.location.hash.substring(1)) : -1;
+}
+
 function test(id) {
     var arr = []
     var msg = new Message({
@@ -84,7 +91,7 @@ function populateView() {
     var htmlString = "";
     for (var postId in users) {
         htmlString += '<li id="user' + postId + '" onclick="populateChat(' + postId + ')">' +
-                            '<a href="#">' +
+                            '<a href="#' + postId + '">' +
                                 '<i class="now-ui-icons users_single-02"></i>' +
                                 '<p>' + users[postId] + '</p>' +
                             '</a>' +
@@ -99,12 +106,32 @@ function populateView() {
 
     $("#nav-bar").html(htmlString);
      //populate chat box, by default show the first conversation
-     var postIdKeyArr = Object.keys(users);
-    if (postIdKeyArr.length >= 1) {
-        var firstPostId = postIdKeyArr[0];
-        $("#chat_user").html(users.firstPostId);
-        populateChat(firstPostId);
+    var postIdKeyArr = Object.keys(users);
+    console.log(currPostId);
+    console.log(getPostIdFromUrl());
+    if (currPostId == -1 && getPostIdFromUrl() == -1) {
+        //default, staff just logged in without selecting any chat
+        if (postIdKeyArr.length >= 1) {
+            //if there is at least 1 user, populate with the first chat
+            var firstPostId = postIdKeyArr[0];
+            $("#chat_user").html(users[firstPostId]);
+            populateChat(firstPostId);
+        } else {
+            //no user is assigned to the staff
+            showNoChatsMsg();
+        }
+    } else {
+        console.log("here");
+        //staff clicked onto chat through nav bar, populating using he/she post clicked on
+        if (postId in users) populateChat(getPostIdFromUrl());
+        //invalid post id in url
+        else showNoChatsMsg();
     }
+}
+
+function showNoChatsMsg() {
+    $(".chat_window").html("<div style='text-align:center; padding-top:40%'> " +
+    "You do not have any ongoing chats. </div>");
 }
 
 /** Populate the chat box with the conversation with the user of @param chatUid.
@@ -113,6 +140,7 @@ function populateView() {
  */
 function populateChat(postId) {
     if (postId == currPostId) return;
+    $("#chat_user").html(users[postId]);
     clearPosts();
     $("#user" + currPostId).removeClass("active");
     currPostId = postId;
