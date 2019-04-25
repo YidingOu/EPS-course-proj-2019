@@ -66,7 +66,7 @@ DROP TABLE IF EXISTS `pivdb`.`audit` ;
 
 CREATE TABLE IF NOT EXISTS `pivdb`.`audit` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `action` VARCHAR(50) NOT NULL,
+  `action` TEXT NOT NULL,
   `date_time` DATETIME NOT NULL,
   `userId` INT(11) NULL,
   `postId` INT(11) NULL,
