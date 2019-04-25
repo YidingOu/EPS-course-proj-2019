@@ -1,5 +1,6 @@
 //adapted from https://bootsnipp.com/snippets/ZlkBn
 
+var PAUSED = 10;          //status value for paused account
 var uid = null;           //userId staff
 var convos = {};          //dictionary of postId to lists of msgs (message objects)
 var users = {};           //dictionary of postId to usernames staff is chatting with
@@ -52,6 +53,7 @@ function test(id) {
 function getChatDetails() {
     var url = "/posts/by_staff/" + uid;
     var request_method = "GET";
+    console.log(url);
 
     $.ajax({
         type: request_method,
@@ -65,21 +67,46 @@ function getChatDetails() {
             console.log(data);
             for (var i=0; i<data.length; i++) {
                 var chat = data[i];
-                var msgs = chat.conversations;
-                var posts = [];
-                for (var j=0; j<msgs; j++) {
-                    var msg = new Message({
-                        text: convo[j].data,
-                        senderId : convo[j].userId
-                    });
-                    posts.push(msg);
-                }
-                if (chat.user != null) {
+                if (chat.user != null && chat.status != PAUSED) {
+                    //valid user returned that is not paused
                     users[chat.id] = chat.user.name;
-                    convos[chat.id] = posts;
                 }
             }
             populateView(users);
+        },
+        error: function (e) {
+            console.log("fail");
+            console.log(e);
+            alert("Error, please refresh the page.")
+        }
+    });
+}
+
+/** Get all messages with @param postId and draw them on screen */
+function getPostMessages(postId) {
+    var url = "/posts/" + postId;
+    var request_method = "GET";
+    console.log(url);
+
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: url,
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log("success");
+            var convo = data.conversations;
+            var msgs = [];
+            for (var j=0; j<convo.length; j++) {
+                var msg = new Message({
+                    text: convo[j].data,
+                    senderId : convo[j].userId
+                });
+                msgs.push(msg);
+            }
+            convos[postId] = msgs;
+            drawPosts(msgs);
         },
         error: function (e) {
             console.log("fail");
@@ -151,8 +178,8 @@ function populateChat(postId) {
     $("#user" + currPostId).removeClass("active");
     currPostId = postId;
     $("#user" + postId).addClass("active");
-    var posts = convos[postId];
-    drawPosts(posts);
+    getPostMessages(postId);
+   // var posts = convos[postId];
 }
 
 /** Defines message object */
@@ -210,24 +237,18 @@ function sendMessage(text) {
         return;
     }
     $('.message_input').val('');
-    $messages = $('.messages');
     var msg = new Message({
         text: text,
         senderId: uid
     });
     //send message to server, draw on success \
-    if (sentMessageToServer(msg)) {
-        msg.draw();
-        convos[currPostId].push(msg);
-        return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
-    }
-    return;
+    sendMessageToServer(msg);
 }
 
 /** Helper function to send the @param msg to the server
- *  Returns true upon success; false otherwise
+ *  Draw message upon success
  */
-function sentMessageToServer(msg) {
+function sendMessageToServer(msg) {
     var url = "/conversations";
     var request_method = "POST";
     var post_data = {
@@ -247,17 +268,18 @@ function sentMessageToServer(msg) {
         timeout: 60000,
         success: function (data) {
             console.log("success");
-            return true;
+            msg.draw();
+            convos[currPostId].push(msg);
+            $messages = $('.messages');
+            $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         },
         error: function (e) {
             console.log("fail");
             console.log(e);
             //alert(e.responseJSON.message);
             alert("Error, please try again. ")
-            return false;
         }
     });
-    return false;
 }
 
 /** Logout by deleting uid in localstorage and authentication token */
