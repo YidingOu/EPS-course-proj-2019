@@ -1,8 +1,9 @@
 //adapted from https://bootsnipp.com/snippets/ZlkBn
 
-var uid = null;       //user id of current user
-var convos = [[]];    //list of lists of msgs (index aligns with list of users)
-var currChat = -1      //index of current chat being viewed
+var uid = null;           //userId staff
+var convos = {};          //dictionary of postId to lists of msgs (message objects)
+var users = {};           //dictionary of postId to usernames staff is chatting with
+var currPostId = -1;     //postId of current user whose chat is viewed
 
 $(document).ready(function() {
     $('.send_message').click(function () {
@@ -14,22 +15,26 @@ $(document).ready(function() {
         }
     });
     uid = getUid();
-    test();
-    populateView(["u1", "u2"]);
+    test(0);
+    test(1);
+    users = {0: "u1", 1: "u2"};
+    populateView();
 })
 
-function test() {
-    var convo = {
-                    "data": "hi",
-                    "userId": 1
-                };
-    convos[0].push(convo);
-    convo = {
-                    "data": "bye",
-                    "userId": 9
-                };
-    convos[0].push(convo);
-    console.log(convos);
+function test(id) {
+    var arr = []
+    var msg = new Message({
+                            text: "hi",
+                            senderId : 1
+                        });
+    arr.push(msg);
+
+    msg = new Message({
+                            text: "bye",
+                            senderId : 9
+                        });
+    arr.push(msg);
+    convos[id] = arr;
 }
 
 
@@ -37,7 +42,6 @@ function test() {
 function getChatDetails() {
     var url = "/posts/by_staff/" + uid;
     var request_method = "GET";
-    var users = [];
 
     $.ajax({
         type: request_method,
@@ -49,12 +53,19 @@ function getChatDetails() {
             console.log("success");
             for (var i=0; i<data.length; i++) {
                 var chat = data[i];
-                var user = chat.user.name;
                 var msgs = chat.conversations;
-                users.append(user);
-                convos.append(msgs);
+                var posts = [];
+                for (var j=0; j<msgs; j++) {
+                    var msg = new Message({
+                        text: convo[j].data,
+                        senderId : convo[j].userId
+                    });
+                    posts.push(msg);
+                }
+                convos[chat.id] = posts;
+                users[chat.id] = chat.user.name;
             }
-            populateView(users, convos);
+            populateView();
         },
         error: function (e) {
             console.log("fail");
@@ -68,17 +79,16 @@ function getChatDetails() {
  *  A dot icon is used to indicate unread messages
  *  Populates the chat box depending on the current username clicked
  *  on the nav bar.
- *  @param users: list of usernames the staff is chatting with
  */
-function populateView(users) {
+function populateView() {
     var htmlString = "";
-    for (var i=0; i<users.length; i++) {
-        htmlString += '<li id="user' + i + '" onclick="populateChat(' + i + ')">' +
-                        '<a href="#">' +
-                            '<i class="now-ui-icons users_single-02"></i>' +
-                            '<p>' + users[i] + '</p>' +
-                        '</a>' +
-                      '</li>';
+    for (var postId in users) {
+        htmlString += '<li id="user' + postId + '" onclick="populateChat(' + postId + ')">' +
+                            '<a href="#">' +
+                                '<i class="now-ui-icons users_single-02"></i>' +
+                                '<p>' + users[postId] + '</p>' +
+                            '</a>' +
+                          '</li>';
     }
     htmlString += '<li>' +
                     '<a href="./staff-settings.html">' +
@@ -88,44 +98,36 @@ function populateView(users) {
                   '</li>';
 
     $("#nav-bar").html(htmlString);
-    $("#user0").addClass("active");
      //populate chat box, by default show the first conversation
-    if (users.length >= 1) {
-        $("#chat_user").html(users[0]);
-        console.log(convos);
-        populateChat(0);
+     var postIdKeyArr = Object.keys(users);
+    if (postIdKeyArr.length >= 1) {
+        var firstPostId = postIdKeyArr[0];
+        $("#chat_user").html(users.firstPostId);
+        populateChat(firstPostId);
     }
 }
 
-/** Populate the chat box with the conversation with the user of @param userIndex.
+/** Populate the chat box with the conversation with the user of @param chatUid.
  *  If the chat is paused, staff should not be able to view the conversation
  *  but view the text "This chat is currently paused" in the chat box.
  */
-function populateChat(userIndex) {
-    if (userIndex == currChat) return;
-    $("#user" + currChat).removeClass("active");
-    currChat = userIndex;
-    $("#user" + userIndex).addClass("active");
-    var posts = [];
-    console.log(convos);
-    for (var j=0; j<convos[userIndex].length; j++) {
-        var msg = new Message({
-                text: convos[userIndex][j].data,
-                sender_id : convos[userIndex][j].userId
-            });
-        posts.push(msg);
-        console.log(msg);
-    }
+function populateChat(postId) {
+    if (postId == currPostId) return;
+    clearPosts();
+    $("#user" + currPostId).removeClass("active");
+    currPostId = postId;
+    $("#user" + postId).addClass("active");
+    var posts = convos[postId];
     drawPosts(posts);
 }
 
 /** Defines message object */
 Message = function (arg) {
-    this.text = arg.text, this.sender_id = arg.sender_id;
+    this.text = arg.text, this.senderId = arg.senderId, this.postId = arg.postId;
     this.draw = function (_this) {
         return function () {
             var $message;
-            message_side = (_this.sender_id == uid) ? "right" : "left"
+            message_side = (_this.senderId == uid) ? "right" : "left"
             $message = $($('.message_template').clone().html());
             $message.addClass(message_side).find('.text').html(_this.text);
             $('.messages').append($message);
@@ -140,34 +142,21 @@ Message = function (arg) {
 /** Returns the uid of the current user (as stored in localstorage) */
 function getUid() {
     try {
-          return parseInt(localStorage.getItem('uid'));
-        } catch(error) {
-            alert("Session expired, please login again. ")
-            $(location).attr("href", "login.html");
-        }
-        return;
+        return parseInt(localStorage.getItem('uid'));
+    } catch(error) {
+        alert("Session expired, please login again. ")
+        $(location).attr("href", "login.html");
+    }
+    return;
 }
 
-/** Gets the chat history of the user with staff
-    Returns: array of messages
-*/
-function getPosts() {
-    var posts = [];
-    message1 = new Message({
-        text: "Hi, i want to find out about something",
-        sender_id : 1
-    });
-    message2 = new Message({
-        text: "Hi, I am the staff, what can I help you with?",
-        sender_id: 2
-    });
-    posts.push(message1, message2);
-    return posts;
+/** Removes all messages displayed in the chat box. */
+function clearPosts() {
+    $('.messages').html("");
 }
 
 /** Draws all posts (where posts are of message objects) */
 function drawPosts(posts) {
-    console.log(posts);
     for (var i=0; i<posts.length; i++) {
         console.log(posts[i].text);
         posts[i].draw();
@@ -189,12 +178,51 @@ function sendMessage(text) {
     }
     $('.message_input').val('');
     $messages = $('.messages');
-    sender_id = uid
-    message = new Message({
+    var msg = new Message({
         text: text,
-        sender_id: uid
+        senderId: uid
     });
-    //send message to server, draw on success 
-    message.draw();
-    return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+    //send message to server, draw on success \
+    msg.draw();
+    if (sentMessageToServer(msg)) {
+        convos[currPostId].push(msg);
+        return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+    }
+    return;
+}
+
+/** Helper function to send the @param msg to the server
+ *  Returns true upon success; false otherwise
+ */
+function sentMessageToServer(msg) {
+    var url = "/conversations";
+    var request_method = "POST";
+    var post_data = {
+            data: msg.text,
+            userId: uid,
+            postId: currPostId
+    };
+    console.log(post_data);
+
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: url,
+        data: JSON.stringify(post_data),
+        dataType: 'json',
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log("success");
+            return true;
+        },
+        error: function (e) {
+            console.log("fail");
+            console.log(e);
+            //alert(e.responseJSON.message);
+            alert("Error, please try again. ")
+            return false;
+        }
+    });
+    return false;
 }
