@@ -9,11 +9,14 @@ import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
 
 import com.ipv.entity.Post;
+import com.ipv.entity.User;
 import com.ipv.reporsitory.ConversationRepository;
 import com.ipv.reporsitory.PostRepository;
+import com.ipv.reporsitory.UserRepository;
 import com.ipv.service.PostService;
 import com.ipv.service.UserService;
 import com.ipv.util.Constant;
+import com.ipv.util.Util;
 
 /**
  * 
@@ -34,6 +37,9 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 	//Spring Dependency injection
 	@Autowired
 	private PostRepository postRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Autowired
 	private ConversationRepository conversationRepository;
@@ -115,6 +121,15 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 
 	@Override
 	public List<Post> getByStaffId(int id) {
-		return postRepository.findByStaffId(id);
+		List<Post> posts = postRepository.findByStaffId(id);
+		for (Post post :posts) {
+			User user = userService.findById(post.getUserId());
+			User staff = userService.findById(post.getStaffId());
+			Util.processUser(user, userRepository);
+			Util.processUser(staff, userRepository);
+			post.setUser(user);
+			post.setStaff(staff);
+		}
+		return posts;
 	}
 }
