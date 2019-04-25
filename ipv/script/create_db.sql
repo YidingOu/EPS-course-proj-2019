@@ -49,6 +49,8 @@ DROP TABLE IF EXISTS `pivdb`.`post` ;
 CREATE TABLE IF NOT EXISTS `pivdb`.`post` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `status` INT(11) NOT NULL,
+  `start_date` DATETIME NOT NULL,
+  `last_updated_date` DATETIME NOT NULL,
   `updated` TINYINT(10) NOT NULL,
   `postkey` VARCHAR(20) NULL DEFAULT NULL,
   `userId` INT(11) NOT NULL,

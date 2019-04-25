@@ -60,6 +60,7 @@ public class ConversationServiceImple extends BaseImple<Conversation> implements
 		conversation.setDate(new Date());
 		User user = userRepository.findById(conversation.getUserId()).get();
 		Post post = postRepository.findById(conversation.getPostId()).get();
+		post.setUpdatedDate(new Date());
 		if (user.getRole() == 0) {
 			conversation.setReply(Constant.CONVERSATION_FROM_USER);
 			post.setUpdated(Constant.POST_UPDATE_FROM_USER);

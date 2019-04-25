@@ -130,18 +130,6 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 		return result;
 	}
 
-	private byte[] createSalt() {
-		byte[] salt = null;
-		try {
-			SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-			salt = new byte[16];
-			sr.nextBytes(salt);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		return salt;
-	}
-
 	@Override
 	public int loadBalancerForGettingAStaffId() {
 		List<User> staffList = userRepository.findByRole(1);
@@ -162,7 +150,11 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 
 	@Override
 	public List<User> getNormalUsers() {
-		return userRepository.findByRole(0);
+		List<User> users = userRepository.findByRole(0);
+		for (User user :users) {
+			user.setPost(postRepository.findByUserId(user.getId()));
+		}
+		return users;
 	}
 
 	@Override

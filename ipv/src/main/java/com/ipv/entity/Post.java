@@ -1,5 +1,6 @@
 package com.ipv.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -8,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -42,6 +45,14 @@ public class Post {
 	@Column(name="postkey")
 	private String key;
 	
+	@Column(name="start_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date startDate;
+	
+	@Column(name="last_updated_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date updatedDate;
+	
 	@Transient
 	private User user;
 
@@ -57,6 +68,23 @@ public class Post {
 
 	public void setConversations(List<Conversation> conversations) {
 		this.conversations = conversations;
+	}
+	
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
 	}
 
 	public User getUser() {

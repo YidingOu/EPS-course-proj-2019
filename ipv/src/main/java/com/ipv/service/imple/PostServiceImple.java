@@ -1,5 +1,6 @@
 package com.ipv.service.imple;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -62,6 +63,8 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 		post.setStaffId(userService.loadBalancerForGettingAStaffId());
 		post.setStatus(Constant.POST_STATUS_ON_GOING);
 		post.setUpdated(Constant.POST_UPDATE_NO);
+		post.setStartDate(new Date());
+		post.setUpdatedDate(new Date());
 		return postRepository.save(post);
 	}
 	
