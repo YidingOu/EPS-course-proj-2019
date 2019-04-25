@@ -22,7 +22,7 @@
 							<h1>Staff Login</h1>
 						</div>
 					</div>
-					<form id="staff_login_form" action="users/staffs/validate" method="post" name="staff_login">
+					<form id="staff_login_form" action="/users/staffs/validate" method="post" name="staff_login">
 						<div class="form-group">
 							<label>Username</label>
                             <input name="username"  class="form-control" id="username" placeholder="Enter Username">
@@ -34,7 +34,7 @@
                         <br>
                         <div id="login_error"></div>
                         <div class="col-md-12 text-center ">
-                            <button id="login_btn" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Login</button>
+                            <button id="login_btn" onclick="submitStaffLogin()" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Login</button>
                         </div> 
                     </form>
 				</div>

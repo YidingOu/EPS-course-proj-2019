@@ -31,27 +31,27 @@ $(function() {
  });
 
 $(function() {
-	   /*Quick solution Should be optimized later*/
-	   $("form[name='staff_login']").validate({
-		     rules: {
-		       username: {
-		         required: true,
-		       },
-		       password: {
-		         required: true,
-		       }
-		     },
-		      username: {
-		        required: "Please enter your username",
-		      
-		       password: {
-		        required: "Please enter password",
-		       }
-		       
-		     },
-		     submitHandler: submitStaffLogin()
-		   });
-	 });
+   /*Quick solution Should be optimized later*/
+   $("form[name='staff_login']").validate({
+         rules: {
+           username: {
+             required: true,
+           },
+           password: {
+             required: true,
+           }
+         },
+          username: {
+            required: "Please enter your username",
+
+           password: {
+            required: "Please enter password",
+           }
+
+         },
+         submitHandler: submitStaffLogin()
+       });
+ });
 
 /** Performs validation of registration form, ensures that username 
  *  and password fields are not empty, and that passwords provided match.
@@ -99,8 +99,8 @@ function submitUserLogin() {
   if (!validFields("login")) return;
   $("#user_login_form").submit(function(event){
     event.preventDefault(); //prevent default action 
-     var post_url = $(this).attr("action"); //get form action url
-    var request_method = $(this).attr("method"); 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method");
     var main_url = "/frontend/src/main.html";
     var form_data = {
     		name:$("#username").val(),  
@@ -134,6 +134,7 @@ function submitUserLogin() {
 function submitStaffLogin() {
   if (!validFields("login")) return;
   $("#staff_login_form").submit(function(event){
+    console.log("login7777");
     event.preventDefault(); //prevent default action
     var post_url = "/users/staffs/validate"; //get form action url
     var request_method = $(this).attr("method"); 
