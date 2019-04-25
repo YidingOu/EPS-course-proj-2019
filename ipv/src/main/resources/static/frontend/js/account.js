@@ -86,7 +86,7 @@ $(function() {
  *  (either "login" or "registration"
  */
 function validFields(type) {
-    if ($("#password").val() == null || $("#username").val() == null) return false;
+    if ($("#password").val() == "" || $("#username").val() == "") return false;
     if (type == "registration") {
         if ($("#password").val().length < PWD_LEN) return false;
         if ($("#password").val() != $("#password_cfm").val()) return false;
@@ -99,14 +99,14 @@ function submitUserLogin() {
   if (!validFields("login")) return;
   $("#user_login_form").submit(function(event){
     event.preventDefault(); //prevent default action 
-    var post_url = $(this).attr("action"); //get form action url
+     var post_url = $(this).attr("action"); //get form action url
     var request_method = $(this).attr("method"); 
     var main_url = "/frontend/src/main.html";
     var form_data = {
     		name:$("#username").val(),  
     		pass:$("#password").val()
     };
-    
+    console.log(post_url);
     $.ajax({
         type: request_method,
         contentType: "application/json",
@@ -118,7 +118,6 @@ function submitUserLogin() {
         success: function (data) {
             console.log("success");
             localStorage.uid = data.entity.id;
-            //console.log(JSON.stringify(data));
         	$(location).attr("href", main_url);
 
         },
@@ -138,7 +137,7 @@ function submitStaffLogin() {
     event.preventDefault(); //prevent default action
     var post_url = "/users/staffs/validate"; //get form action url
     var request_method = $(this).attr("method"); 
-    var staff_url = "/frontend/src/staff/main.html";
+    var staff_url = "/frontend/src/staff/chat.html";
     var admin_url = "/frontend/src/staff/dashboard.html";
     var form_data = {
     		name:$("#username").val(),  
@@ -165,6 +164,7 @@ function submitStaffLogin() {
         },
         error: function (e) {
         	console.log("fail");
+        	console.log(e);
         	alert("Login failed, please try again.");
 
         }

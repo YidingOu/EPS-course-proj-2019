@@ -3,6 +3,7 @@ PWD_LEN = 1 //TODO: change after testing
 users = {}
 
 $(document).ready(function() {
+    validate();
     $("#delete-btn").click(function() {
         deleteAccount();
     });
@@ -15,8 +16,43 @@ $(document).ready(function() {
         users = {0: "u1", 1: "u2"};
         populateView();
     }
-    //validate();
 });
+
+/** Performs validation of profile update form, ensures that username
+ *  and password fields are not empty, and that passwords provided match.
+ */
+function validate() {
+  $("#staff-profile").validate({
+    rules: {
+      first_name: {
+        required: true
+      },
+      last_name: {
+        required: true
+      },
+      username: {
+        required: true
+      },
+      password: {
+        required: true,
+        minlength: PWD_LEN
+      },
+      password_cfm: {
+        equalTo: "#password"
+      }
+    },
+    messages: {
+      last_name: "Please provide a last name",
+      first_name: "Please provide a first name",
+      username: "Please provide a username",
+      password: {
+        required: "Please provide a password",
+        minlength: "Your password must be at least 8 characters long"
+      },
+      password_cfm: "Passwords must match!"
+    }
+  });
+};
 
 //TODO: is there a reason why we do this
 $.urlParam = function (name) {
@@ -93,7 +129,8 @@ function getUsernames() {
             console.log("success");
             for (var i=0; i<data.length; i++) {
                 var chat = data[i];
-                users[chat.id] = chat.user.name;
+                console.log(chat);
+                if (chat.user != null) users[chat.id] = chat.user.name;
             }
             return true;
         },
@@ -126,7 +163,7 @@ function deleteAccount() {
     if (cfm) { // User Pressed Yes, delete account
         var url = "/users/" + uid;
         var request_method = "DELETE";
-        var main_url = "/frontend/src/main.html";
+        var main_url = "/frontend/src/chat.html";
 
         $.ajax({
             type: request_method,
@@ -155,55 +192,22 @@ function deleteAccount() {
  *  (ii) password is the same as the confirmed password
  */
 function validFields() {
-    if ($("#password").val() == null || $("#username").val() == null
-    || $("#first_name") == null || $("#last_name") == null ) return false;
+    if ($("#password").val() == "" || $("#username").val() == ""
+    || $("#first_name") == "" || $("#last_name") == "" ) return false;
     if ($("#password").val().length < PWD_LEN) return false;
     if ($("#password").val() != $("#password_cfm").val()) return false;
     return true;
 }
 
-/** Performs validation of profile update form, ensures that username 
- *  and password fields are not empty, and that passwords provided match.
- */
-function validate() {
-  $("form[name='staff-profile']").validate({
-    rules: {
-      first_name: {
-        required: true
-      },
-      last_name: {
-        required: true
-      },
-      username: {
-        required: true
-      },
-      password: {
-        required: true,
-        minlength: PWD_LEN
-      },
-      password_cfm: {
-        equalTo: "#password"
-      }
-    },
-    messages: {
-      last_name: "Please provide a last name",
-      first_name: "Please provide a first name",
-      username: "Please provide a username",
-      password: {
-        required: "Please provide a password",
-        minlength: "Your password must be at least 8 characters long"
-      },
-      password_cfm: "Passwords must match!"
-    },
-    submitHandler: saveChanges()
-  });
-};
-
 /** Sends an ajax request to save account changes */
 function saveChanges() {
+    if (!validFields()) {
+        alert("Please fill in all fields and use a password that is at least " + PWD_LEN + " characters long.");
+        return;
+    }
     var post_url = "/users/update_pass"
     var request_method = "PUT";
-    var main_url = "/frontend/src/staff/main.html";
+    var main_url = "/frontend/src/staff/chat.html";
     var form_data = {
         firstName:$("#first_name").val(),
         lastName:$("#last_name").val(),

@@ -38,7 +38,7 @@ function test(id) {
 
     msg = new Message({
                             text: "bye",
-                            senderId : 9
+                            senderId : uid
                         });
     arr.push(msg);
     convos[id] = arr;
@@ -69,8 +69,10 @@ function getChatDetails() {
                     });
                     posts.push(msg);
                 }
-                convos[chat.id] = posts;
-                users[chat.id] = chat.user.name;
+                if (chat.user.name != null) {
+                    users[chat.id] = chat.user.name;
+                    convos[chat.id] = posts;
+                }
             }
             populateView();
         },
@@ -107,8 +109,6 @@ function populateView() {
     $("#nav-bar").html(htmlString);
      //populate chat box, by default show the first conversation
     var postIdKeyArr = Object.keys(users);
-    console.log(currPostId);
-    console.log(getPostIdFromUrl());
     if (currPostId == -1 && getPostIdFromUrl() == -1) {
         //default, staff just logged in without selecting any chat
         if (postIdKeyArr.length >= 1) {
@@ -121,7 +121,6 @@ function populateView() {
             showNoChatsMsg();
         }
     } else {
-        console.log("here");
         //staff clicked onto chat through nav bar, populating using he/she post clicked on
         if (postId in users) populateChat(getPostIdFromUrl());
         //invalid post id in url
@@ -186,7 +185,6 @@ function clearPosts() {
 /** Draws all posts (where posts are of message objects) */
 function drawPosts(posts) {
     for (var i=0; i<posts.length; i++) {
-        console.log(posts[i].text);
         posts[i].draw();
     }
 }
@@ -211,8 +209,8 @@ function sendMessage(text) {
         senderId: uid
     });
     //send message to server, draw on success \
-    msg.draw();
     if (sentMessageToServer(msg)) {
+        msg.draw();
         convos[currPostId].push(msg);
         return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
     }
