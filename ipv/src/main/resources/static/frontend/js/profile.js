@@ -1,5 +1,6 @@
 
 var uid = null;
+var PWD_LEN = 1;
 
 $(document).ready(function() {
 	$("#delete-btn").click(function() {
@@ -11,6 +12,9 @@ $(document).ready(function() {
 	$("#save-btn").click(function() {
 		saveChanges();
 	});
+	$("#logout").click(function() {
+        logout();
+    });
 	uid = getUid();
 	//validate();
 	populateUsername();
@@ -51,6 +55,17 @@ function populateUsername() {
     });
 }
 
+/** Checks to ensure valid fields for a profile update:
+ *  (i) username and password fields are not empty
+ *  (ii) password is the same as the confirmed password
+ */
+function validFields() {
+    if ($("#password").val() == "" || $("#username").val() == "") return false;
+    if ($("#password").val().length < PWD_LEN) return false;
+    if ($("#password").val() != $("#password_cfm").val()) return false;
+    return true;
+}
+
 /** Performs validation of profile update form, ensures that name, username 
  *  and password fields are not empty, and that passwords provided match.
  */
@@ -87,7 +102,7 @@ function deleteAccount() {
 	if (cfm) { // User Pressed Yes, delete account 
 	    var url = "/users/" + uid;
 	    var request_method = "DELETE";
-	    var main_url = "/frontend/src/main.html";
+	    var main_url = "/frontend/src/login.html";
 	    
 	    $.ajax({
 	        type: request_method,
@@ -115,8 +130,8 @@ function deleteAccount() {
  *  upon confirmation. 
  */
 function pauseAccount() {
-	var cfm = confirm ("Are you sure you want to pause your account?"); 
-	if (cfm) { // User Pressed Yes, pause account
+	var pwd = prompt("Please re-enter your password if you would like to lock your conversation. ");
+	if (pwd) { // User Pressed Yes, pause account
 	    //TODO
 		var url = "/posts/pause/" + uid;
         var request_method = "POST";
@@ -135,8 +150,8 @@ function pauseAccount() {
             },
             error: function (e) {
                 console.log("fail");
-                console.log(JSON.stringify(e));
-                alert("Deletion of account failed, please try again.")
+                console.log(e);
+                alert("Locking of conversation failed, please try again.")
             }
         });
         return;
@@ -146,6 +161,10 @@ function pauseAccount() {
 
 /** Sends an ajax request to save account changes */
 function saveChanges() {
+    if (!validFields()) {
+        alert("Please fill in all fields and use a password that is at least " + PWD_LEN + " characters long.");
+        return;
+    }
     var post_url = "/users/update_pass"
     var request_method = "PUT"; 
     var main_url = "/frontend/src/main.html";
@@ -176,4 +195,10 @@ function saveChanges() {
         }
     });
 	return;
+}
+
+/** Logout by deleting uid in localstorage and authentication token */
+function logout() {
+    //TODO
+    console.log("logout");
 }

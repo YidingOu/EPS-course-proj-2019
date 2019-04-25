@@ -14,11 +14,15 @@ $(document).ready(function() {
             return sendMessage(getMessageText());
         }
     });
+    $("#logout").click(function() {
+        logout();
+    });
     uid = getUid();
-    test(0);
-    test(1);
-    users = {0: "u1", 1: "u2"};
-    populateView();
+    //test(0);
+    //test(1);
+    //users = {0: "u1", 1: "u2"};
+    //populateView();
+    getChatDetails();
 })
 
 /** Gets the current post id that is being viewed (is appended after "#"
@@ -38,12 +42,11 @@ function test(id) {
 
     msg = new Message({
                             text: "bye",
-                            senderId : 9
+                            senderId : uid
                         });
     arr.push(msg);
     convos[id] = arr;
 }
-
 
 /** Gets all chat messages and users that the staff is chatting with */
 function getChatDetails() {
@@ -58,6 +61,8 @@ function getChatDetails() {
         timeout: 60000,
         success: function (data) {
             console.log("success");
+            console.log(url);
+            console.log(data);
             for (var i=0; i<data.length; i++) {
                 var chat = data[i];
                 var msgs = chat.conversations;
@@ -69,10 +74,12 @@ function getChatDetails() {
                     });
                     posts.push(msg);
                 }
-                convos[chat.id] = posts;
-                users[chat.id] = chat.user.name;
+                if (chat.user != null) {
+                    users[chat.id] = chat.user.name;
+                    convos[chat.id] = posts;
+                }
             }
-            populateView();
+            populateView(users);
         },
         error: function (e) {
             console.log("fail");
@@ -82,12 +89,13 @@ function getChatDetails() {
     });
 }
 
-/** Populate the side navigation with users staff is chatting with.
+/** Populate the side navigation with @param users staff is chatting with.
  *  A dot icon is used to indicate unread messages
  *  Populates the chat box depending on the current username clicked
  *  on the nav bar.
+ *  @param users: dictionary of postId to usernames staff is chatting with
  */
-function populateView() {
+function populateView(users) {
     var htmlString = "";
     for (var postId in users) {
         htmlString += '<li id="user' + postId + '" onclick="populateChat(' + postId + ')">' +
@@ -107,8 +115,6 @@ function populateView() {
     $("#nav-bar").html(htmlString);
      //populate chat box, by default show the first conversation
     var postIdKeyArr = Object.keys(users);
-    console.log(currPostId);
-    console.log(getPostIdFromUrl());
     if (currPostId == -1 && getPostIdFromUrl() == -1) {
         //default, staff just logged in without selecting any chat
         if (postIdKeyArr.length >= 1) {
@@ -121,7 +127,6 @@ function populateView() {
             showNoChatsMsg();
         }
     } else {
-        console.log("here");
         //staff clicked onto chat through nav bar, populating using he/she post clicked on
         if (postId in users) populateChat(getPostIdFromUrl());
         //invalid post id in url
@@ -134,9 +139,10 @@ function showNoChatsMsg() {
     "You do not have any ongoing chats. </div>");
 }
 
-/** Populate the chat box with the conversation with the user of @param chatUid.
+/** Populate the chat box with the conversation with the user of @param postId.
  *  If the chat is paused, staff should not be able to view the conversation
  *  but view the text "This chat is currently paused" in the chat box.
+ *  @param postId: id of post that the staff is viewing
  */
 function populateChat(postId) {
     if (postId == currPostId) return;
@@ -186,7 +192,6 @@ function clearPosts() {
 /** Draws all posts (where posts are of message objects) */
 function drawPosts(posts) {
     for (var i=0; i<posts.length; i++) {
-        console.log(posts[i].text);
         posts[i].draw();
     }
 }
@@ -211,8 +216,8 @@ function sendMessage(text) {
         senderId: uid
     });
     //send message to server, draw on success \
-    msg.draw();
     if (sentMessageToServer(msg)) {
+        msg.draw();
         convos[currPostId].push(msg);
         return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
     }
@@ -253,4 +258,9 @@ function sentMessageToServer(msg) {
         }
     });
     return false;
+}
+
+/** Logout by deleting uid in localstorage and authentication token */
+function logout() {
+    //TODO
 }
