@@ -37,7 +37,6 @@ function getStats() {
         success: function (data) {
             console.log("success");
             console.log(data);
-
             var content_html = data.id;
             document.getElementById("paused-cases").innerHTML = content_html;
 

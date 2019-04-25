@@ -4,9 +4,6 @@ users = {}
 
 $(document).ready(function() {
     validate();
-    $("#delete-btn").click(function() {
-        deleteAccount();
-    });
     $("#save-btn").click(function() {
         saveChanges();
     });
@@ -15,10 +12,7 @@ $(document).ready(function() {
     });
     uid = getUid();
     init();
-    if (getUsernames()) {
-        users = {0: "u1", 1: "u2"};
-        populateView();
-    }
+    getUsernames();
 });
 
 /** Performs validation of profile update form, ensures that username
@@ -135,16 +129,14 @@ function getUsernames() {
                 console.log(chat);
                 if (chat.user != null) users[chat.id] = chat.user.name;
             }
-            return true;
+            populateView();
         },
         error: function (e) {
             console.log("fail");
             console.log(e);
             alert("Error, please refresh the page.")
-            return false;
         }
     });
-    return true;
 }
 
 /** Gets the uid of the current user */
@@ -154,38 +146,6 @@ function getUid() {
     } catch(error) {
         alert("Session expired, please login again. ")
         $(location).attr("href", "login.html");
-    }
-    return;
-}
-
-/** Draws the alert confirmation box and sends an ajax request to delete account
- *  upon confirmation.
- */
-function deleteAccount() {
-    var cfm = confirm ("Are you sure you want to delete your account? This action cannot be undone. ");
-    if (cfm) { // User Pressed Yes, delete account
-        var url = "/users/" + uid;
-        var request_method = "DELETE";
-        var main_url = "/frontend/src/chat.html";
-
-        $.ajax({
-            type: request_method,
-            contentType: "application/json",
-            url: url,
-            cache: false,
-            timeout: 60000,
-            success: function (data) {
-                console.log("success");
-                $(location).attr("href", main_url);
-
-            },
-            error: function (e) {
-                console.log("fail");
-                console.log(e);
-                alert("Deletion of account failed, please try again.")
-            }
-        });
-        return;
     }
     return;
 }
