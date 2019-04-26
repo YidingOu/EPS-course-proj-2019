@@ -15,6 +15,7 @@ $(document).ready(function() {
     });
 	uid = getUid();
 	//validate();
+	getPostId();
 	populateUsername();
 });
 
@@ -26,6 +27,31 @@ function getUid() {
         alert("Session expired, please login again. ")
         $(location).attr("href", "login.html");
     }
+    return;
+}
+
+function getPostId() {
+    var post_url = "/posts/by_user/" + uid;
+    var request_method = "GET";
+
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: post_url,
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log(post_url);
+            console.log("success");
+            postId = data.id;
+        },
+        error: function (e) {
+            console.log("fail");
+            console.log(e);
+            alert("Session expired. Please login again. "); //TO CHANGE?
+            $(location).attr("href", "login.html");
+        }
+    });
     return;
 }
 
@@ -129,21 +155,27 @@ function deleteAccount() {
  */
 function pauseAccount() {
 	var pwd = prompt("Please re-enter your password if you would like to lock your conversation. ");
-	if (pwd) { // User Pressed Yes, pause account
-	    //TODO
-		var url = "/posts/pause/" + uid;
+	if (pwd && pwd != "") { // User Pressed Yes, pause account
+		var url = "/posts/pause";
         var request_method = "POST";
-        var main_url = "/frontend/src/main.html";
-
+        var main_url = "/frontend/src/login.html";
+        var post_data = {
+            id: postId,
+            key: pwd
+        }
+        console.log(post_data);
         $.ajax({
             type: request_method,
             contentType: "application/json",
+            data: JSON.stringify(post_data),
+            dataType: 'json',
             url: url,
             cache: false,
             timeout: 60000,
             success: function (data) {
                 console.log("success");
-                alert("Conversation successfully locked!");
+                alert("Conversation successfully locked! You can sign back in to resume your conversation in future.");
+                logout();
                 $(location).attr("href", main_url);
             },
             error: function (e) {
