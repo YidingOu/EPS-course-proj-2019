@@ -9,12 +9,14 @@ import org.jasypt.util.text.BasicTextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ipv.entity.Contact;
 import com.ipv.entity.Conversation;
 import com.ipv.entity.Post;
 import com.ipv.entity.User;
 import com.ipv.reporsitory.ConversationRepository;
 import com.ipv.reporsitory.PostRepository;
 import com.ipv.reporsitory.UserRepository;
+import com.ipv.service.ContactService;
 import com.ipv.service.EncryptionService;
 import com.ipv.service.PostService;
 import com.ipv.service.UserService;
@@ -53,6 +55,9 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 	private UserService userService;
 	
 	@Autowired
+	private ContactService contactService;
+	
+	@Autowired
 	private EncryptionService encrytionService;
 	
 	//After the injection is done, override the repository in the super class
@@ -63,6 +68,7 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 
 	@Override
 	public Post initPost(int userId) {
+		
 		Post post = new Post();
 		post.setId(0);
 		post.setUserId(userId);
@@ -71,6 +77,15 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 		post.setUpdated(Constant.POST_UPDATE_NO);
 		post.setStartDate(new Date());
 		post.setUpdatedDate(new Date());
+		
+		Contact contact = new Contact();
+		contact.setAddress("Not given");
+		contact.setNumber("Not given");
+		contact.setPostId(post.getId());
+		contactService.save(contact);
+		
+		post.setContact(contact);
+		
 		return postRepository.save(post);
 	}
 	
@@ -79,6 +94,7 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 		Post post = super.findById(id);
 		if (post != null) {
 			post.setConversations(conversationRepository.findByPostId(id));
+			post.setContact(contactService.findByPostId(id));
 		}
 		return post;
 	}
@@ -108,10 +124,13 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 		post.setUserId(0);
 		repository.save(post);
 		
+		//remove conversations
 		List<Conversation> list = conversationRepository.findByPostId(post.getId());
 		list.stream().forEach(c -> {
 			conversationRepository.delete(c);
 		});
+		//remove contact
+		contactService.deleteById(contactService.findByPostId(id).getId());
 		
 		return post;
 	}
