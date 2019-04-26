@@ -24,7 +24,7 @@ function getStaff() {
             var content_html = '';
             for (var i = 0; i < data.length; i++) {
                 if (data[i].role != STAFF) continue;
-                content_html += '<td> <a href=\'staff1.html?id=' + data[i].id + ' \'> ' + data[i].firstName + " " + data[i].lastName + ' </a></td>' + '\n';
+                content_html += '<td> <a href=\'view-staff.html#' + data[i].id + ' \'> ' + data[i].firstName + " " + data[i].lastName + ' </a></td>' + '\n';
                 content_html += '<td> ' + data[i].name + ' </td>' + '\n';
                 content_html += '<td id="staff' + data[i].id + '"> </td>' + '\n';
                 content_html += '</tr>' + '\n';

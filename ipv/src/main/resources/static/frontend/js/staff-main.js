@@ -188,6 +188,7 @@ function populateChat(postId) {
         return;
     }
     getPostMessages(postId);
+    getLocationInfo(postId);
 }
 
 /** Defines message object */
@@ -285,6 +286,32 @@ function sendMessageToServer(msg) {
             console.log("fail");
             console.log(e);
             alert("Error, please try again. ")
+        }
+    });
+}
+
+/** Get location information that the user corresponding to @param post has sent */
+function getLocationInfo(postId) {
+    var url = "/contacts/by_post/" + postId;
+    var request_method = "GET";
+    console.log(url);
+
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: url,
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log("success");
+            console.log(data);
+            $("#location").removeClass("hidden");
+            var text = "Location information (will be deleted after 1 week): \n " + data.address;
+            $("#location").html(text);
+        },
+        error: function (e) {
+            console.log("fail");
+            console.log(e);
         }
     });
 }

@@ -1,6 +1,5 @@
 uid = null
 PWD_LEN = 1 //TODO: change after testing
-users = {}
 
 $(document).ready(function() {
     validate();
@@ -11,9 +10,13 @@ $(document).ready(function() {
         logout();
     });
     uid = getUid();
-    init();
-    getUsernames();
+    var staffId = getStaffId();
+    init(staffId);
 });
+
+function getStaffId() {
+    return window.location.hash.substring(1) ? (window.location.hash.substring(1)) : uid;
+}
 
 /** Performs validation of profile update form, ensures that username
  *  and password fields are not empty, and that passwords provided match.
@@ -51,17 +54,8 @@ function validate() {
   });
 };
 
-//TODO: is there a reason why we do this
-$.urlParam = function (name) {
-    var results = new RegExp('[\?&]' + name + '=([^&#]*)')
-        .exec(window.location.search);
-
-    return (results !== null) ? results[1] || 0 : false;
-}
-
 /** Populates the first name, last name, username fields of the current user */
-function init() {
-    //var id = $.urlParam('id');
+function init(staffId) {
     console.log("/users/" + uid);
     $.ajax({
         type: "GET",
@@ -79,63 +73,6 @@ function init() {
         error: function (e) {
             console.log(e);
             alert("Error, please refresh page.");
-        }
-    });
-}
-
-/** Populate the side navigation with users staff is chatting with.
- *  A dot icon is used to indicate unread messages
- *  Populates the chat box depending on the current username clicked
- *  on the nav bar.
- */
-function populateView() {
-    var htmlString = "";
-    console.log(users);
-    for (var postId in users) {
-        htmlString += '<li id="user' + postId + '")">' +
-                            '<a href="chat.html#' + postId + '">' +
-                                '<i class="now-ui-icons users_single-02"></i>' +
-                                '<p>' + users[postId] + '</p>' +
-                            '</a>' +
-                          '</li>';
-    }
-    htmlString += '<li class="active">' +
-                    '<a href="./staff-settings.html">' +
-                   	    '<i class="now-ui-icons ui-1_settings-gear-63"></i>' +
-                   	     '<p>Account Settings</p>' +
-                   	'</a>' +
-                  '</li>';
-
-    $("#nav-bar").html(htmlString);
-}
-
-
-/** Gets all usernames of users that the staff is chatting with
- *  and populates the nav bar */
-function getUsernames() {
-    var url = "/posts/by_staff/" + uid;
-    var request_method = "GET";
-
-    $.ajax({
-        type: request_method,
-        contentType: "application/json",
-        url: url,
-        cache: false,
-        timeout: 60000,
-        success: function (data) {
-            console.log("success");
-            for (var i=0; i<data.length; i++) {
-                var chat = data[i];
-                console.log(chat);
-                if (chat.user != null) users[chat.id] = chat.user.name;
-            }
-            populateView();
-        },
-        error: function (e) {
-            console.log("fail");
-            console.log(e);
-            alert("Error, please try again.")
-            $(location).attr("href", "chat.html");
         }
     });
 }
@@ -165,41 +102,40 @@ function validFields() {
 
 /** Sends an ajax request to save account changes */
 function saveChanges() {
-    if (!validFields()) {
-        alert("Please fill in all fields and use a password that is at least " + PWD_LEN + " characters long.");
-        return;
-    }
-    var post_url = "/users/update_pass"
-    var request_method = "PUT";
-    var main_url = "/frontend/src/staff/chat.html";
-    var form_data = {
-        firstName:$("#first_name").val(),
-        lastName:$("#last_name").val(),
-        pass:$("#password").val(),
-        name:$("#username").val(),
-        id:uid
-    };
-    console.log(form_data);
+    $("#staff_login_form").submit(function(event){
+        if (!validFields()) return;
+        event.preventDefault(); //prevent default action
+        var post_url = "/users/update_pass"
+        var request_method = "PUT";
+        var main_url = "/frontend/src/staff/chat.html";
+        var form_data = {
+            firstName:$("#first_name").val(),
+            lastName:$("#last_name").val(),
+            pass:$("#password").val(),
+            name:$("#username").val(),
+            id:uid
+        };
+        console.log(form_data);
 
-    $.ajax({
-        type: request_method,
-        contentType: "application/json",
-        url: post_url,
-        data: JSON.stringify(form_data),
-        dataType: 'json',
-        cache: false,
-        timeout: 60000,
-        success: function (data) {
-            console.log("success");
-            $(location).attr("href", main_url);
-        },
-        error: function (e) {
-            console.log("fail");
-            console.log(e);
-            alert("Your profile failed to update, please try again.")
-        }
+        $.ajax({
+            type: request_method,
+            contentType: "application/json",
+            url: post_url,
+            data: JSON.stringify(form_data),
+            dataType: 'json',
+            cache: false,
+            timeout: 60000,
+            success: function (data) {
+                console.log("success");
+                $(location).attr("href", main_url);
+            },
+            error: function (e) {
+                console.log("fail");
+                console.log(e);
+                alert("Your profile failed to update, please try again.")
+            }
+        });
     });
-    return;
 };
 
 /** Sends an ajax request to save account changes (for admin account) */

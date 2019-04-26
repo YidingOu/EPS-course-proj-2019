@@ -169,13 +169,13 @@ function submitUserLogin() {
 
 /** Submits information in login form to server */ 
 function submitStaffLogin() {
-  if (!validFields("login")) return;
   $("#staff_login_form").submit(function(event){
+    if (!validFields("login")) return;
     event.preventDefault(); //prevent default action
     var post_url = "/users/staffs/validate"; //get form action url
     var request_method = $(this).attr("method"); 
     var staff_url = "/frontend/src/staff/chat.html";
-    var admin_url = "/frontend/src/staff/staff.html";
+    var admin_url = "/frontend/src/admin/dashboard.html";
     var form_data = {
     		name:$("#username").val(),  
     		pass:$("#password").val()

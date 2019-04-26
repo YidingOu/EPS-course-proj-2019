@@ -244,3 +244,14 @@ a {
 .message_template {
   display: none;
 }
+
+.location {
+    background: red;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
