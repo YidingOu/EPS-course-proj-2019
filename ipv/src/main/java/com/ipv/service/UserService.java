@@ -31,5 +31,9 @@ public interface UserService extends BaseService<User>{
 	public List<User> getStaffs();
 	
 	public User changePass(User olduser, String pass);
+	
+	public User addStaff(User user);
+
+	public void delete(User user);
 
 }

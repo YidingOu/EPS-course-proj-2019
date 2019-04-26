@@ -75,6 +75,19 @@ public class UserRestAPI {
 		return user;
 	}
 
+	// create an staff
+	@PostMapping("/staffs")
+	public User addStaff(@RequestBody User user) {
+		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
+		user.setId(0);
+		service.addStaff(user);
+
+		//Add audit
+		auditService.addAudit(user.getId(), null, "Staff created with id = " + user.getId());
+
+		return user;
+	}
+
 	// validate
 	@PostMapping("/validate")
 	public ValidateResponseWapper validate(@RequestBody User user) {
@@ -162,8 +175,8 @@ public class UserRestAPI {
 		if (user == null) {
 			throw new NotFoundException("user id not found - " + id);
 		}
-		service.deleteById(id);
-
+		service.delete(user);
+		
 		//Add audit
 		auditService.addAudit(user.getId(), null, "User is deleted with id = " + user.getId());
 

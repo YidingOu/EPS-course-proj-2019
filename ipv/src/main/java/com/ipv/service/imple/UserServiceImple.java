@@ -1,12 +1,13 @@
 package com.ipv.service.imple;
 
-import java.util.Date;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
 
 import com.ipv.entity.Post;
@@ -15,13 +16,8 @@ import com.ipv.reporsitory.PostRepository;
 import com.ipv.reporsitory.UserRepository;
 import com.ipv.service.PostService;
 import com.ipv.service.UserService;
+import com.ipv.util.Constant;
 import com.ipv.util.Util;
-import java.security.*;
-import org.springframework.security.crypto.keygen.KeyGenerators;
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-import java.security.Key;
-import io.jsonwebtoken.*;
 
 
 /**
@@ -106,7 +102,9 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 		
 	}
 	
+	// create normal user
 	public User save(User user) {
+		user.setRole(0);
 		String salt = KeyGenerators.string().generateKey();
 		user.setSalt(salt);
 		String pwd = user.getPass();
@@ -184,6 +182,34 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 		user = repository.save(user);
 		Util.processUser(user, userRepository);
 		return user;
+	}
+
+	@Override
+	public User addStaff(User user) {
+		user.setRole(1);
+		String salt = KeyGenerators.string().generateKey();
+		user.setSalt(salt);
+		String pwd = user.getPass();
+		byte[] salts = salt.getBytes();
+		String newPwd = saltPassword(pwd, salts);
+		user.setPass(newPwd);
+		user = repository.save(user);
+		Util.processUser(user, userRepository);
+		return user;
+	}
+
+	@Override
+	public void delete(User user) {
+		repository.deleteById(user.getId());
+		
+		//Re assign the post to other staffs if a staff is removed
+		if (user.getRole() == Constant.STAFF) {
+			List<Post> posts = postRepository.findByStaffId(user.getId());
+			posts.stream().forEach(p -> {
+				p.setStaffId(loadBalancerForGettingAStaffId());
+				postRepository.save(p);
+			});
+		}
 	}
 	
 

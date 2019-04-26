@@ -6,6 +6,11 @@ package com.ipv.util;
  * 
  */
 public class Constant {
+	
+	public final static int USER = 0;
+	public final static int STAFF = 1;
+	public final static int ADMIN = 2;
+	
 	public final static int FAIL = 0;
 	public final static int SUCCESS = 1;
 	
