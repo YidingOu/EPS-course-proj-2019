@@ -87,6 +87,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         return dbPass.equals(hashedPass);
     }
 
+    // Validate the input name and password of staff
     @Override
     public User validateStaff(String name, String pass) {
         User user = userRepository.findByName(name);
@@ -149,6 +150,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         return min.getId();
     }
 
+    // Return the user repo
     @Override
     public UserRepository getUserRepository() {
         return this.userRepository;

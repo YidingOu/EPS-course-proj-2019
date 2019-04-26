@@ -19,12 +19,13 @@ public class BaseImple<E> {
     //JpaRepository, will be override by the children
     public JpaRepository<E, Integer> repository;
 
+    // Return all repos
     public List<E> findAll() {
         return repository.findAll();
     }
 
 
-    // Return entity with input id.
+    // Return entity with input id
     public E findById(int id) {
         Optional<E> result = repository.findById(id);
 

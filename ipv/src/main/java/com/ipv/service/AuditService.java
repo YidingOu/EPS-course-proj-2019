@@ -15,7 +15,12 @@ import com.ipv.entity.Audit;
  * 
  */
 public interface AuditService extends BaseService<Audit>{
+	// Add an audit
 	public void addAudit(Integer userId, Integer postId, String action);
+
+	// Find a list of audits with input post id
 	public List<Audit> findByPostId(int id);
+
+	// Find a list of audits with input user id
 	public List<Audit> findByUserId(int id);
 }
