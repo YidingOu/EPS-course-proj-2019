@@ -97,20 +97,14 @@ function getPosts(userId) {
         success: function (data) {
             console.log(post_url);
             console.log("success");
-            while (data.status == 10) {
-                //conversation is paused
-                console.log("is paused");
-                //TODO
-                var pwd = prompt("Please input your password if you would like " +
-                "to resume your conversation with the shelter: ");
-                if (resumeConversation(pwd)) {
-                    getPosts(userId);
-                    break;
-                }
-                else alert("Incorrect password, please try again. ")
-            }
             console.log(data);
             postId = data.id;
+            if (data.status == 10) {
+                //conversation is paused
+                console.log("is paused");
+                resumeConversation()
+            }
+
             getMessages(postId);
             getLocationInfo();
         },
@@ -125,9 +119,42 @@ function getPosts(userId) {
 }
 
 /** Resumes the conversation with the shelter by invoking the api */
-function resumeConversation(pwd) {
-    //TODO
-    return false;
+function resumeConversation() {
+    var pwd = prompt("Please input your password if you would like " +
+                    "to resume your conversation with the shelter: ");
+    if (pwd && pwd != "") { // User Pressed Yes, resume account
+        var url = "/posts/resume";
+        var request_method = "POST";
+        var main_url = "/frontend/src/main.html";
+        var post_data = {
+            id: postId,
+            key: pwd
+        }
+        console.log(post_data);
+
+        $.ajax({
+            type: request_method,
+            contentType: "application/json",
+            data: JSON.stringify(post_data),
+            dataType: 'json',
+            url: url,
+            cache: false,
+            timeout: 60000,
+            success: function (data) {
+                console.log("success");
+                alert("Conversation successfully unlocked!");
+                $(location).attr("href", main_url);
+            },
+            error: function (e) {
+                console.log("fail");
+                console.log(e);
+                alert("Incorrect password, please try again.");
+                $(location).attr("href", main_url);
+            }
+        });
+        return;
+    }
+    return;
 }
 
 /** Gets messages from the same conversation (ie same post id) and draws to screen */
@@ -318,15 +345,20 @@ function getLocationInfo() {
     });
 }
 
+/** Displays the location information */
 function displayLocationInfo(location) {
     $("#location").removeClass("hidden");
     $("#location_info").html(location);
+    $("#location-btn").addClass("hidden");
 }
 
+/** Hides the location information */
 function hideLocationInfo() {
     $("#location").addClass("hidden");
+    $("#location-btn").removeClass("hidden");
 }
 
+/** Sends request to server to edit the location information */
 function editLocation() {
     var location = prompt("Update the location information you wish to share: ")
     var url = "/contacts";
@@ -366,6 +398,7 @@ function editLocation() {
     return;
 }
 
+/** Deletes location information */
 function deleteLocation() {
     var cfm = confirm("Are you sure you want to delete your location information? ")
     var url = "/contacts/" + locationId;
