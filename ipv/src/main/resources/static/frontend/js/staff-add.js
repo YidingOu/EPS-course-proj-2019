@@ -58,9 +58,9 @@ function submitNewStaff() {
   $("#new-staff").submit(function(event){
     if (!validFields("staff")) return;
     event.preventDefault(); //prevent default action
-    var post_url = "/users"
+    var post_url = "/users/staffs"
     var request_method = "POST";
-    var main_url = "/frontend/src/staff/staff.html";
+    var main_url = "/frontend/src/admin/staff.html";
     var form_data = {
     		name:$("#username").val(),
     		pass:$("#password").val(),

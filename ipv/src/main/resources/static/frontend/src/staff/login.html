@@ -25,16 +25,16 @@
 					<form id="staff_login_form" action="/users/staffs/validate" method="post" name="staff_login">
 						<div class="form-group">
 							<label>Username</label>
-                            <input name="username"  class="form-control" id="username" placeholder="Enter Username">
+                            <input name="username" maxlength="20"  class="form-control" id="username" placeholder="Enter Username">
                         </div>
                         <div class="form-group">
                             <label>Password</label>
-                            <input type="password" name="password" id="password" class="form-control" placeholder="Enter Password">
+                            <input type="password" maxlength="20" name="password" id="password" class="form-control" placeholder="Enter Password">
                         </div>
                         <br>
                         <div id="login_error"></div>
                         <div class="col-md-12 text-center ">
-                            <button id="login_btn" onclick="submitStaffLogin()" type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Login</button>
+                            <button id="login_btn"  type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Login</button>
                         </div> 
                     </form>
 				</div>
