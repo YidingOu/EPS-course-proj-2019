@@ -2,6 +2,7 @@ package com.ipv.service.imple;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -15,6 +16,7 @@ import com.ipv.reporsitory.ConversationRepository;
 import com.ipv.reporsitory.PostRepository;
 import com.ipv.reporsitory.UserRepository;
 import com.ipv.service.ConversationService;
+import com.ipv.service.EncryptionService;
 import com.ipv.util.Constant;
 
 /**
@@ -43,6 +45,9 @@ public class ConversationServiceImple extends BaseImple<Conversation> implements
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private EncryptionService encrytionService;
+	
 	
 	//After the injection is done, override the repository in the super class
 	@PostConstruct
@@ -52,11 +57,25 @@ public class ConversationServiceImple extends BaseImple<Conversation> implements
 	
 	@Override
 	public List<Conversation> findByPostId(int id) {
-		return conversationRepository.findByPostId(id);
+		List<Conversation> list = conversationRepository.findByPostId(id);
+		list.stream().forEach(c -> c.setData(encrytionService.decrypt(c.getData())));
+		return list;
+	}
+	
+	@Override
+	public Conversation findById(int id){
+		Optional<Conversation> result = repository.findById(id);
+		Conversation c = null;
+		if (result.isPresent()) {
+			c = result.get();
+		}
+		c.setData(encrytionService.decrypt(c.getData()));
+		return c;
 	}
 	
 	@Override
 	public Conversation save(Conversation conversation){
+		conversation.setData(encrytionService.encrypt(conversation.getData()));
 		conversation.setDate(new Date());
 		User user = userRepository.findById(conversation.getUserId()).get();
 		Post post = postRepository.findById(conversation.getPostId()).get();
