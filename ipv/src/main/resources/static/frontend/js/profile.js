@@ -3,14 +3,12 @@ var uid = null;
 var PWD_LEN = 1;
 
 $(document).ready(function() {
+    validate();
 	$("#delete-btn").click(function() {
 		deleteAccount();
 	});
 	$("#pause-btn").click(function() {
 		pauseAccount();
-	});
-	$("#save-btn").click(function() {
-		saveChanges();
 	});
 	$("#logout").click(function() {
         logout();
@@ -70,14 +68,14 @@ function validFields() {
  *  and password fields are not empty, and that passwords provided match.
  */
 function validate() {
-    $("form[name='profile']").validate({
+    $("#user-profile").validate({
         rules: {
           username: {
             required: true
           },
           password: {
             required: true,
-            minlength: 1	//TODO: change to min length of 8
+            minlength: PWD_LEN
           },
           password_cfm: {
             equalTo: "#password"
@@ -145,8 +143,8 @@ function pauseAccount() {
             timeout: 60000,
             success: function (data) {
                 console.log("success");
+                alert("Conversation successfully locked!");
                 $(location).attr("href", main_url);
-
             },
             error: function (e) {
                 console.log("fail");
@@ -161,40 +159,39 @@ function pauseAccount() {
 
 /** Sends an ajax request to save account changes */
 function saveChanges() {
-    if (!validFields()) {
-        alert("Please fill in all fields and use a password that is at least " + PWD_LEN + " characters long.");
-        return;
-    }
-    var post_url = "/users/update_pass"
-    var request_method = "PUT"; 
-    var main_url = "/frontend/src/main.html";
-    var form_data = {
-		pass:$("#password").val(),
-		name:$("#username").val(),
-		id:uid
-    };
-    console.log($("#password").val());
-    console.log(form_data);
-    
-    $.ajax({
-        type: request_method,
-        contentType: "application/json",
-        url: post_url,
-        data: JSON.stringify(form_data),
-        dataType: 'json',
-        cache: false,
-        timeout: 60000,
-        success: function (data) {
-        	console.log("success");
-        	$(location).attr("href", main_url);
-        },
-        error: function (e) {
-        	console.log("fail");
-        	console.log(JSON.stringify(e));
-        	alert("Your profile failed to update, please try again.")
-        }
-    });
-	return;
+    $("#user-profile").submit(function(event){
+        event.preventDefault(); //prevent default action
+        if (!validFields()) return;
+        var post_url = "/users/update_pass"
+        var request_method = "PUT";
+        var main_url = "/frontend/src/main.html";
+        var form_data = {
+            pass:$("#password").val(),
+            name:$("#username").val(),
+            id:uid
+        };
+        console.log(form_data);
+
+        $.ajax({
+            type: request_method,
+            contentType: "application/json",
+            url: post_url,
+            data: JSON.stringify(form_data),
+            dataType: 'json',
+            cache: false,
+            timeout: 60000,
+            success: function (data) {
+                console.log("success");
+                alert("Profile successfully updated!");
+                $(location).attr("href", main_url);
+            },
+            error: function (e) {
+                console.log("fail");
+                console.log(JSON.stringify(e));
+                alert("Your profile failed to update, please try again.")
+            }
+        });
+    })
 }
 
 /** Logout by deleting uid in localstorage and authentication token */

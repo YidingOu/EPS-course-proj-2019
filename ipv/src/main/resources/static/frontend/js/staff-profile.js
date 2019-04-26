@@ -4,9 +4,6 @@ users = {}
 
 $(document).ready(function() {
     validate();
-    $("#save-btn").click(function() {
-        saveChanges();
-    });
     $("#logout").click(function() {
         logout();
     });
@@ -47,7 +44,8 @@ function validate() {
         minlength: "Your password must be at least 8 characters long"
       },
       password_cfm: "Passwords must match!"
-    }
+    },
+    submitHandler: saveChanges()
   });
 };
 
@@ -165,80 +163,42 @@ function validFields() {
 
 /** Sends an ajax request to save account changes */
 function saveChanges() {
-    if (!validFields()) {
-        alert("Please fill in all fields and use a password that is at least " + PWD_LEN + " characters long.");
-        return;
-    }
-    var post_url = "/users/update_pass"
-    var request_method = "PUT";
-    var main_url = "/frontend/src/staff/chat.html";
-    var form_data = {
-        firstName:$("#first_name").val(),
-        lastName:$("#last_name").val(),
-        pass:$("#password").val(),
-        name:$("#username").val(),
-        id:uid
-    };
-    console.log(form_data);
+    $("#staff-profile").submit(function(event){
+        event.preventDefault(); //prevent default action
+        if (!validFields()) return;
+        var post_url = "/users/update_pass"
+        var request_method = "PUT";
+        var main_url = "/frontend/src/staff/chat.html";
+        var form_data = {
+            firstName:$("#first_name").val(),
+            lastName:$("#last_name").val(),
+            pass:$("#password").val(),
+            name:$("#username").val(),
+            id:uid
+        };
+        console.log(form_data);
 
-    $.ajax({
-        type: request_method,
-        contentType: "application/json",
-        url: post_url,
-        data: JSON.stringify(form_data),
-        dataType: 'json',
-        cache: false,
-        timeout: 60000,
-        success: function (data) {
-            console.log("success");
-            $(location).attr("href", main_url);
-        },
-        error: function (e) {
-            console.log("fail");
-            console.log(e);
-            alert("Your profile failed to update, please try again.")
-        }
-    });
-    return;
-};
+        $.ajax({
+            type: request_method,
+            contentType: "application/json",
+            url: post_url,
+            data: JSON.stringify(form_data),
+            dataType: 'json',
+            cache: false,
+            timeout: 60000,
+            success: function (data) {
+                console.log("success");
+                alert("Profile successfully updated!");
+                $(location).attr("href", main_url);
 
-/** Sends an ajax request to save account changes (for admin account) */
-function saveAdminChanges() {
-    if (!validFields()) {
-        alert("Please fill in all fields and use a password that is at least " + PWD_LEN + " characters long.");
-        return;
-    }
-    var post_url = "/users/update_pass"
-    var request_method = "PUT";
-    var main_url = "/frontend/src/staff/dashboard.html";
-    var form_data = {
-        firstName:$("#first_name").val(),
-        lastName:$("#last_name").val(),
-        pass:$("#password").val(),
-        name:$("#username").val(),
-        id:uid
-    };
-    console.log(form_data);
-
-    $.ajax({
-        type: request_method,
-        contentType: "application/json",
-        url: post_url,
-        data: JSON.stringify(form_data),
-        dataType: 'json',
-        cache: false,
-        timeout: 60000,
-        success: function (data) {
-            console.log("success");
-            $(location).attr("href", main_url);
-        },
-        error: function (e) {
-            console.log("fail");
-            console.log(e);
-            alert("Your profile failed to update, please try again.")
-        }
-    });
-    return;
+            },
+            error: function (e) {
+                console.log("fail");
+                console.log(e);
+                alert("Your profile failed to update, please try again.")
+            }
+        });
+    })
 };
 
 /** Logout by deleting uid in localstorage and authentication token */
