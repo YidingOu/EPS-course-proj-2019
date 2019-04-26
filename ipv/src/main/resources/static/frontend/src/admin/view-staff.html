@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <script src="../../assets/js/core/jquery.min.js"></script>
+    <script src="../../assets/js/core/jquery.validate.min.js"></script>
+    <script src="../../js/view-staff.js"></script>
+    <link href="../../assets/css/now-ui-dashboard.css?v=1.3.0" rel="stylesheet"/>
+    <link href="../../css/admin.css" rel="stylesheet"/>
+    <link href="../../assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <title>
+        Pittsburgh Women's Shelter Communications
+    </title>
+</head>
+<body>
+<div class="wrapper">
+    <div class="sidebar" data-color="blue">
+        <div class="logo center">
+            <a href="dashboard.html" class="simple-text logo-normal"> Admin </a>
+        </div>
+        <div class="sidebar-wrapper" id="sidebar-wrapper">
+            <ul class="nav">
+                <li>
+                    <a href="./dashboard.html">
+                        <i class="now-ui-icons design_app"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="./staff.html">
+                        <i class="now-ui-icons users_single-02"></i>
+                        <p>Staff</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="./logs.html">
+                        <i class="now-ui-icons business_chart-bar-32"></i>
+                        <p>Logs</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="./settings.html">
+                        <i class="now-ui-icons ui-1_settings-gear-63"></i>
+                        <p>Account Settings</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-panel" id="main-panel">
+        <div class="content">
+            <div class="row content-margin">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="title">Edit Profile</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="staff-profile">
+                                <div class="row">
+                                    <div class="col-md-4 pr-1">
+                                        <div class="form-group">
+                                            <label>First Name</label>
+                                            <input name="first_name" id="first_name" type="text" class="form-control" placeholder="First Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 px-1">
+                                        <div class="form-group">
+                                            <label>Last Name</label>
+                                            <input name="last_name" id="last_name" type="text" class="form-control" placeholder="Last Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 pl-1">
+                                        <div class="form-group">
+                                            <label>Username</label>
+                                            <input name="username" id="username" type="text" class="form-control" placeholder="Username">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Password</label>
+                                            <input name="password" id="password" type="password" class="form-control" placeholder="Password">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Confirm Password</label>
+                                            <input name="password_cfm" id="password_cfm" type="password" class="form-control" placeholder="Confirm Password">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="row buttons" style="width: 100%; margin: 0">
+                                <button type="button" id="delete-btn" class="btn btn-danger" style="float: left">Delete Account</button>
+                                <div style="position: absolute; right: 2%">
+                                    <a href="staff.html"><button type="button" class="btn btn-secondary">Cancel</button></a>
+                                    <a href="staff.html"><button type="button" id="save-btn" class="btn btn-primary">Save</button></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
