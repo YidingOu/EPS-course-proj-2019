@@ -1,6 +1,5 @@
 package com.ipv.rest;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class UserRestAPI {
 
 	@Autowired
 	private UserService service;
-	
+
 	@Autowired
 	private AuditService auditService;
 
@@ -69,10 +68,10 @@ public class UserRestAPI {
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
 		user.setId(0);
 		service.save(user);
-		
+
 		//Add audit
 		auditService.addAudit(user.getId(), null, "User created with id = " + user.getId());
-		
+
 		return user;
 	}
 
@@ -89,7 +88,7 @@ public class UserRestAPI {
 			auditService.addAudit(resultUser.getId(), null, "User logins failed with id = " + resultUser.getId());
 			return new ValidateResponseWapper(0, null, "The althentication failed");
 		}
-		
+
 	}
 
 	//get all staffs
@@ -97,7 +96,7 @@ public class UserRestAPI {
 	public List<User> findAllStaffs() {
 		return service.getStaffs();
 	}
-	
+
 	//get all staffs
 	@GetMapping("/customers")
 	public List<User> findAllNormalUsers() {
@@ -120,20 +119,38 @@ public class UserRestAPI {
 		}
 	}
 
-	// update password for the user
-	@PutMapping("/update_pass")
+	// update info for the user
+	@PutMapping
 	public User update(@RequestBody User user) {
 		User olduser = service.findById(user.getId());
 		if (olduser == null) {
 			throw new NotFoundException("User id not found - " + user.getId());
 		}
-		
-		olduser = service.changePass(olduser, user.getPass());
+
+		olduser.setFirstName(user.getFirstName());
+		olduser.setLastName(user.getLastName());
 		Util.processUser(olduser, service.getUserRepository());
-		
+
 		//Add audit
 		auditService.addAudit(user.getId(), null, "User updated password with id = " + user.getId());
-		
+
+		return olduser;
+	}
+
+	// update password for the user
+	@PutMapping("/update_pass")
+	public User updatePass(@RequestBody User user) {
+		User olduser = service.findById(user.getId());
+		if (olduser == null) {
+			throw new NotFoundException("User id not found - " + user.getId());
+		}
+
+		olduser = service.changePass(olduser, user.getPass());
+		Util.processUser(olduser, service.getUserRepository());
+
+		//Add audit
+		auditService.addAudit(user.getId(), null, "User updated password with id = " + user.getId());
+
 		return olduser;
 	}
 
@@ -146,13 +163,13 @@ public class UserRestAPI {
 			throw new NotFoundException("user id not found - " + id);
 		}
 		service.deleteById(id);
-		
+
 		//Add audit
 		auditService.addAudit(user.getId(), null, "User is deleted with id = " + user.getId());
-		
+
 		return "Deleted User id - " + id;
 	}
-	
+
 
 }
 
