@@ -4,6 +4,9 @@ staffId = null;
 
 $(document).ready(function() {
     validate();
+    $("#delete-btn").click(function() {
+        deleteStaff();
+    })
     $("#logout").click(function() {
         logout();
     });
@@ -14,6 +17,40 @@ $(document).ready(function() {
 
 function getStaffId() {
     return window.location.hash.substring(1) ? (window.location.hash.substring(1)) : uid;
+}
+
+
+/** Draws the alert confirmation box and sends an ajax request to delete account
+ *  upon confirmation.
+ */
+function deleteStaff() {
+	var cfm = confirm ("Are you sure you want to delete the account? This action cannot be undone. ");
+	if (cfm) { // User Pressed Yes, delete account
+	    var url = "/users/" + staffId;
+	    var request_method = "DELETE";
+	    var main_url = "/frontend/src/admin/staff.html";
+
+	    $.ajax({
+	        type: request_method,
+	        contentType: "application/json",
+	        url: url,
+	        cache: false,
+	        timeout: 60000,
+	        success: function (data) {
+	        	console.log("success");
+                alert("Account successfully deleted.")
+	        	$(location).attr("href", main_url);
+
+	        },
+	        error: function (e) {
+	        	console.log("fail");
+	        	console.log(JSON.stringify(e));
+	        	alert("Deletion of account failed, please try again.")
+	        }
+	    });
+		return;
+	}
+	return;
 }
 
 /** Performs validation of profile update form, ensures that username
