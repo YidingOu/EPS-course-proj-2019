@@ -3,6 +3,7 @@
 var uid = null;
 var postId = null;
 var posts = [];
+var locationId = null;
 
 $(document).ready(function() {
     uid = getUid();
@@ -34,7 +35,6 @@ $(document).ready(function() {
         logout();
     });
     getPosts(uid);
-    //posts = test();
 })
 
 /** If the local variable first is not set, set it to 1 and return true;
@@ -112,6 +112,7 @@ function getPosts(userId) {
             console.log(data);
             postId = data.id;
             getMessages(postId);
+            getLocationInfo();
         },
         error: function (e) {
             console.log("fail");
@@ -257,6 +258,11 @@ function sendLocation() {
     var location = prompt("Please enter the location you wish to share. " +
         "This information is strictly confidential and will be automatically deleted after a week.");
     var url = "/contacts";
+    if (location == "") {
+        alert("Input cannot be empty!")
+        return;
+    }
+    if (location == null) return;
     var request_method = "POST";
     var post_data = {
         address: location,
@@ -275,6 +281,109 @@ function sendLocation() {
             console.log("success");
             console.log(data);
             alert("Successfully sent your location information! ")
+            displayLocationInfo(location);
+        },
+        error: function (e) {
+            console.log("fail");
+            console.log(e);
+            alert("Error, please try again.");
+        }
+    });
+    return;
+}
+
+/** Get location information that the user corresponding to @param post has sent */
+function getLocationInfo() {
+    var url = "/contacts/by_post/" + postId;
+    var request_method = "GET";
+    console.log(url);
+
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: url,
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log("success");
+            console.log(data);
+            locationId = data.id;
+            console.log(locationId);
+            displayLocationInfo(data.address);
+        },
+        error: function (e) {
+            console.log("fail");
+            console.log(e);
+        }
+    });
+}
+
+function displayLocationInfo(location) {
+    $("#location").removeClass("hidden");
+    $("#location_info").html(location);
+}
+
+function hideLocationInfo() {
+    $("#location").addClass("hidden");
+}
+
+function editLocation() {
+    var location = prompt("Update the location information you wish to share: ")
+    var url = "/contacts";
+    if (location == "") {
+        alert("Input cannot be empty!")
+        return;
+    }
+    if (location == null) return;
+
+    var request_method = "PUT";
+    var post_data = {
+        address: location,
+        postId: postId,
+        id: locationId
+    };
+    console.log(post_data);
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: url,
+        data: JSON.stringify(post_data),
+        dataType: 'json',
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log("success");
+            console.log(data);
+            alert("Successfully updated your location information! ")
+            displayLocationInfo(location);
+        },
+        error: function (e) {
+            console.log("fail");
+            console.log(e);
+            alert("Error, please try again.");
+        }
+    });
+    return;
+}
+
+function deleteLocation() {
+    var cfm = confirm("Are you sure you want to delete your location information? ")
+    var url = "/contacts/" + locationId;
+    if (!cfm) return;
+
+    var request_method = "DELETE";
+
+    $.ajax({
+        type: request_method,
+        contentType: "application/json",
+        url: url,
+        cache: false,
+        timeout: 60000,
+        success: function (data) {
+            console.log("success");
+            console.log(data);
+            alert("Successfully deleted your location information! ")
+            hideLocationInfo();
         },
         error: function (e) {
             console.log("fail");
