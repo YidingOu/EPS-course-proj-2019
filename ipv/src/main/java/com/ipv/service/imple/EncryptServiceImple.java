@@ -9,52 +9,55 @@ import org.springframework.stereotype.Service;
 import com.ipv.service.EncryptionService;
 
 /**
- * 
- * 
+ *
  */
 @Service
-public class EncryptServiceImple implements EncryptionService{
+public class EncryptServiceImple implements EncryptionService {
 
-	@Value("${spring.encryption.key}")
-	private String key;
+    @Value("${spring.encryption.key}")
+    private String key;
 
-	BasicTextEncryptor textEncryptor;
-	
-	//After the injection is done, override the repository in the super class
-	@PostConstruct
-	public void init() {
-		textEncryptor = new BasicTextEncryptor();
-		textEncryptor.setPasswordCharArray(key.toCharArray());
+    BasicTextEncryptor textEncryptor;
 
-	}
+    //After the injection is done, override the repository in the super class
+    @PostConstruct
+    public void init() {
+        textEncryptor = new BasicTextEncryptor();
+        textEncryptor.setPasswordCharArray(key.toCharArray());
 
-	@Override
-	public String encrypt(String text) {
-		return textEncryptor.encrypt(text);
-	}
+    }
 
-	@Override
-	public String decrypt(String text) {
-		return textEncryptor.decrypt(text);
-	}
+    // Encrypt the input text
+    @Override
+    public String encrypt(String text) {
+        return textEncryptor.encrypt(text);
+    }
 
-	@Override
-	public String encrypt(BasicTextEncryptor encryptor, String text) {
-		return encryptor.encrypt(text);
-	}
+    // Decrypt the input text
+    @Override
+    public String decrypt(String text) {
+        return textEncryptor.decrypt(text);
+    }
 
-	@Override
-	public String decrypt(BasicTextEncryptor encryptor, String text) {
-		return encryptor.decrypt(text);
-	}
+    // Encrypt the input text with input encryptor
+    @Override
+    public String encrypt(BasicTextEncryptor encryptor, String text) {
+        return encryptor.encrypt(text);
+    }
 
-	@Override
-	public BasicTextEncryptor createAnEncryptor(String key) {
-		BasicTextEncryptor newEncryptor = new BasicTextEncryptor();
-		newEncryptor.setPassword(key);
-		return newEncryptor;
-	}
+    // Decrypt the input text with input encryptor
+    @Override
+    public String decrypt(BasicTextEncryptor encryptor, String text) {
+        return encryptor.decrypt(text);
+    }
 
+    // Create an encryptor with input key
+    @Override
+    public BasicTextEncryptor createAnEncryptor(String key) {
+        BasicTextEncryptor newEncryptor = new BasicTextEncryptor();
+        newEncryptor.setPassword(key);
+        return newEncryptor;
+    }
 
 
 }
