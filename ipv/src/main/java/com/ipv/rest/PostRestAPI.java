@@ -16,6 +16,7 @@ import com.ipv.entity.Post;
 import com.ipv.exception.NotFoundException;
 import com.ipv.service.AuditService;
 import com.ipv.service.PostService;
+import com.ipv.util.wrapper.PauseAndResumeWrapper;
 import com.ipv.util.wrapper.PostCount;
 
 /**
@@ -130,19 +131,19 @@ public class PostRestAPI {
 	}
 
 	//pause the post
-	@GetMapping("/pause/{id}")
-	public Post pause(@PathVariable int id) {
+	@PostMapping("/pause")
+	public Post pause(@RequestBody PauseAndResumeWrapper wrapper) {
 		//Add audit
-		auditService.addAudit(null, id, "Post paused with id = " + id );
-		return service.pause(id);
+		auditService.addAudit(null, wrapper.getId(), "Post paused with id = " + wrapper.getId());
+		return service.pause(wrapper);
 	}
 
 	//resume the post
-	@GetMapping("/resume/{id}")
-	public Post resume(@PathVariable int id) {
+	@PostMapping("/resume")
+	public Post resume(@RequestBody PauseAndResumeWrapper wrapper) {
 		//Add audit
-		auditService.addAudit(null, id, "Post resumed with id = " + id );
-		return service.resume(id);
+		auditService.addAudit(null, wrapper.getId(), "Post resumed with id = " + wrapper.getId() );
+		return service.resume(wrapper);
 	}
 
 	//close the post

@@ -5,19 +5,23 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.jasypt.util.text.BasicTextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
 
+import com.ipv.entity.Conversation;
 import com.ipv.entity.Post;
 import com.ipv.entity.User;
 import com.ipv.reporsitory.ConversationRepository;
 import com.ipv.reporsitory.PostRepository;
 import com.ipv.reporsitory.UserRepository;
+import com.ipv.service.EncryptionService;
 import com.ipv.service.PostService;
 import com.ipv.service.UserService;
 import com.ipv.util.Constant;
 import com.ipv.util.Util;
+import com.ipv.util.wrapper.PauseAndResumeWrapper;
 import com.ipv.util.wrapper.PostCount;
 
 /**
@@ -49,6 +53,9 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private EncryptionService encrytionService;
+	
 	//After the injection is done, override the repository in the super class
 	@PostConstruct
 	public void initParent() {
@@ -78,20 +85,19 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 	}
 
 	@Override
-	public Post pause(int id) {
-		Post post = findById(id);
-		post.setKey(KeyGenerators.string().generateKey());
+	public Post pause(PauseAndResumeWrapper wrapper) {
+		Post post = findById(wrapper.getId());
 		post.setStatus(Constant.POST_STATUS_PAUSED);
-		encrypt(post);
+		encrypt(post, wrapper.getKey());
 		repository.save(post);
 		return post;
 	}
 
 	@Override
-	public Post resume(int id) {
-		Post post = findById(id);
+	public Post resume(PauseAndResumeWrapper wrapper) {
+		Post post = findById(wrapper.getId());
 		post.setStatus(Constant.POST_STATUS_ON_GOING);
-		decrypt(post);
+		decrypt(post, wrapper.getKey());
 		repository.save(post);
 		return post;
 	}
@@ -104,16 +110,6 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 		return post;
 	}
 	
-	private void decrypt(Post post) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	private void encrypt(Post post) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public Post getByUserId(int userId) {
 		Post post = postRepository.findByUserId(userId);
@@ -144,5 +140,24 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 		count.setClosedPost(postRepository.countByStatus(Constant.POST_STATUS_CLOSED));
 		count.setPausedPost(postRepository.countByStatus(Constant.POST_STATUS_PAUSED));
 		return count;
+	}
+	
+	private void decrypt(Post post, String key) {
+		BasicTextEncryptor encryptor = encrytionService.createAnEncryptor(key);
+		List<Conversation> list = conversationRepository.findByPostId(post.getId());
+		list.stream().forEach(c -> {
+			c.setData(encrytionService.encrypt(encryptor, c.getData()));
+			conversationRepository.save(c);
+		});
+	}
+	
+	private void encrypt(Post post, String key) {
+		BasicTextEncryptor encryptor = encrytionService.createAnEncryptor(key);
+		List<Conversation> list = conversationRepository.findByPostId(post.getId());
+		list.stream().forEach(c -> {
+			c.setData(encrytionService.decrypt(encryptor, c.getData()));
+			conversationRepository.save(c);
+		});
+		
 	}
 }
