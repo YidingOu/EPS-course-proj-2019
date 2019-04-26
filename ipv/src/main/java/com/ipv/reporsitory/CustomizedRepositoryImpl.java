@@ -5,14 +5,18 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
+/**
+ * A Implement of CustomizedRepository
+ */
+
 @Repository
 public class CustomizedRepositoryImpl<E> implements CustomizedRepository<E> {
-	@PersistenceContext
+    @PersistenceContext
     private EntityManager entityManager;
 
-	@Override
-	public void detach(E entity) {
-		entityManager.detach(entity);
-	}
+    @Override
+    public void detach(E entity) {
+        entityManager.detach(entity);
+    }
 
 }
