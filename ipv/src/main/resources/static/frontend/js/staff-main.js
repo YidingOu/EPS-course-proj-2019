@@ -306,7 +306,7 @@ function getLocationInfo(postId) {
             console.log("success");
             console.log(data);
             $("#location").removeClass("hidden");
-            var text = "Location information (will be deleted after 1 week): \n " + data.address;
+            var text = "<b> Location information from user (will be deleted after 1 week): </b> <br> " + data.address;
             $("#location").html(text);
         },
         error: function (e) {

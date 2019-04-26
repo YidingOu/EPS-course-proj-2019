@@ -82,43 +82,6 @@ $(function() {
   });
 });
 
-/** Performs validation of registration form, ensures that username
- *  and password fields are not empty, and that passwords provided match.
- */
-$(function() {
-  $("form[name='new-staff']").validate({
-    rules: {
-      username: {
-        required: true
-      },
-      first_name: {
-        required: true
-      },
-      last_name: {
-        required: true
-      },
-      password: {
-        required: true,
-        minlength: PWD_LEN
-      },
-      password_cfm: {
-        equalTo: "#password"
-      }
-    },
-    messages: {
-      last_name: "Please provide a last name",
-      first_name: "Please provide a first name",
-      username: "Please provide a username",
-      password: {
-        required: "Please provide a password",
-        minlength: "Your password must be at least 8 characters long"
-      },
-      password_cfm: "Passwords must match!"
-    },
-    submitHandler: submitNewStaff()
-  });
-});
-
 /** Checks to ensure valid fields for a form of @param type
  *  (either "login" or "registration"
  */

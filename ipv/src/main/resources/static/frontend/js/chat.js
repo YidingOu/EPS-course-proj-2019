@@ -274,6 +274,7 @@ function sendLocation() {
         success: function (data) {
             console.log("success");
             console.log(data);
+            alert("Successfully sent your location information! ")
         },
         error: function (e) {
             console.log("fail");
