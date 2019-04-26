@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
 
 import com.ipv.entity.Conversation;
@@ -106,7 +105,14 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 	public Post close(int id) {
 		Post post = findById(id);
 		post.setStatus(Constant.POST_STATUS_CLOSED);
+		post.setUserId(0);
 		repository.save(post);
+		
+		List<Conversation> list = conversationRepository.findByPostId(post.getId());
+		list.stream().forEach(c -> {
+			conversationRepository.delete(c);
+		});
+		
 		return post;
 	}
 	
