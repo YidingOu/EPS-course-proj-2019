@@ -115,6 +115,7 @@ public class PostServiceImple extends BaseImple<Post> implements PostService{
 		Post post = postRepository.findByUserId(userId);
 		if (post != null) {
 			post.setConversations(conversationRepository.findByPostId(post.getId()));
+			post.setStaff(userRepository.findById(post.getStaffId()).get());
 		}
 		return post;
 	}
