@@ -60,8 +60,19 @@ public class Post {
 	private User staff;
 	
 	@Transient
+	private Contact contact;
+	
+	@Transient
 	private List<Conversation> conversations;
 	
+	public Contact getContact() {
+		return contact;
+	}
+
+	public void setContact(Contact contact) {
+		this.contact = contact;
+	}
+
 	public List<Conversation> getConversations() {
 		return conversations;
 	}

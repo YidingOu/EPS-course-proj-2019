@@ -119,15 +119,10 @@ public class PostRestAPI {
 		if (post == null) {
 			throw new NotFoundException("post id not found - " + id);
 		}
-		service.deleteById(id);
+		auditService.addAudit(null, id, "Post closed with id = " + id );
+		service.close(id);
 		
-		//Add audit
-		auditService.addAudit(post.getUserId(), post.getId(), 
-				"Post delete with id = " + post.getId() + 
-				" and User id = " + post.getUserId() + 
-				" and Staff id = " + post.getStaffId());
-		
-		return "Deleted Post id - " + id;
+		return "Closed Post id - " + id;
 	}
 
 	//pause the post
