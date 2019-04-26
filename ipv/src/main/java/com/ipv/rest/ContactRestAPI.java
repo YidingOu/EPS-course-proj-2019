@@ -58,7 +58,7 @@ public class ContactRestAPI {
 	@PostMapping
 	public Contact add(@RequestBody Contact contact) {
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
-		contact.setId(0);
+//		contact.setId(0);
 		service.save(contact);
 		
 		// Add audit
