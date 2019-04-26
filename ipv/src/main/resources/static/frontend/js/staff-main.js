@@ -1,9 +1,10 @@
 //adapted from https://bootsnipp.com/snippets/ZlkBn
 
-var PAUSED = 10;          //status value for paused account
+var LOCKED = 10;          //status value for paused account
 var uid = null;           //userId staff
 var convos = {};          //dictionary of postId to lists of msgs (message objects)
 var users = {};           //dictionary of postId to usernames staff is chatting with
+var isLocked = {};        //dictionary of postId to bool (true if post is locked, false otherwise)
 var currPostId = -1;     //postId of current user whose chat is viewed
 
 $(document).ready(function() {
@@ -67,8 +68,9 @@ function getChatDetails() {
             console.log(data);
             for (var i=0; i<data.length; i++) {
                 var chat = data[i];
-                if (chat.user != null && chat.status != PAUSED) {
-                    //valid user returned that is not paused
+                if (chat.user != null) {
+                    //valid user returned
+                    isLocked[chat.id] = (chat.status == LOCKED) ? true : false;
                     users[chat.id] = chat.user.name;
                 }
             }
@@ -161,6 +163,7 @@ function populateView(users) {
     }
 }
 
+/** Display message that staff has no ongoing chat with users */
 function showNoChatsMsg() {
     $(".chat_window").html("<div style='text-align:center; padding-top:40%'> " +
     "You do not have any ongoing chats. </div>");
@@ -178,8 +181,13 @@ function populateChat(postId) {
     $("#user" + currPostId).removeClass("active");
     currPostId = postId;
     $("#user" + postId).addClass("active");
+    if (isLocked[postId]) {
+        //chat is locked
+        $(".chat_window").html("<div style='text-align:center; padding-top:40%'> " +
+            "This chat is currently paused by the user. </div>");
+        return;
+    }
     getPostMessages(postId);
-   // var posts = convos[postId];
 }
 
 /** Defines message object */
@@ -241,7 +249,7 @@ function sendMessage(text) {
         text: text,
         senderId: uid
     });
-    //send message to server, draw on success \
+    //send message to server, draw on success
     sendMessageToServer(msg);
 }
 
@@ -276,7 +284,6 @@ function sendMessageToServer(msg) {
         error: function (e) {
             console.log("fail");
             console.log(e);
-            //alert(e.responseJSON.message);
             alert("Error, please try again. ")
         }
     });

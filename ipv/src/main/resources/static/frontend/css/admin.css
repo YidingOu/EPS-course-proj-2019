@@ -56,3 +56,7 @@ tbody {
 	color: white;
 	margin: 1px;
 }
+
+label.error {
+    color: red !important;
+}

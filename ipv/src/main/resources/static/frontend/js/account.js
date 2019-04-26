@@ -82,6 +82,43 @@ $(function() {
   });
 });
 
+/** Performs validation of registration form, ensures that username
+ *  and password fields are not empty, and that passwords provided match.
+ */
+$(function() {
+  $("form[name='new-staff']").validate({
+    rules: {
+      username: {
+        required: true
+      },
+      first_name: {
+        required: true
+      },
+      last_name: {
+        required: true
+      },
+      password: {
+        required: true,
+        minlength: PWD_LEN
+      },
+      password_cfm: {
+        equalTo: "#password"
+      }
+    },
+    messages: {
+      last_name: "Please provide a last name",
+      first_name: "Please provide a first name",
+      username: "Please provide a username",
+      password: {
+        required: "Please provide a password",
+        minlength: "Your password must be at least 8 characters long"
+      },
+      password_cfm: "Passwords must match!"
+    },
+    submitHandler: submitNewStaff()
+  });
+});
+
 /** Checks to ensure valid fields for a form of @param type
  *  (either "login" or "registration"
  */
@@ -96,8 +133,8 @@ function validFields(type) {
 
 /** Submits information in login form to server */ 
 function submitUserLogin() {
-  if (!validFields("login")) return;
   $("#user_login_form").submit(function(event){
+    if (!validFields("login")) return;
     event.preventDefault(); //prevent default action 
     var post_url = $(this).attr("action"); //get form action url
     var request_method = $(this).attr("method");
@@ -134,12 +171,11 @@ function submitUserLogin() {
 function submitStaffLogin() {
   if (!validFields("login")) return;
   $("#staff_login_form").submit(function(event){
-    console.log("login7777");
     event.preventDefault(); //prevent default action
     var post_url = "/users/staffs/validate"; //get form action url
     var request_method = $(this).attr("method"); 
     var staff_url = "/frontend/src/staff/chat.html";
-    var admin_url = "/frontend/src/staff/dashboard.html";
+    var admin_url = "/frontend/src/staff/staff.html";
     var form_data = {
     		name:$("#username").val(),  
     		pass:$("#password").val()
@@ -175,8 +211,8 @@ function submitStaffLogin() {
 
 /** Submits information in registration form to server */
 function submitRegistration() {
-  if (validFields("registration")) return;
   $("#reg_form").submit(function(event){
+    if (!validFields("registration")) return;
     event.preventDefault(); //prevent default action
     var post_url = $(this).attr("action"); //get form action url
     var request_method = $(this).attr("method");
@@ -206,4 +242,3 @@ function submitRegistration() {
     });
   });
 }
-
