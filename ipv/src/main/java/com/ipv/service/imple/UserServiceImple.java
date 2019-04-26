@@ -1,10 +1,12 @@
 package com.ipv.service.imple;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.ipv.entity.Post;
@@ -16,6 +18,10 @@ import com.ipv.service.UserService;
 import com.ipv.util.Util;
 import java.security.*;
 import org.springframework.security.crypto.keygen.KeyGenerators;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+import java.security.Key;
+import io.jsonwebtoken.*;
 
 
 /**
@@ -49,6 +55,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	public void initParent() {
 	  repository = userRepository;
 	}
+
 	
 	/*
 	 * Validate the passwords
@@ -61,6 +68,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService{
 	public User validate(String name, String pass) {
 		User user = userRepository.findByName(name);
 		if (checkPass(user, pass)) {
+			Util.create(user);
 			Util.processUser(user, userRepository);
 			user.setPost(postRepository.findByUserId(user.getId()));
 			return user;
