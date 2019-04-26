@@ -95,6 +95,7 @@ function getPosts(userId) {
         cache: false,
         timeout: 60000,
         success: function (data) {
+            console.log(post_url);
             console.log("success");
             while (data.status == 10) {
                 //conversation is paused
@@ -102,9 +103,13 @@ function getPosts(userId) {
                 //TODO
                 var pwd = prompt("Please input your password if you would like " +
                 "to resume your conversation with the shelter: ");
-                if (resumeConversation(pwd)) getPosts(userId);
+                if (resumeConversation(pwd)) {
+                    getPosts(userId);
+                    break;
+                }
                 else alert("Incorrect password, please try again. ")
             }
+            console.log(data);
             postId = data.id;
             getMessages(postId);
         },
@@ -268,16 +273,14 @@ function sendLocation() {
         timeout: 60000,
         success: function (data) {
             console.log("success");
-            return true;
+            console.log(data);
         },
         error: function (e) {
             console.log("fail");
             console.log(e);
             alert("Error, please try again.");
-            return false;
         }
     });
-    return false;
     return;
 }
 
