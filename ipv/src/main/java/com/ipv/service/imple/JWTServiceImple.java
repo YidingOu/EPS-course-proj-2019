@@ -23,9 +23,10 @@ public class JWTServiceImple implements JWTService {
     @Override
     public String createJWT(User user) {
         int role = user.getRole();
-        String id = String.valueOf(user.getId());
+        int uid = user.getId();
+        String id = String.valueOf(uid);
         String issuer = "ipvTeam";
-        String jwt = createJWTHelper(id, issuer, role);
+        String jwt = createJWTHelper(id, issuer, role, uid);
         return jwt;
     }
 
@@ -38,7 +39,7 @@ public class JWTServiceImple implements JWTService {
 
     }
 
-    private String createJWTHelper(String id, String issuer, int role) {
+    private String createJWTHelper(String id, String issuer, int role, int uid) {
         //https://developer.okta.com/blog/2018/10/31/jwts-with-java
 
         //create JWT algorithm
@@ -57,6 +58,7 @@ public class JWTServiceImple implements JWTService {
                 .setIssuedAt(now)
                 .setIssuer(issuer)
                 .claim("role", role)
+                .claim("UserID", uid)
                 .signWith(signingKey);
 
         long expTime = timeStamp + 1800000;
