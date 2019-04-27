@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import com.ipv.service.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,9 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private JWTService jwtService;
+
     //After the injection is done, override the repository in the super class
     @PostConstruct
     public void initParent() {
@@ -62,7 +66,8 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
     public User validate(String name, String pass) {
         User user = userRepository.findByName(name);
         if (checkPass(user, pass)) {
-//            Util.create(user);
+            String jwt = jwtService.createJWT(user);
+            System.out.println(jwt);
             Util.processUser(user, userRepository);
             user.setPost(postRepository.findByUserId(user.getId()));
             return user;

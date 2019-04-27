@@ -8,4 +8,5 @@ public interface JWTService {
     public String createJWT(User user);
 
     public Claims decodeJWT(String jwt);
+
 }
