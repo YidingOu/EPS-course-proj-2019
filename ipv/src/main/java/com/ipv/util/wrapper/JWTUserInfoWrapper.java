@@ -3,11 +3,11 @@ package com.ipv.util.wrapper;
 import java.util.Date;
 
 public class JWTUserInfoWrapper {
-	int id;
-	int role;
-	Date expireDate;
-	String newJWT;
-	
+	int id;	//user id
+	int role; //user role
+	Date expireDate;	//expiration date
+	String newJWT;	//new JWT generated when validation pass
+
 	public int getId() {
 		return id;
 	}

@@ -89,8 +89,6 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
 
         String hashedPass = saltPassword(pass, byteSalt);
 
-//		System.out.println("hashed pwd:" + hashedPass + " pass: " + dbPass);
-
         return dbPass.equals(hashedPass);
     }
 
