@@ -11,4 +11,6 @@ public interface JWTService {
 
     public JWTUserInfoWrapper validate(String jwt, User user);
 
+    public JWTUserInfoWrapper validate(String jwt);
+
 }

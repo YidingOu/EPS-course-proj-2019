@@ -24,6 +24,7 @@ public class JWTServiceImple implements JWTService {
     @Value("${spring.jwt.SECRET_KEY}")
     private String SECRET_KEY;
 
+    // fetch user id and role to create jwt
     @Override
     public String createJWT(User user) {
         int role = user.getRole();
@@ -34,6 +35,7 @@ public class JWTServiceImple implements JWTService {
         return jwt;
     }
 
+    // take a jwt and decode it to wrapper class
     @Override
     public JWTUserInfoWrapper decodeJWT(String jwt) {
         Claims claims = Jwts.parser()
@@ -48,6 +50,7 @@ public class JWTServiceImple implements JWTService {
 
     }
 
+    // validate jwt, if it not expired, renew jwt.
     @Override
     public JWTUserInfoWrapper validate(String jwt, User user) {
         JWTUserInfoWrapper info = decodeJWT(jwt);
@@ -58,6 +61,24 @@ public class JWTServiceImple implements JWTService {
             return null;
         } else {
             info.setNewJWT(createJWT(user));
+            return info;
+        }
+    }
+
+    @Override
+    public JWTUserInfoWrapper validate(String jwt) {
+        JWTUserInfoWrapper info = decodeJWT(jwt);
+        long timeStamp = System.currentTimeMillis();
+        Date now = new Date(timeStamp);
+        Date jwtDate = info.getExpireDate();
+        if (jwtDate.compareTo(now) < 0) {
+            return null;
+        } else {
+            int uid = info.getId();
+            String issuer = "ipvTeam";
+            String id = String.valueOf(uid);
+            int role = info.getRole();
+            info.setNewJWT(createJWTHelper(id, issuer, role, uid));
             return info;
         }
     }

@@ -68,7 +68,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         User user = userRepository.findByName(name);
         if (checkPass(user, pass)) {
             String jwt = jwtService.createJWT(user);
-            JWTUserInfoWrapper info = jwtService.validate(jwt, user);
+            JWTUserInfoWrapper info = jwtService.validate(jwt);
             System.out.println(info.getNewJWT());
             Util.processUser(user, userRepository);
             user.setPost(postRepository.findByUserId(user.getId()));
