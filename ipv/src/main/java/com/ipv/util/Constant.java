@@ -25,5 +25,9 @@ public class Constant {
 	public final static int CONVERSATION_FROM_USER = 0;
 	public final static int CONVERSATION_FROM_STAFF = 1;
 	
+	public final static String JWT_TOKEN_HEADER = "JWT_TOKEN_HEADER";
+	
+	
+	
 
 }

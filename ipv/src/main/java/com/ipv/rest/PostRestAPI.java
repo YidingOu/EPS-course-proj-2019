@@ -2,6 +2,8 @@ package com.ipv.rest;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,8 +47,8 @@ public class PostRestAPI {
 
 	//get post by id
 	@GetMapping("{id}")
-	public Post get(@PathVariable int id) {
-
+	public Post get(@PathVariable int id, HttpServletRequest request) {
+		System.out.println((String)request.getSession().getAttribute("sss"));
 		Post post = service.findById(id);
 		if (post == null) {
 			throw new NotFoundException("Post id not found - " + id);
