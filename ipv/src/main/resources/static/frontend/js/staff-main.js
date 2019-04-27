@@ -52,7 +52,7 @@ function test(id) {
 
 /** Gets all chat messages and users that the staff is chatting with */
 function getChatDetails() {
-    var url = "/posts/by_staff/" + uid;
+    var url = "/api/posts/by_staff/" + uid;
     var request_method = "GET";
     console.log(url);
 
@@ -90,7 +90,7 @@ function getChatDetails() {
 
 /** Get all messages with @param postId and draw them on screen */
 function getPostMessages(postId) {
-    var url = "/posts/" + postId;
+    var url = "/api/posts/" + postId;
     var request_method = "GET";
     console.log(url);
 
@@ -266,7 +266,7 @@ function sendMessage(text) {
  *  Draw message upon success
  */
 function sendMessageToServer(msg) {
-    var url = "/conversations";
+    var url = "/api/conversations";
     var request_method = "POST";
     var post_data = {
             data: msg.text,
@@ -304,7 +304,7 @@ function sendMessageToServer(msg) {
 
 /** Get location information that the user corresponding to @param post has sent */
 function getLocationInfo(postId) {
-    var url = "/contacts/by_post/" + postId;
+    var url = "/api/contacts/by_post/" + postId;
     var request_method = "GET";
     console.log(url);
 

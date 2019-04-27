@@ -15,7 +15,7 @@ function getStats() {
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/posts/count_info",
+        url: "/api/posts/count_info",
         dataType: 'json',
         headers: {
             "JWT_TOKEN_HEADER": getJwt()
@@ -44,7 +44,7 @@ function getCurrentCases() {
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/users/customers",
+        url: "/api/users/customers",
         dataType: 'json',
         cache: false,
         headers: {

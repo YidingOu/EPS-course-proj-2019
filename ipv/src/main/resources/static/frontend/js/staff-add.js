@@ -1,5 +1,5 @@
 
-PWD_LEN = 1; //TODO CHANGE
+PWD_LEN = 8;
 
 /** Performs validation of registration form, ensures that username
  *  and password fields are not empty, and that passwords provided match.
@@ -58,7 +58,7 @@ function submitNewStaff() {
   $("#new-staff").submit(function(event){
     if (!validFields("staff")) return;
     event.preventDefault(); //prevent default action
-    var post_url = "/users/staffs"
+    var post_url = "/api/users/staffs"
     var request_method = "POST";
     var main_url = "/frontend/src/admin/staff.html";
     var form_data = {

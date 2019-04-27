@@ -4,7 +4,7 @@
  *  and password fields are not empty. 
  */
 
-PWD_LEN = 1;    //TODO: increase after testing
+PWD_LEN = 8;
 
 $(function() {
    /*Quick solution Should be optimized later*/
