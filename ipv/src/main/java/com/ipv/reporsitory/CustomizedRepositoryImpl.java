@@ -6,7 +6,7 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 /**
- * A Implement of CustomizedRepository
+ *  CustomizedRepository for session detach
  */
 
 @Repository

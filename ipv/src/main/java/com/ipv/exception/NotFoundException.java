@@ -4,7 +4,6 @@ public class NotFoundException extends RuntimeException {
 
 	/**
 	 * Customized exception for record not fund
-	 * The more exceptions will be added later
 	 */
 	private static final long serialVersionUID = 1L;
 

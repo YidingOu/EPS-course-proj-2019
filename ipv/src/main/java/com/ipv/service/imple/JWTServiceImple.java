@@ -17,7 +17,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
+/**
+ *The function body JWT service
+ */
 @Service
 public class JWTServiceImple implements JWTService {
 
