@@ -26,7 +26,7 @@ import com.ipv.service.ConversationService;
  * 
  */
 @RestController
-@RequestMapping("/conversations")
+@RequestMapping("/api/conversations")
 public class ConversationRestAPI {
 	
 	@Autowired

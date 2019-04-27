@@ -6,9 +6,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import com.ipv.service.JWTService;
-import com.ipv.util.wrapper.JWTUserInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +15,12 @@ import com.ipv.entity.Post;
 import com.ipv.entity.User;
 import com.ipv.reporsitory.PostRepository;
 import com.ipv.reporsitory.UserRepository;
+import com.ipv.service.JWTService;
 import com.ipv.service.PostService;
 import com.ipv.service.UserService;
 import com.ipv.util.Constant;
 import com.ipv.util.Util;
+import com.ipv.util.wrapper.JWTUserInfoWrapper;
 
 
 /**
@@ -64,12 +65,13 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
      *
      * */
     @Override
-    public User validate(String name, String pass) {
+    public User validate(String name, String pass, ServerHttpResponse response) {
         User user = userRepository.findByName(name);
         if (checkPass(user, pass)) {
             String jwt = jwtService.createJWT(user);
             JWTUserInfoWrapper info = jwtService.validate(jwt);
             System.out.println(info.getNewJWT());
+            response.getHeaders().add(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
             Util.processUser(user, userRepository);
             user.setPost(postRepository.findByUserId(user.getId()));
             return user;
@@ -96,11 +98,16 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
 
     // Validate the input name and password of staff
     @Override
-    public User validateStaff(String name, String pass) {
+    public User validateStaff(String name, String pass, ServerHttpResponse response) {
         User user = userRepository.findByName(name);
         if (user.getRole() < 1 || !checkPass(user, pass)) { // not staff or fail
             return null;
         } else {
+        	String jwt = jwtService.createJWT(user);
+            JWTUserInfoWrapper info = jwtService.validate(jwt);
+            System.out.println(info.getNewJWT());
+            response.getHeaders().add(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
+            
             Util.processUser(user, userRepository);
             user.setPostForStaff(postRepository.findByStaffId(user.getId()));
             return user;

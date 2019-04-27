@@ -30,7 +30,7 @@ import com.ipv.util.wrapper.PostCount;
  * 
  */
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/api/posts")
 public class PostRestAPI {
 
 	@Autowired

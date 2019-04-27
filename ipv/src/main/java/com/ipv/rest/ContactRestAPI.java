@@ -24,7 +24,7 @@ import com.ipv.service.ContactService;
  * 
  */
 @RestController
-@RequestMapping("/contacts")
+@RequestMapping("/api/contacts")
 public class ContactRestAPI {
 	
 	@Autowired

@@ -3,6 +3,7 @@ package com.ipv.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ import com.ipv.util.wrapper.ValidateResponseWapper;
  */
 @CrossOrigin(origins = "*", maxAge = 3600) //cors issue, for the development usage
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserRestAPI {
 
 	@Autowired
@@ -90,8 +91,8 @@ public class UserRestAPI {
 
 	// validate
 	@PostMapping("/validate")
-	public ValidateResponseWapper validate(@RequestBody User user) {
-		User resultUser = service.validate(user.getName(), user.getPass());
+	public ValidateResponseWapper validate(@RequestBody User user, ServerHttpResponse response) {
+		User resultUser = service.validate(user.getName(), user.getPass(), response);
 		if (resultUser != null) {
 			//Add audit
 			auditService.addAudit(resultUser.getId(), null, "User logins success with id = " + resultUser.getId());
@@ -119,8 +120,8 @@ public class UserRestAPI {
 	// validate for staffs
 	@SuppressWarnings("null")
 	@PostMapping("staffs/validate")
-	public ValidateResponseWapper validateStaff(@RequestBody User user) {
-		User resultUser = service.validateStaff(user.getName(), user.getPass());
+	public ValidateResponseWapper validateStaff(@RequestBody User user, ServerHttpResponse response) {
+		User resultUser = service.validateStaff(user.getName(), user.getPass(), response);
 		if (resultUser != null) {
 			//Add audit
 			auditService.addAudit(resultUser.getId(), null, "Staff logins success with id = " + resultUser.getId());

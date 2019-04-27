@@ -20,7 +20,7 @@ import com.ipv.service.AuditService;
  * 
  */
 @RestController
-@RequestMapping("/audits")
+@RequestMapping("/api/audits")
 public class AuditRestAPI {
 	
 	@Autowired

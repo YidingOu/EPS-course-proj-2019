@@ -24,7 +24,7 @@ import com.ipv.util.wrapper.ValidateResponseWapper;
  * 
  */
 @RestController
-@RequestMapping("/emails")
+@RequestMapping("/api/emails")
 public class EmailRestAPI {
 	
 	@Autowired
