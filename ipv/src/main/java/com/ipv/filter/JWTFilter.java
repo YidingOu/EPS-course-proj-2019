@@ -15,8 +15,10 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.ipv.exception.NotFoundException;
+import com.ipv.exception.TokenValidateFailedException;
 import com.ipv.service.JWTService;
 import com.ipv.util.Constant;
+import com.ipv.util.wrapper.JWTUserInfoWrapper;
 
 //reference https://www.baeldung.com/spring-boot-add-filter
 
@@ -32,13 +34,16 @@ public class JWTFilter implements Filter{
 
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
-		//req.getSession().setAttribute("sss", "333");
-		//throw new NotFoundException("User id not found - " + id);
 		if (!req.getRequestURI().contains("validate")) {
 			String token = req.getHeader(Constant.JWT_TOKEN_HEADER);
-//			jwtInfo = jwtService.
+			JWTUserInfoWrapper jwtInfo = jwtService.validate(token);
+			if (jwtInfo == null) {
+				throw new TokenValidateFailedException("Token is invalid or expired");
+			}
+			req.getSession().setAttribute("token", jwtInfo);
 		}
 		chain.doFilter(request, response);
+		res.setHeader(Constant.JWT_TOKEN_HEADER, jwtInfo.get);
 	}
 
 }
