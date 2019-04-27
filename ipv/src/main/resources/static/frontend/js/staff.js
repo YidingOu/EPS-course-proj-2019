@@ -15,10 +15,14 @@ function getStaff() {
         contentType: "application/json",
         url: "/users",
         dataType: 'json',
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         cache: false,
         timeout: 600,
-        success: function (data) {
+        success: function (data, textStatus, xhr) {
             console.log("success");
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
             console.log(data);
 
             var content_html = '';
@@ -52,9 +56,13 @@ function populateCases(staffId) {
         url: "/posts/by_staff/" + staffId,
         dataType: 'json',
         cache: false,
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         timeout: 600,
-        success: function (data) {
+        success: function (data, textStatus, xhr) {
             console.log("success");
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
             var usernames = [];
             for (var i=0; i<data.length; i++) {
                 var user = data[i].user;
@@ -75,4 +83,21 @@ function populateCases(staffId) {
             alert("Error, please refresh the page. ");
         }
     });
+}
+
+
+/** Gets the jwt of the current user */
+function getJwt() {
+    try {
+        return parseInt(localStorage.getItem('jwt'));
+    } catch(error) {
+        alert("Session expired, please login again. ")
+        $(location).attr("href", "login.html");
+    }
+    return;
+}
+
+/** Logout by deleting uid in localstorage and authentication token */
+function logout() {
+    localStorage.clear();
 }

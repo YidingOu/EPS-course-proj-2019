@@ -37,6 +37,17 @@ $(document).ready(function() {
     getPosts(uid);
 })
 
+/** Gets the jwt of the current user */
+function getJwt() {
+    try {
+        return parseInt(localStorage.getItem('jwt'));
+    } catch(error) {
+        alert("Session expired, please login again. ")
+        $(location).attr("href", "login.html");
+    }
+    return;
+}
+
 /** If the local variable first is not set, set it to 1 and return true;
  *  else return false.
  */
@@ -93,10 +104,13 @@ function getPosts(userId) {
         contentType: "application/json",
         url: post_url,
         cache: false,
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         timeout: 60000,
-        success: function (data) {
-            console.log(post_url);
+        success: function (data, textStatus, xhr) {
             console.log("success");
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
             console.log(data);
             postId = data.id;
             if (data.status == 10) {
@@ -138,10 +152,14 @@ function resumeConversation() {
             data: JSON.stringify(post_data),
             dataType: 'json',
             url: url,
+            headers: {
+                "JWT_TOKEN_HEADER": getJwt()
+            },
             cache: false,
             timeout: 60000,
-            success: function (data) {
+            success: function (data, textStatus, xhr) {
                 console.log("success");
+                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
                 alert("Conversation successfully unlocked!");
                 $(location).attr("href", main_url);
             },
@@ -167,10 +185,14 @@ function getMessages(postId) {
         type: request_method,
         contentType: "application/json",
         url: post_url,
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         cache: false,
         timeout: 60000,
-        success: function (data) {
+         success: function (data, textStatus, xhr) {
             console.log("success");
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
             console.log(data);
             for (var i=0; i<data.length; i++) {
                 msg = new Message({
@@ -257,12 +279,16 @@ function addPost(message) {
         type: request_method,
         contentType: "application/json",
         url: url,
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         data: JSON.stringify(post_data),
         dataType: 'json',
         cache: false,
         timeout: 60000,
-        success: function (data) {
+        success: function (data, textStatus, xhr) {
             console.log("success");
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
             return true;
         },
         error: function (e) {
@@ -301,11 +327,15 @@ function sendLocation() {
         contentType: "application/json",
         url: url,
         data: JSON.stringify(post_data),
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         dataType: 'json',
         cache: false,
         timeout: 60000,
-        success: function (data) {
+        success: function (data, textStatus, xhr) {
             console.log("success");
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
             console.log(data);
             alert("Successfully sent your location information! ")
             displayLocationInfo(location);
@@ -329,10 +359,14 @@ function getLocationInfo() {
         type: request_method,
         contentType: "application/json",
         url: url,
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         cache: false,
         timeout: 60000,
-        success: function (data) {
+        success: function (data, textStatus, xhr) {
             console.log("success");
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
             console.log(data);
             locationId = data.id;
             console.log(locationId);
@@ -380,11 +414,15 @@ function editLocation() {
         contentType: "application/json",
         url: url,
         data: JSON.stringify(post_data),
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         dataType: 'json',
         cache: false,
         timeout: 60000,
-        success: function (data) {
+        success: function (data, textStatus, xhr) {
             console.log("success");
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
             console.log(data);
             alert("Successfully updated your location information! ")
             displayLocationInfo(location);
@@ -410,10 +448,14 @@ function deleteLocation() {
         type: request_method,
         contentType: "application/json",
         url: url,
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         cache: false,
         timeout: 60000,
-        success: function (data) {
+        success: function (data, textStatus, xhr) {
             console.log("success");
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
             console.log(data);
             alert("Successfully deleted your location information! ")
             hideLocationInfo();
@@ -429,5 +471,5 @@ function deleteLocation() {
 
 /** Logout by deleting uid in localstorage and authentication token */
 function logout() {
-    //TODO
+    localStorage.clear();
 }

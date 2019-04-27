@@ -65,6 +65,7 @@ public class JWTServiceImple implements JWTService {
         }
     }
 
+    //alternative validate method, do not need user input
     @Override
     public JWTUserInfoWrapper validate(String jwt) {
         JWTUserInfoWrapper info = decodeJWT(jwt);
@@ -83,6 +84,7 @@ public class JWTServiceImple implements JWTService {
         }
     }
 
+    //create jwt, set fields
     private String createJWTHelper(String id, String issuer, int role, int uid) {
         //https://developer.okta.com/blog/2018/10/31/jwts-with-java
 
