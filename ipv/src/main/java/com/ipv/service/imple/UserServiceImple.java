@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import com.ipv.service.JWTService;
+import com.ipv.util.wrapper.JWTUserInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
@@ -67,7 +68,8 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         User user = userRepository.findByName(name);
         if (checkPass(user, pass)) {
             String jwt = jwtService.createJWT(user);
-            System.out.println(jwt);
+            JWTUserInfoWrapper info = jwtService.validate(jwt, user);
+            System.out.println(info.getNewJWT());
             Util.processUser(user, userRepository);
             user.setPost(postRepository.findByUserId(user.getId()));
             return user;

@@ -6,6 +6,7 @@ public class JWTUserInfoWrapper {
 	int id;
 	int role;
 	Date expireDate;
+	String newJWT;
 	
 	public int getId() {
 		return id;
@@ -16,6 +17,8 @@ public class JWTUserInfoWrapper {
 	public int getRole() {
 		return role;
 	}
+	public String getNewJWT() {return newJWT; }
+	public void setNewJWT(String jwt) { this.newJWT = jwt; }
 	public void setRole(int role) {
 		this.role = role;
 	}
@@ -25,6 +28,7 @@ public class JWTUserInfoWrapper {
 	public void setExpireDate(Date expireDate) {
 		this.expireDate = expireDate;
 	}
+
 	@Override
 	public String toString() {
 		return "JWTUserInfoWrapper [id=" + id + ", role=" + role + ", expireDate=" + expireDate + "]";

@@ -40,12 +40,26 @@ public class JWTServiceImple implements JWTService {
                 .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(jwt).getBody();
         JWTUserInfoWrapper info = new JWTUserInfoWrapper();
-        info.setId((Integer)claims.get("id"));
+        info.setId((Integer)claims.get("UserID"));
         info.setExpireDate(claims.getExpiration());
         info.setRole((Integer)claims.get("role"));
         
         return info;
 
+    }
+
+    @Override
+    public JWTUserInfoWrapper validate(String jwt, User user) {
+        JWTUserInfoWrapper info = decodeJWT(jwt);
+        long timeStamp = System.currentTimeMillis();
+        Date now = new Date(timeStamp);
+        Date jwtDate = info.getExpireDate();
+        if (jwtDate.compareTo(now) < 0) {
+            return null;
+        } else {
+            info.setNewJWT(createJWT(user));
+            return info;
+        }
     }
 
     private String createJWTHelper(String id, String issuer, int role, int uid) {
