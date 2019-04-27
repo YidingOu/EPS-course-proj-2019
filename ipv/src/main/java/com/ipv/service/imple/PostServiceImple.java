@@ -179,7 +179,7 @@ public class PostServiceImple extends BaseImple<Post> implements PostService {
         BasicTextEncryptor encryptor = encrytionService.createAnEncryptor(key);
         List<Conversation> list = conversationRepository.findByPostId(post.getId());
         list.stream().forEach(c -> {
-            c.setData(encrytionService.encrypt(encryptor, c.getData()));
+            c.setData(encrytionService.decrypt(encryptor, c.getData()));
             conversationRepository.save(c);
         });
     }
@@ -189,7 +189,7 @@ public class PostServiceImple extends BaseImple<Post> implements PostService {
         BasicTextEncryptor encryptor = encrytionService.createAnEncryptor(key);
         List<Conversation> list = conversationRepository.findByPostId(post.getId());
         list.stream().forEach(c -> {
-            c.setData(encrytionService.decrypt(encryptor, c.getData()));
+            c.setData(encrytionService.encrypt(encryptor, c.getData()));
             conversationRepository.save(c);
         });
 
