@@ -39,10 +39,13 @@ function getPostId() {
         contentType: "application/json",
         url: post_url,
         cache: false,
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         timeout: 60000,
-        success: function (data) {
-            console.log(post_url);
+        success: function (data, textStatus, xhr) {
             console.log("success");
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
             postId = data.id;
         },
         error: function (e) {
@@ -67,8 +70,9 @@ function populateUsername() {
         url: url,
         cache: false,
         timeout: 60000,
-        success: function (data) {
-        	console.log("success");
+        success: function (data, textStatus, xhr) {
+            console.log("success");
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
         	$("#username").val(data.name);
         },
         error: function (e) {
@@ -133,9 +137,13 @@ function deleteAccount() {
 	        contentType: "application/json",
 	        url: url,
 	        cache: false,
+	        headers: {
+                "JWT_TOKEN_HEADER": getJwt()
+            },
 	        timeout: 60000,
-	        success: function (data) {
-	        	console.log("success");
+	        success: function (data, textStatus, xhr) {
+                console.log("success");
+                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
 	        	$(location).attr("href", main_url);
 
 	        },
@@ -170,10 +178,14 @@ function pauseAccount() {
             data: JSON.stringify(post_data),
             dataType: 'json',
             url: url,
+            headers: {
+                "JWT_TOKEN_HEADER": getJwt()
+            },
             cache: false,
             timeout: 60000,
-            success: function (data) {
+            success: function (data, textStatus, xhr) {
                 console.log("success");
+                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
                 alert("Conversation successfully locked! You can sign back in to resume your conversation in future.");
                 logout();
                 $(location).attr("href", main_url);
@@ -208,12 +220,16 @@ function saveChanges() {
             type: request_method,
             contentType: "application/json",
             url: post_url,
+            headers: {
+                "JWT_TOKEN_HEADER": getJwt()
+            },
             data: JSON.stringify(form_data),
             dataType: 'json',
             cache: false,
             timeout: 60000,
-            success: function (data) {
+            success: function (data, textStatus, xhr) {
                 console.log("success");
+                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
                 alert("Profile successfully updated!");
                 $(location).attr("href", main_url);
             },
@@ -226,8 +242,18 @@ function saveChanges() {
     })
 }
 
+/** Gets the jwt of the current user */
+function getJwt() {
+    try {
+        return parseInt(localStorage.getItem('jwt'));
+    } catch(error) {
+        alert("Session expired, please login again. ")
+        $(location).attr("href", "login.html");
+    }
+    return;
+}
+
 /** Logout by deleting uid in localstorage and authentication token */
 function logout() {
-    //TODO
-    console.log("logout");
+    localStorage.clear();
 }
