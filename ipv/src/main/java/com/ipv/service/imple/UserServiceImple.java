@@ -62,7 +62,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
     public User validate(String name, String pass) {
         User user = userRepository.findByName(name);
         if (checkPass(user, pass)) {
-            Util.create(user);
+//            Util.create(user);
             Util.processUser(user, userRepository);
             user.setPost(postRepository.findByUserId(user.getId()));
             return user;
