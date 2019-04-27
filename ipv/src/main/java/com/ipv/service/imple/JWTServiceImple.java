@@ -1,18 +1,22 @@
 package com.ipv.service.imple;
 
+import java.security.Key;
+import java.util.Date;
+
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.ipv.entity.User;
 import com.ipv.service.JWTService;
+import com.ipv.util.wrapper.JWTUserInfoWrapper;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-import java.security.Key;
-import java.util.Date;
 
 @Service
 public class JWTServiceImple implements JWTService {
@@ -30,11 +34,16 @@ public class JWTServiceImple implements JWTService {
     }
 
     @Override
-    public Claims decodeJWT(String jwt) {
+    public JWTUserInfoWrapper decodeJWT(String jwt) {
         Claims claims = Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(jwt).getBody();
-        return claims;
+        JWTUserInfoWrapper info = new JWTUserInfoWrapper();
+        info.setId((Integer)claims.get("id"));
+        info.setExpireDate(claims.getExpiration());
+        info.setRole((Integer)claims.get("role"));
+        
+        return info;
 
     }
 
