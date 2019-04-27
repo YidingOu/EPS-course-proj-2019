@@ -13,7 +13,7 @@ function getStaff() {
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/users",
+        url: "/api/users",
         dataType: 'json',
         headers: {
             "JWT_TOKEN_HEADER": getJwt()
@@ -49,11 +49,11 @@ function getStaff() {
  *  Populates the table accordingly.
  */
 function populateCases(staffId) {
-    console.log("/posts/by_staff/" + staffId);
+    console.log("/api/posts/by_staff/" + staffId);
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/posts/by_staff/" + staffId,
+        url: "/api/posts/by_staff/" + staffId,
         dataType: 'json',
         cache: false,
         headers: {

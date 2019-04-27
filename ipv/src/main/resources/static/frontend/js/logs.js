@@ -10,7 +10,7 @@ function getLogs() {
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/audits",
+        url: "/api/audits",
         headers: {
             "JWT_TOKEN_HEADER": getJwt()
         },

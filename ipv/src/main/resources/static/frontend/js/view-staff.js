@@ -1,5 +1,5 @@
 uid = null
-PWD_LEN = 1 //TODO: change after testing
+PWD_LEN = 8;
 staffId = null;
 
 $(document).ready(function() {
@@ -26,7 +26,7 @@ function getStaffId() {
 function deleteStaff() {
 	var cfm = confirm ("Are you sure you want to delete the account? This action cannot be undone. ");
 	if (cfm) { // User Pressed Yes, delete account
-	    var url = "/users/" + staffId;
+	    var url = "/api/users/" + staffId;
 	    var request_method = "DELETE";
 	    var main_url = "/frontend/src/admin/staff.html";
 
@@ -98,7 +98,7 @@ function init() {
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/users/" + staffId,
+        url: "/api/users/" + staffId,
         dataType: 'json',
         cache: false,
         headers: {
@@ -147,7 +147,7 @@ function saveChanges() {
     $("#staff-profile").submit(function(event){
         if (!validFields()) return;
         event.preventDefault(); //prevent default action
-        var post_url = "/users/update_pass"
+        var post_url = "/api/users/update_pass"
         var request_method = "PUT";
         var main_url = "/frontend/src/admin/staff.html";
         var form_data = {
@@ -191,7 +191,7 @@ function saveAdminChanges() {
         alert("Please fill in all fields and use a password that is at least " + PWD_LEN + " characters long.");
         return;
     }
-    var post_url = "/users/update_pass"
+    var post_url = "/api/users/update_pass"
     var request_method = "PUT";
     var main_url = "/frontend/src/staff/dashboard.html";
     var form_data = {

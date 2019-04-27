@@ -96,7 +96,7 @@ function getUid() {
     Returns: array of messages
 */
 function getPosts(userId) {
-    var post_url = "/posts/by_user/" + userId;
+    var post_url = "/api/posts/by_user/" + userId;
     var request_method = "GET"; 
     
     $.ajax({
@@ -137,7 +137,7 @@ function resumeConversation() {
     var pwd = prompt("Please input your password if you would like " +
                     "to resume your conversation with the shelter: ");
     if (pwd && pwd != "") { // User Pressed Yes, resume account
-        var url = "/posts/resume";
+        var url = "/api/posts/resume";
         var request_method = "POST";
         var main_url = "/frontend/src/main.html";
         var post_data = {
@@ -178,7 +178,7 @@ function resumeConversation() {
 /** Gets messages from the same conversation (ie same post id) and draws to screen */
 function getMessages(postId) {
     var posts = [];
-    var post_url = "/conversations/by_post/" + postId;
+    var post_url = "/api/conversations/by_post/" + postId;
     var request_method = "GET"; 
     
     $.ajax({
@@ -267,7 +267,7 @@ function sendMessage(text) {
 
 /** Creates a new post using @param message and sends it to the server */
 function addPost(message) {
-    var url = "/conversations";
+    var url = "/api/conversations";
     var request_method = "POST"; 
     var post_data = {
         data: message.text,
@@ -310,7 +310,7 @@ function redirect() {
 function sendLocation() {
     var location = prompt("Please enter the location you wish to share. " +
         "This information is strictly confidential and will be automatically deleted after a week.");
-    var url = "/contacts";
+    var url = "/api/contacts";
     if (location == "") {
         alert("Input cannot be empty!")
         return;
@@ -351,7 +351,7 @@ function sendLocation() {
 
 /** Get location information that the user corresponding to @param post has sent */
 function getLocationInfo() {
-    var url = "/contacts/by_post/" + postId;
+    var url = "/api/contacts/by_post/" + postId;
     var request_method = "GET";
     console.log(url);
 
@@ -395,7 +395,7 @@ function hideLocationInfo() {
 /** Sends request to server to edit the location information */
 function editLocation() {
     var location = prompt("Update the location information you wish to share: ")
-    var url = "/contacts";
+    var url = "/api/contacts";
     if (location == "") {
         alert("Input cannot be empty!")
         return;
@@ -439,7 +439,7 @@ function editLocation() {
 /** Deletes location information */
 function deleteLocation() {
     var cfm = confirm("Are you sure you want to delete your location information? ")
-    var url = "/contacts/" + locationId;
+    var url = "/api/contacts/" + locationId;
     if (!cfm) return;
 
     var request_method = "DELETE";

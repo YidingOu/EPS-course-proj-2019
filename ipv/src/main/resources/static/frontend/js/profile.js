@@ -1,6 +1,6 @@
 
 var uid = null;
-var PWD_LEN = 1;
+var PWD_LEN = 8;
 
 $(document).ready(function() {
     validate();
@@ -31,7 +31,7 @@ function getUid() {
 }
 
 function getPostId() {
-    var post_url = "/posts/by_user/" + uid;
+    var post_url = "/api/posts/by_user/" + uid;
     var request_method = "GET";
 
     $.ajax({
@@ -61,7 +61,7 @@ function getPostId() {
 /** Populates the username field with the username of the current user */
 function populateUsername() {
     console.log(uid);
-	var url = "/users/" + uid;
+	var url = "/api/users/" + uid;
     var request_method = "GET";
 
 	$.ajax({
@@ -128,7 +128,7 @@ function validate() {
 function deleteAccount() {
 	var cfm = confirm ("Are you sure you want to delete your account? This action cannot be undone. "); 
 	if (cfm) { // User Pressed Yes, delete account 
-	    var url = "/users/" + uid;
+	    var url = "/api/users/" + uid;
 	    var request_method = "DELETE";
 	    var main_url = "/frontend/src/login.html";
 	    
@@ -164,7 +164,7 @@ function deleteAccount() {
 function pauseAccount() {
 	var pwd = prompt("Please re-enter your password if you would like to lock your conversation. ");
 	if (pwd && pwd != "") { // User Pressed Yes, pause account
-		var url = "/posts/pause";
+		var url = "/api/posts/pause";
         var request_method = "POST";
         var main_url = "/frontend/src/login.html";
         var post_data = {
@@ -206,7 +206,7 @@ function saveChanges() {
     $("#user-profile").submit(function(event){
         event.preventDefault(); //prevent default action
         if (!validFields()) return;
-        var post_url = "/users/update_pass"
+        var post_url = "/api/users/update_pass"
         var request_method = "PUT";
         var main_url = "/frontend/src/main.html";
         var form_data = {

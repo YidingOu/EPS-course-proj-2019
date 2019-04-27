@@ -1,5 +1,5 @@
 uid = null
-PWD_LEN = 1 //TODO: change after testing
+PWD_LEN = 8;
 users = {}
 
 $(document).ready(function() {
@@ -49,7 +49,6 @@ function validate() {
   });
 };
 
-//TODO: is there a reason why we do this
 $.urlParam = function (name) {
     var results = new RegExp('[\?&]' + name + '=([^&#]*)')
         .exec(window.location.search);
@@ -60,11 +59,11 @@ $.urlParam = function (name) {
 /** Populates the first name, last name, username fields of the current user */
 function init() {
     //var id = $.urlParam('id');
-    console.log("/users/" + uid);
+    console.log("/api/users/" + uid);
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/users/" + uid,
+        url: "/api/users/" + uid,
         dataType: 'json',
         cache: false,
         timeout: 600,
@@ -112,7 +111,7 @@ function populateView() {
 /** Gets all usernames of users that the staff is chatting with
  *  and populates the nav bar */
 function getUsernames() {
-    var url = "/posts/by_staff/" + uid;
+    var url = "/api/posts/by_staff/" + uid;
     var request_method = "GET";
 
     $.ajax({
@@ -168,7 +167,7 @@ function saveChanges() {
     $("#staff-profile").submit(function(event){
         event.preventDefault(); //prevent default action
         if (!validFields()) return;
-        var post_url = "/users/update_pass"
+        var post_url = "/api/users/update_pass"
         var request_method = "PUT";
         var main_url = "/frontend/src/staff/chat.html";
         var form_data = {
