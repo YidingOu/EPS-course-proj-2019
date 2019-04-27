@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.ipv.exception.NotFoundException;
 import com.ipv.exception.TokenValidateFailedException;
 import com.ipv.service.JWTService;
 import com.ipv.util.Constant;
@@ -22,6 +21,12 @@ import com.ipv.util.wrapper.JWTUserInfoWrapper;
 
 //reference https://www.baeldung.com/spring-boot-add-filter
 
+
+/**
+ * 
+ * The filter for validating / reassigning the jwt token
+ * 
+ * */
 @Component
 @Order(1)
 public class JWTFilter implements Filter{
@@ -34,16 +39,19 @@ public class JWTFilter implements Filter{
 
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
+		JWTUserInfoWrapper jwtInfo = null;
+		
+		//validate the token
 		if (!req.getRequestURI().contains("validate")) {
 			String token = req.getHeader(Constant.JWT_TOKEN_HEADER);
-			JWTUserInfoWrapper jwtInfo = jwtService.validate(token);
-			if (jwtInfo == null) {
+			if (token == null || (jwtInfo = jwtService.validate(token)) == null) {
 				throw new TokenValidateFailedException("Token is invalid or expired");
 			}
 			req.getSession().setAttribute("token", jwtInfo);
 		}
 		chain.doFilter(request, response);
-		res.setHeader(Constant.JWT_TOKEN_HEADER, jwtInfo.get);
+		//renew the token
+		res.setHeader(Constant.JWT_TOKEN_HEADER, jwtInfo.getNewJWT());
 	}
 
 }
