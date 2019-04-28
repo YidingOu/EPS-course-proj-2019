@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.ServerHttpResponse;
@@ -65,13 +66,13 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
      *
      * */
     @Override
-    public User validate(String name, String pass, ServerHttpResponse response) {
+    public User validate(String name, String pass, HttpServletResponse response) {
         User user = userRepository.findByName(name);
         if (checkPass(user, pass)) {
             String jwt = jwtService.createJWT(user);
             JWTUserInfoWrapper info = jwtService.validate(jwt);
             System.out.println(info.getNewJWT());
-            response.getHeaders().add(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
+            response.setHeader(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
             Util.processUser(user, userRepository);
             user.setPost(postRepository.findByUserId(user.getId()));
             return user;
@@ -96,7 +97,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
 
     // Validate the input name and password of staff
     @Override
-    public User validateStaff(String name, String pass, ServerHttpResponse response) {
+    public User validateStaff(String name, String pass, HttpServletResponse response) {
         User user = userRepository.findByName(name);
         if (user.getRole() < 1 || !checkPass(user, pass)) { // not staff or fail
             return null;
@@ -104,7 +105,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         	String jwt = jwtService.createJWT(user);
             JWTUserInfoWrapper info = jwtService.validate(jwt);
             System.out.println(info.getNewJWT());
-            response.getHeaders().add(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
+            response.setHeader(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
             
             Util.processUser(user, userRepository);
             user.setPostForStaff(postRepository.findByStaffId(user.getId()));
@@ -114,7 +115,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
     }
 
     // create normal user
-    public User save(User user) {
+    public User save(User user, HttpServletResponse response) {
         user.setRole(0);
         String salt = KeyGenerators.string().generateKey();
         user.setSalt(salt);
@@ -127,6 +128,12 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         Post post = postService.initPost(user.getId());
         user.setPost(post);
         Util.processUser(user, userRepository);
+        
+        String jwt = jwtService.createJWT(user);
+        JWTUserInfoWrapper info = jwtService.validate(jwt);
+        System.out.println(info.getNewJWT());
+        response.setHeader(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
+        
         return user;
     }
 
@@ -202,7 +209,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
 
     // Add the input staff
     @Override
-    public User addStaff(User user) {
+    public User addStaff(User user, HttpServletResponse response) {
         user.setRole(1);
         String salt = KeyGenerators.string().generateKey();
         user.setSalt(salt);
@@ -212,6 +219,12 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         user.setPass(newPwd);
         user = repository.save(user);
         Util.processUser(user, userRepository);
+        
+        String jwt = jwtService.createJWT(user);
+        JWTUserInfoWrapper info = jwtService.validate(jwt);
+        System.out.println(info.getNewJWT());
+        response.setHeader(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
+        
         return user;
     }
 

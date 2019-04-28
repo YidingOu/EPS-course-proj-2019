@@ -2,7 +2,7 @@ package com.ipv.service;
 
 import java.util.List;
 
-import org.springframework.http.server.ServerHttpResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import com.ipv.entity.User;
 import com.ipv.reporsitory.UserRepository;
@@ -18,10 +18,10 @@ import com.ipv.reporsitory.UserRepository;
 public interface UserService extends BaseService<User> {
 
     //interface for the password validation
-    public User validate(String string, String pass, ServerHttpResponse response);
+    public User validate(String string, String pass, HttpServletResponse response);
 
     // Validate the input name and password of staff
-    public User validateStaff(String name, String pass, ServerHttpResponse response);
+    public User validateStaff(String name, String pass, HttpServletResponse response);
 
     // LoadBalance
     public int loadBalancerForGettingAStaffId();
@@ -39,9 +39,12 @@ public interface UserService extends BaseService<User> {
     public User changePass(User olduser, String pass);
 
     // Add the input staff
-    public User addStaff(User user);
+    public User addStaff(User user, HttpServletResponse response);
 
     // Delete the input user
     public void delete(User user);
+    
+ // Add users
+	public User save(User user, HttpServletResponse response);
 
 }

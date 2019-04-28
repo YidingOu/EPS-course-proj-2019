@@ -2,6 +2,8 @@ package com.ipv.rest;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -63,12 +65,12 @@ public class UserRestAPI {
 	}
 
 	// create an user, the function will be completed later
-	@PostMapping
-	public User add(@RequestBody User user) {
+	@PostMapping("/create_user")
+	public User add(@RequestBody User user, HttpServletResponse response) {
 
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
 		user.setId(0);
-		service.save(user);
+		service.save(user, response);
 
 		//Add audit
 		auditService.addAudit(user.getId(), null, "User created with id = " + user.getId());
@@ -77,11 +79,11 @@ public class UserRestAPI {
 	}
 
 	// create an staff
-	@PostMapping("/staffs")
-	public User addStaff(@RequestBody User user) {
+	@PostMapping("/staffs/create_user")
+	public User addStaff(@RequestBody User user, HttpServletResponse response) {
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
 		user.setId(0);
-		service.addStaff(user);
+		service.addStaff(user, response);
 
 		//Add audit
 		auditService.addAudit(user.getId(), null, "Staff created with id = " + user.getId());
@@ -91,7 +93,7 @@ public class UserRestAPI {
 
 	// validate
 	@PostMapping("/validate")
-	public ValidateResponseWapper validate(@RequestBody User user, ServerHttpResponse response) {
+	public ValidateResponseWapper validate(@RequestBody User user, HttpServletResponse response) {
 		User resultUser = service.validate(user.getName(), user.getPass(), response);
 		if (resultUser != null) {
 			//Add audit
@@ -120,7 +122,7 @@ public class UserRestAPI {
 	// validate for staffs
 	@SuppressWarnings("null")
 	@PostMapping("staffs/validate")
-	public ValidateResponseWapper validateStaff(@RequestBody User user, ServerHttpResponse response) {
+	public ValidateResponseWapper validateStaff(@RequestBody User user, HttpServletResponse response) {
 		User resultUser = service.validateStaff(user.getName(), user.getPass(), response);
 		if (resultUser != null) {
 			//Add audit

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.ipv.exception.TokenValidateFailedException;
@@ -41,13 +42,18 @@ public class JWTFilter implements Filter{
 		HttpServletResponse res = (HttpServletResponse) response;
 		JWTUserInfoWrapper jwtInfo = null;
 		
-		// validate the token
+		// validate the token 
 		System.out.println("====="+req.getRequestURI());
-		if (req.getRequestURI().contains("api") && !req.getRequestURI().contains("validate") && !req.getRequestURI().contains("swagger-ui")) {
+		if (req.getRequestURI().contains("api") 
+				&& !req.getRequestURI().contains("validate") 
+				&& !req.getRequestURI().contains("create_user")
+				&& !req.getRequestURI().contains("swagger-ui")) {
 			System.out.println("+++ enter filter");
 			String token = req.getHeader(Constant.JWT_TOKEN_HEADER);
 			if (token == null || (jwtInfo = jwtService.validate(token)) == null) {
-				throw new TokenValidateFailedException("Token is invalid or expired");
+				res.sendError(HttpStatus.FORBIDDEN.value(), "Token is invalid or expired");
+				return;
+//				throw new TokenValidateFailedException("Token is invalid or expired");
 			}
 			req.getSession().setAttribute("token", jwtInfo);
 		}
