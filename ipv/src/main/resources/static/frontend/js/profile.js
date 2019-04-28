@@ -45,7 +45,7 @@ function getPostId() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             postId = data.id;
         },
         error: function (e) {
@@ -72,7 +72,7 @@ function populateUsername() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
         	$("#username").val(data.name);
         },
         error: function (e) {
@@ -143,7 +143,7 @@ function deleteAccount() {
 	        timeout: 60000,
 	        success: function (data, textStatus, xhr) {
                 console.log("success");
-                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
 	        	$(location).attr("href", main_url);
 
 	        },
@@ -185,7 +185,7 @@ function pauseAccount() {
             timeout: 60000,
             success: function (data, textStatus, xhr) {
                 console.log("success");
-                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
                 alert("Conversation successfully locked! You can sign back in to resume your conversation in future.");
                 logout();
                 $(location).attr("href", main_url);
@@ -229,7 +229,7 @@ function saveChanges() {
             timeout: 60000,
             success: function (data, textStatus, xhr) {
                 console.log("success");
-                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
                 alert("Profile successfully updated!");
                 $(location).attr("href", main_url);
             },

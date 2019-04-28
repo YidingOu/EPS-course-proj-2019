@@ -22,7 +22,7 @@ function getStaff() {
         timeout: 600,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
 
             var content_html = '';
@@ -62,7 +62,7 @@ function populateCases(staffId) {
         timeout: 600,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             var usernames = [];
             for (var i=0; i<data.length; i++) {
                 var user = data[i].user;

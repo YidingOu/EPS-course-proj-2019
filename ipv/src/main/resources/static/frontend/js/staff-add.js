@@ -58,7 +58,7 @@ function submitNewStaff() {
   $("#new-staff").submit(function(event){
     if (!validFields("staff")) return;
     event.preventDefault(); //prevent default action
-    var post_url = "/api/users/staffs"
+    var post_url = "/api/users/staffs/create_user"
     var request_method = "POST";
     var main_url = "/frontend/src/admin/staff.html";
     var form_data = {
@@ -80,7 +80,7 @@ function submitNewStaff() {
         timeout: 600,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
         	$(location).attr("href", main_url);
         },

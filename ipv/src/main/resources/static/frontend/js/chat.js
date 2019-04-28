@@ -40,7 +40,7 @@ $(document).ready(function() {
 /** Gets the jwt of the current user */
 function getJwt() {
     try {
-        return parseInt(localStorage.getItem('jwt'));
+        return localStorage.getItem('jwt');
     } catch(error) {
         alert("Session expired, please login again. ")
         $(location).attr("href", "login.html");
@@ -97,7 +97,9 @@ function getUid() {
 */
 function getPosts(userId) {
     var post_url = "/api/posts/by_user/" + userId;
-    var request_method = "GET"; 
+    var request_method = "GET";
+
+    console.log(getJwt());
     
     $.ajax({
         type: request_method,
@@ -110,7 +112,8 @@ function getPosts(userId) {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            console.log(xhr);
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             postId = data.id;
             if (data.status == 10) {
@@ -118,7 +121,6 @@ function getPosts(userId) {
                 console.log("is paused");
                 resumeConversation()
             }
-
             getMessages(postId);
             getLocationInfo();
         },
@@ -159,7 +161,7 @@ function resumeConversation() {
             timeout: 60000,
             success: function (data, textStatus, xhr) {
                 console.log("success");
-                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
                 alert("Conversation successfully unlocked!");
                 $(location).attr("href", main_url);
             },
@@ -192,7 +194,7 @@ function getMessages(postId) {
         timeout: 60000,
          success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             for (var i=0; i<data.length; i++) {
                 msg = new Message({
@@ -288,7 +290,7 @@ function addPost(message) {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             return true;
         },
         error: function (e) {
@@ -335,7 +337,7 @@ function sendLocation() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             alert("Successfully sent your location information! ")
             displayLocationInfo(location);
@@ -366,7 +368,7 @@ function getLocationInfo() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             locationId = data.id;
             console.log(locationId);
@@ -422,7 +424,7 @@ function editLocation() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             alert("Successfully updated your location information! ")
             displayLocationInfo(location);
@@ -455,7 +457,7 @@ function deleteLocation() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             alert("Successfully deleted your location information! ")
             hideLocationInfo();

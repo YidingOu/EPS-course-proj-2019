@@ -118,7 +118,7 @@ function submitUserLogin() {
         success: function (data, textStatus, xhr) {
             console.log("success");
             localStorage.uid = data.entity.id;
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
         	$(location).attr("href", main_url);
         },
         error: function (e) {
@@ -152,7 +152,7 @@ function submitStaffLogin() {
         cache: false,
         timeout: 600,
         success: function (data, textStatus, xhr) {
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
         	if (data.state == 1) {
         		$(location).attr("href", staff_url);
                 localStorage.uid = data.entity.id;
@@ -197,7 +197,7 @@ function submitRegistration() {
         	console.log("success");
             console.log(data);
             localStorage.uid = data.id;
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
         	$(location).attr("href", main_url);
         },
         error: function (e) {

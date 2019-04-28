@@ -69,7 +69,7 @@ function init() {
         timeout: 600,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             $("#username").val(data.name);
             $("#first_name").val(data.firstName);
             $("#last_name").val(data.lastName);
@@ -122,7 +122,7 @@ function getUsernames() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             for (var i=0; i<data.length; i++) {
                 var chat = data[i];
                 console.log(chat);
@@ -192,7 +192,7 @@ function saveChanges() {
             },
             success: function (data, textStatus, xhr) {
                 console.log("success");
-                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
                 alert("Profile successfully updated!");
                 $(location).attr("href", main_url);
 
