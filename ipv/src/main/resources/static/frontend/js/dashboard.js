@@ -32,7 +32,8 @@ function getStats() {
         },
         error: function (e) {
             console.log(e);
-            alert("Error, please refresh the page.");
+            alert("Error, please login again.");
+            logout();
         }
     });
 }
@@ -72,7 +73,7 @@ function getCurrentCases() {
         },
         error: function (e) {
             console.log(e);
-            alert("Error, please refresh the page.");
+            logout();
         }
     });
 }
@@ -85,7 +86,7 @@ function getJwt() {
     } catch(error) {
         alert("Session expired, please login again. ")
         logout();
-        $(location).attr("href", "login.html");
+        $(location).attr("href", "../staff/login.html");
     }
     return;
 }
@@ -93,4 +94,5 @@ function getJwt() {
 /** Logout by deleting uid in localstorage and authentication token */
 function logout() {
     localStorage.clear();
+    $(location).attr("href", "../staff/login.html");
 }

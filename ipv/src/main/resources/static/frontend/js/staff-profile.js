@@ -76,7 +76,8 @@ function init() {
         },
         error: function (e) {
             console.log(e);
-            alert("Error, please refresh page.");
+            alert("Session expired, please login again.");
+            logout();
         }
     });
 }
@@ -133,8 +134,8 @@ function getUsernames() {
         error: function (e) {
             console.log("fail");
             console.log(e);
-            alert("Error, please try again.")
-            $(location).attr("href", "chat.html");
+            alert("Session expired, please login again.");
+            logout();
         }
     });
 }
@@ -146,7 +147,6 @@ function getUid() {
     } catch(error) {
         alert("Session expired, please login again. ")
         logout();
-        $(location).attr("href", "login.html");
     }
     return;
 }
@@ -201,7 +201,8 @@ function saveChanges() {
             error: function (e) {
                 console.log("fail");
                 console.log(e);
-                alert("Your profile failed to update, please try again.")
+                alert("Session expired, please login again.");
+                logout();
             }
         });
     })
@@ -215,7 +216,6 @@ function getJwt() {
     } catch(error) {
         alert("Session expired, please login again. ")
         logout();
-        $(location).attr("href", "login.html");
     }
     return;
 }
@@ -223,4 +223,5 @@ function getJwt() {
 /** Logout by deleting uid in localstorage and authentication token */
 function logout() {
     localStorage.clear();
+    $(location).attr("href", "../staff/login.html");
 }

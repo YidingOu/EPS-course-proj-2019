@@ -25,7 +25,7 @@ function getUid() {
         return localStorage.getItem('uid');
     } catch(error) {
         alert("Session expired, please login again. ")
-        $(location).attr("href", "login.html");
+        logout();
     }
     return;
 }
@@ -51,8 +51,8 @@ function getPostId() {
         error: function (e) {
             console.log("fail");
             console.log(e);
-            alert("Session expired. Please login again. "); //TO CHANGE?
-            $(location).attr("href", "login.html");
+            alert("Session expired. Please login again. ");
+            logout();
         }
     });
     return;
@@ -81,7 +81,8 @@ function populateUsername() {
         error: function (e) {
         	console.log("fail");
         	console.log(e);
-        	alert("Error, please refresh the page.")
+        	alert("Session expired, please login again.")
+        	logout();
         }
     });
 }
@@ -251,7 +252,7 @@ function getJwt() {
         return localStorage.getItem('jwt');
     } catch(error) {
         alert("Session expired, please login again. ")
-        $(location).attr("href", "login.html");
+        logout();
     }
     return;
 }
@@ -259,4 +260,5 @@ function getJwt() {
 /** Logout by deleting uid in localstorage and authentication token */
 function logout() {
     localStorage.clear();
+    $(location).attr("href", "login.html");
 }

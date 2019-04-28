@@ -41,7 +41,8 @@ function getLogs() {
         },
         error: function (e) {
             console.log(e);
-            alert("Alert.");
+            alert("Error, please login again.");
+            logout();
         }
     });
 }
@@ -53,7 +54,6 @@ function getJwt() {
     } catch(error) {
         alert("Session expired, please login again. ")
         logout();
-        $(location).attr("href", "login.html");
     }
     return;
 }
@@ -61,4 +61,5 @@ function getJwt() {
 /** Logout by deleting uid in localstorage and authentication token */
 function logout() {
     localStorage.clear();
+    $(location).attr("href", "../staff/login.html");
 }

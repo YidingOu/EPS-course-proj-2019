@@ -43,7 +43,7 @@ function getJwt() {
         return localStorage.getItem('jwt');
     } catch(error) {
         alert("Session expired, please login again. ")
-        $(location).attr("href", "login.html");
+        logout();
     }
     return;
 }
@@ -476,4 +476,5 @@ function deleteLocation() {
 /** Logout by deleting uid in localstorage and authentication token */
 function logout() {
     localStorage.clear();
+    $(location).attr("href", "login.html");
 }
