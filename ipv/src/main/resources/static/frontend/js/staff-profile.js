@@ -69,7 +69,7 @@ function init() {
         timeout: 600,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             $("#username").val(data.name);
             $("#first_name").val(data.firstName);
             $("#last_name").val(data.lastName);
@@ -122,7 +122,7 @@ function getUsernames() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             for (var i=0; i<data.length; i++) {
                 var chat = data[i];
                 console.log(chat);
@@ -192,7 +192,7 @@ function saveChanges() {
             },
             success: function (data, textStatus, xhr) {
                 console.log("success");
-                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
+                if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
                 alert("Profile successfully updated!");
                 $(location).attr("href", main_url);
 
@@ -210,7 +210,7 @@ function saveChanges() {
 /** Gets the jwt of the current user */
 function getJwt() {
     try {
-        return parseInt(localStorage.getItem('jwt'));
+        return localStorage.getItem('jwt');
     } catch(error) {
         alert("Session expired, please login again. ")
         $(location).attr("href", "login.html");

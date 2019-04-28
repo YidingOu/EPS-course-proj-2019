@@ -67,7 +67,7 @@ function getChatDetails() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(url);
             console.log(data);
             for (var i=0; i<data.length; i++) {
@@ -105,7 +105,7 @@ function getPostMessages(postId) {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             var convo = data.conversations;
             var msgs = [];
             for (var j=0; j<convo.length; j++) {
@@ -288,7 +288,7 @@ function sendMessageToServer(msg) {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             msg.draw();
             convos[currPostId].push(msg);
             $messages = $('.messages');
@@ -319,7 +319,7 @@ function getLocationInfo(postId) {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             $("#location").removeClass("hidden");
             var text = "<b> Location information from user (will be deleted after 1 week): </b> <br> " + data.address;
@@ -335,7 +335,7 @@ function getLocationInfo(postId) {
 /** Gets the jwt of the current user */
 function getJwt() {
     try {
-        return parseInt(localStorage.getItem('jwt'));
+        return localStorage.getItem('jwt');
     } catch(error) {
         alert("Session expired, please login again. ")
         $(location).attr("href", "login.html");

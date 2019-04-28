@@ -96,7 +96,7 @@ function submitNewStaff() {
 /** Gets the jwt of the current user */
 function getJwt() {
     try {
-        return parseInt(localStorage.getItem('jwt'));
+        return localStorage.getItem('jwt');
     } catch(error) {
         alert("Session expired, please login again. ")
         $(location).attr("href", "login.html");
