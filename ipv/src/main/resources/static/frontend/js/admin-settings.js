@@ -64,7 +64,8 @@ function getJwt() {
         return parseInt(localStorage.getItem('jwt'));
     } catch(error) {
         alert("Session expired, please login again. ")
-        $(location).attr("href", "login.html");
+        logout();
+$(location).attr("href", "login.html");
     }
     return;
 }
@@ -103,6 +104,7 @@ function getUid() {
         return parseInt(localStorage.getItem('uid'));
     } catch(error) {
         alert("Session expired, please login again. ")
+        logout();
         $(location).attr("href", "login.html");
     }
     return;

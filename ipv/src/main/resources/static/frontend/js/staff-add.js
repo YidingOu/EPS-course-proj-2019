@@ -99,6 +99,7 @@ function getJwt() {
         return localStorage.getItem('jwt');
     } catch(error) {
         alert("Session expired, please login again. ")
+        logout();
         $(location).attr("href", "login.html");
     }
     return;

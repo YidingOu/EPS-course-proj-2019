@@ -69,6 +69,9 @@ function populateUsername() {
         contentType: "application/json",
         url: url,
         cache: false,
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");

@@ -86,7 +86,8 @@ function getUid() {
     try {
         return parseInt(localStorage.getItem('uid'));
     } catch(error) {
-        alert("Session expired, please login again. ")
+        alert("Session expired, please login again. ");
+        logout();
         $(location).attr("href", "login.html");
     }
     return;
@@ -119,7 +120,8 @@ function getPosts(userId) {
             if (data.status == 10) {
                 //conversation is paused
                 console.log("is paused");
-                resumeConversation()
+                resumeConversation();
+                return;
             }
             getMessages(postId);
             getLocationInfo();
