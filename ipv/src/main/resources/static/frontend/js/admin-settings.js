@@ -1,5 +1,5 @@
 uid = null
-PWD_LEN = 1 //TODO: change after testing
+PWD_LEN = 8;
 users = {}
 
 $(document).ready(function() {
@@ -61,11 +61,10 @@ $.urlParam = function (name) {
 /** Gets the jwt of the current user */
 function getJwt() {
     try {
-        return parseInt(localStorage.getItem('jwt'));
+        return localStorage.getItem('jwt');
     } catch(error) {
         alert("Session expired, please login again. ")
         logout();
-$(location).attr("href", "login.html");
     }
     return;
 }
@@ -73,11 +72,10 @@ $(location).attr("href", "login.html");
 /** Populates the first name, last name, username fields of the current user */
 function init() {
     //var id = $.urlParam('id');
-    console.log("/users/" + uid);
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/users/" + uid,
+        url: "/api/users/" + uid,
         dataType: 'json',
         headers: {
             "JWT_TOKEN_HEADER": getJwt()
@@ -85,11 +83,12 @@ function init() {
         cache: false,
         timeout: 600,
         success: function (data, textStatus, xhr) {
+            console.log("success");
             console.log(data);
             $("#username").val(data.name);
             $("#first_name").val(data.firstName);
             $("#last_name").val(data.lastName);
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
         },
         error: function (e) {
             console.log(e);
@@ -105,7 +104,6 @@ function getUid() {
     } catch(error) {
         alert("Session expired, please login again. ")
         logout();
-        $(location).attr("href", "login.html");
     }
     return;
 }
@@ -163,7 +161,7 @@ function validFields() {
 function saveChanges() {
     $("#admin-profile").submit(function(event){
         if (!validFields()) return;
-        var post_url = "/users/update_pass"
+        var post_url = "/api/users/update_pass"
         var request_method = "PUT";
         var main_url = "/frontend/src/admin/dashboard.html";
         var form_data = {
@@ -188,7 +186,7 @@ function saveChanges() {
             timeout: 60000,
             success: function (data, textStatus, xhr) {
                 console.log("success");
-                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+                if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
                 $(location).attr("href", main_url);
             },
             error: function (e) {
@@ -203,4 +201,5 @@ function saveChanges() {
 /** Logout by deleting uid in localstorage and authentication token */
 function logout() {
     localStorage.clear();
+    $(location).attr("href", "../staff/login.html");
 }

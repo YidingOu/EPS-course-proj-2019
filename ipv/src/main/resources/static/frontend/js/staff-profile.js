@@ -66,6 +66,9 @@ function init() {
         url: "/api/users/" + uid,
         dataType: 'json',
         cache: false,
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         timeout: 600,
         success: function (data, textStatus, xhr) {
             console.log("success");
@@ -121,6 +124,9 @@ function getUsernames() {
         url: url,
         cache: false,
         timeout: 60000,
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         success: function (data, textStatus, xhr) {
             console.log("success");
             if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
@@ -143,7 +149,7 @@ function getUsernames() {
 /** Gets the uid of the current user */
 function getUid() {
     try {
-        return parseInt(localStorage.getItem('uid'));
+        return localStorage.getItem('uid');
     } catch(error) {
         alert("Session expired, please login again. ")
         logout();
@@ -189,7 +195,7 @@ function saveChanges() {
             cache: false,
             timeout: 60000,
             headers: {
-                'JWT_TOKEN_HEADER': `Bearer ${token}`,
+                'JWT_TOKEN_HEADER': getJwt(),
             },
             success: function (data, textStatus, xhr) {
                 console.log("success");

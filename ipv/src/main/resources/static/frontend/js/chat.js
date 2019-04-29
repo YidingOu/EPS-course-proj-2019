@@ -123,6 +123,7 @@ function getPosts(userId) {
                 resumeConversation();
                 return;
             }
+            $("#staff_name").html(data.staff.name);
             getMessages(postId);
             getLocationInfo();
         },

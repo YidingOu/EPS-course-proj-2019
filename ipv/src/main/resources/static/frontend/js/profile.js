@@ -121,6 +121,7 @@ function validate() {
             required: "Please provide a password",
             minlength: "Your password must be at least 8 characters long"
           },
+          password_cfm: "Passwords must match!"
         },
         submitHandler: saveChanges()
     });

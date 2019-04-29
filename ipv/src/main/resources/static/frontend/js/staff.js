@@ -22,7 +22,7 @@ function getStaff() {
         timeout: 600,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
 
             var content_html = '';
@@ -51,6 +51,7 @@ function getStaff() {
  */
 function populateCases(staffId) {
     console.log("/api/posts/by_staff/" + staffId);
+    console.log(getJwt());
     $.ajax({
         type: "GET",
         contentType: "application/json",
@@ -63,7 +64,7 @@ function populateCases(staffId) {
         timeout: 600,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             var usernames = [];
             for (var i=0; i<data.length; i++) {
                 var user = data[i].user;
