@@ -56,14 +56,16 @@ public class JWTFilter implements Filter{
 //				throw new TokenValidateFailedException("Token is invalid or expired");
 			}
 			req.getSession().setAttribute("token", jwtInfo);
+			res.setHeader(Constant.JWT_TOKEN_HEADER, jwtInfo.getNewJWT());
 		}
 		// continue the process
 		chain.doFilter(request, response);
 		
-		// renew the token
-		if (res != null && jwtInfo != null) {
-			res.setHeader(Constant.JWT_TOKEN_HEADER, jwtInfo.getNewJWT());
-		}
+//		// renew the token
+//		if (res != null && jwtInfo != null) {
+//			System.out.println("Enter new token--");
+//			
+//		}
 	}
 
 }
