@@ -76,7 +76,8 @@ public class PostServiceImple extends BaseImple<Post> implements PostService {
         post.setUpdated(Constant.POST_UPDATE_NO);
         post.setStartDate(new Date());
         post.setUpdatedDate(new Date());
-
+        post = postRepository.save(post);
+        
         Contact contact = new Contact();
         contact.setAddress("Not given");
         contact.setNumber("Not given");
@@ -85,7 +86,7 @@ public class PostServiceImple extends BaseImple<Post> implements PostService {
 
         post.setContact(contact);
 
-        return postRepository.save(post);
+        return post;
     }
 
     // Find the post with input user id
