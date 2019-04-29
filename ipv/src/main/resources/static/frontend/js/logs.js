@@ -19,7 +19,7 @@ function getLogs() {
         timeout: 600,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
 
             var role_map = {
@@ -41,7 +41,8 @@ function getLogs() {
         },
         error: function (e) {
             console.log(e);
-            alert("Alert.");
+            alert("Error, please login again.");
+            logout();
         }
     });
 }
@@ -49,10 +50,10 @@ function getLogs() {
 /** Gets the jwt of the current user */
 function getJwt() {
     try {
-        return parseInt(localStorage.getItem('jwt'));
+        return localStorage.getItem('jwt');
     } catch(error) {
         alert("Session expired, please login again. ")
-        $(location).attr("href", "login.html");
+        logout();
     }
     return;
 }
@@ -60,4 +61,5 @@ function getJwt() {
 /** Logout by deleting uid in localstorage and authentication token */
 function logout() {
     localStorage.clear();
+    $(location).attr("href", "../staff/login.html");
 }

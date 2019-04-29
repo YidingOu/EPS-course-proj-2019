@@ -66,17 +66,21 @@ function init() {
         url: "/api/users/" + uid,
         dataType: 'json',
         cache: false,
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         timeout: 600,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             $("#username").val(data.name);
             $("#first_name").val(data.firstName);
             $("#last_name").val(data.lastName);
         },
         error: function (e) {
             console.log(e);
-            alert("Error, please refresh page.");
+            alert("Session expired, please login again.");
+            logout();
         }
     });
 }
@@ -120,9 +124,12 @@ function getUsernames() {
         url: url,
         cache: false,
         timeout: 60000,
+        headers: {
+            "JWT_TOKEN_HEADER": getJwt()
+        },
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             for (var i=0; i<data.length; i++) {
                 var chat = data[i];
                 console.log(chat);
@@ -133,8 +140,8 @@ function getUsernames() {
         error: function (e) {
             console.log("fail");
             console.log(e);
-            alert("Error, please try again.")
-            $(location).attr("href", "chat.html");
+            alert("Session expired, please login again.");
+            logout();
         }
     });
 }
@@ -142,10 +149,10 @@ function getUsernames() {
 /** Gets the uid of the current user */
 function getUid() {
     try {
-        return parseInt(localStorage.getItem('uid'));
+        return localStorage.getItem('uid');
     } catch(error) {
         alert("Session expired, please login again. ")
-        $(location).attr("href", "login.html");
+        logout();
     }
     return;
 }
@@ -188,11 +195,11 @@ function saveChanges() {
             cache: false,
             timeout: 60000,
             headers: {
-                'JWT_TOKEN_HEADER': `Bearer ${token}`,
+                'JWT_TOKEN_HEADER': getJwt(),
             },
             success: function (data, textStatus, xhr) {
                 console.log("success");
-                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+                if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
                 alert("Profile successfully updated!");
                 $(location).attr("href", main_url);
 
@@ -200,7 +207,8 @@ function saveChanges() {
             error: function (e) {
                 console.log("fail");
                 console.log(e);
-                alert("Your profile failed to update, please try again.")
+                alert("Session expired, please login again.");
+                logout();
             }
         });
     })
@@ -210,10 +218,10 @@ function saveChanges() {
 /** Gets the jwt of the current user */
 function getJwt() {
     try {
-        return parseInt(localStorage.getItem('jwt'));
+        return localStorage.getItem('jwt');
     } catch(error) {
         alert("Session expired, please login again. ")
-        $(location).attr("href", "login.html");
+        logout();
     }
     return;
 }
@@ -221,4 +229,5 @@ function getJwt() {
 /** Logout by deleting uid in localstorage and authentication token */
 function logout() {
     localStorage.clear();
+    $(location).attr("href", "../staff/login.html");
 }

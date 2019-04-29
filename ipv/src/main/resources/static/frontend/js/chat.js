@@ -40,10 +40,10 @@ $(document).ready(function() {
 /** Gets the jwt of the current user */
 function getJwt() {
     try {
-        return parseInt(localStorage.getItem('jwt'));
+        return localStorage.getItem('jwt');
     } catch(error) {
         alert("Session expired, please login again. ")
-        $(location).attr("href", "login.html");
+        logout();
     }
     return;
 }
@@ -86,7 +86,8 @@ function getUid() {
     try {
         return parseInt(localStorage.getItem('uid'));
     } catch(error) {
-        alert("Session expired, please login again. ")
+        alert("Session expired, please login again. ");
+        logout();
         $(location).attr("href", "login.html");
     }
     return;
@@ -97,7 +98,9 @@ function getUid() {
 */
 function getPosts(userId) {
     var post_url = "/api/posts/by_user/" + userId;
-    var request_method = "GET"; 
+    var request_method = "GET";
+
+    console.log(getJwt());
     
     $.ajax({
         type: request_method,
@@ -110,22 +113,24 @@ function getPosts(userId) {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            console.log(xhr);
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             postId = data.id;
             if (data.status == 10) {
                 //conversation is paused
                 console.log("is paused");
-                resumeConversation()
+                resumeConversation();
+                return;
             }
-
+            $("#staff_name").html(data.staff.name);
             getMessages(postId);
             getLocationInfo();
         },
         error: function (e) {
             console.log("fail");
             console.log(e);
-            alert("Session expired. Please login again. "); //TO CHANGE?
+            alert("Session expired. Please login again. ");
             $(location).attr("href", "login.html");
         }
     });
@@ -159,7 +164,7 @@ function resumeConversation() {
             timeout: 60000,
             success: function (data, textStatus, xhr) {
                 console.log("success");
-                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+                if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
                 alert("Conversation successfully unlocked!");
                 $(location).attr("href", main_url);
             },
@@ -179,8 +184,8 @@ function resumeConversation() {
 function getMessages(postId) {
     var posts = [];
     var post_url = "/api/conversations/by_post/" + postId;
-    var request_method = "GET"; 
-    
+    var request_method = "GET";
+
     $.ajax({
         type: request_method,
         contentType: "application/json",
@@ -192,7 +197,7 @@ function getMessages(postId) {
         timeout: 60000,
          success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             for (var i=0; i<data.length; i++) {
                 msg = new Message({
@@ -206,7 +211,7 @@ function getMessages(postId) {
         error: function (e) {
             console.log("fail");
             console.log(e)
-            alert("Session expired. Please login again. "); 
+            alert("Session expired. Please login again. ");
             $(location).attr("href", "login.html");
         }
     });
@@ -256,7 +261,7 @@ function sendMessage(text) {
         senderId: uid
     });
     console.log("sending");
-    //send message to server, draw on success 
+    //send message to server, draw on success
     if (addPost(message)) {
         posts.push(message);
         message.draw();
@@ -268,13 +273,13 @@ function sendMessage(text) {
 /** Creates a new post using @param message and sends it to the server */
 function addPost(message) {
     var url = "/api/conversations";
-    var request_method = "POST"; 
+    var request_method = "POST";
     var post_data = {
         data: message.text,
         postId: postId,
         userId:uid
     };
-    
+
     $.ajax({
         type: request_method,
         contentType: "application/json",
@@ -288,13 +293,13 @@ function addPost(message) {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             return true;
         },
         error: function (e) {
             console.log("fail");
             console.log(e);
-            alert("Error, please try again."); 
+            alert("Error, please try again.");
             return false;
         }
     });
@@ -306,7 +311,7 @@ function redirect() {
     window.location.href = "http://google.com";
 }
 
-/** Prompts user to input location and sends information to server. */ 
+/** Prompts user to input location and sends information to server. */
 function sendLocation() {
     var location = prompt("Please enter the location you wish to share. " +
         "This information is strictly confidential and will be automatically deleted after a week.");
@@ -335,7 +340,7 @@ function sendLocation() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             alert("Successfully sent your location information! ")
             displayLocationInfo(location);
@@ -366,7 +371,7 @@ function getLocationInfo() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             locationId = data.id;
             console.log(locationId);
@@ -422,7 +427,7 @@ function editLocation() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             alert("Successfully updated your location information! ")
             displayLocationInfo(location);
@@ -455,7 +460,7 @@ function deleteLocation() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             alert("Successfully deleted your location information! ")
             hideLocationInfo();
@@ -472,4 +477,5 @@ function deleteLocation() {
 /** Logout by deleting uid in localstorage and authentication token */
 function logout() {
     localStorage.clear();
+    $(location).attr("href", "login.html");
 }

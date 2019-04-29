@@ -41,7 +41,7 @@ function deleteStaff() {
 	        timeout: 60000,
 	        success: function (data, textStatus, xhr) {
                 console.log("success");
-                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+                if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
                 alert("Account successfully deleted.")
 	        	$(location).attr("href", main_url);
 	        },
@@ -107,7 +107,7 @@ function init() {
         timeout: 600,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             $("#username").val(data.name);
             $("#first_name").val(data.firstName);
             $("#last_name").val(data.lastName);
@@ -125,7 +125,7 @@ function getUid() {
         return parseInt(localStorage.getItem('uid'));
     } catch(error) {
         alert("Session expired, please login again. ")
-        $(location).attr("href", "login.html");
+        logout();
     }
     return;
 }
@@ -172,7 +172,7 @@ function saveChanges() {
             timeout: 60000,
             success: function (data, textStatus, xhr) {
                 console.log("success");
-                localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+                if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
                 alert("Profile successfully updated!")
                 $(location).attr("href", main_url);
             },
@@ -216,7 +216,7 @@ function saveAdminChanges() {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
-            localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER'));
+            if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             $(location).attr("href", main_url);
         },
         error: function (e) {
@@ -232,10 +232,10 @@ function saveAdminChanges() {
 /** Gets the jwt of the current user */
 function getJwt() {
     try {
-        return parseInt(localStorage.getItem('jwt'));
+        return localStorage.getItem('jwt');
     } catch(error) {
         alert("Session expired, please login again. ")
-        $(location).attr("href", "login.html");
+        logout();
     }
     return;
 }
@@ -243,4 +243,5 @@ function getJwt() {
 /** Logout by deleting uid in localstorage and authentication token */
 function logout() {
     localStorage.clear();
+    $(location).attr("href", "../staff/login.html");
 }
