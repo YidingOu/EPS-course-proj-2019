@@ -307,7 +307,7 @@ function sendMessageToServer(msg) {
 
 /** Get location information that the user corresponding to @param post has sent */
 function getLocationInfo(postId) {
-    var url = "/api/contacts/by_post/" + postId;
+    var url = "/api/contact/by_post/" + postId;
     var request_method = "GET";
     console.log(url);
 
@@ -329,7 +329,7 @@ function getLocationInfo(postId) {
             $("#location").html(text);
         },
         error: function (e) {
-            console.log("Session expired, please login again.");
+            alert("Session expired, please login again.");
             console.log(e);
             logout();
         }
