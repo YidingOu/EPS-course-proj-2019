@@ -35,7 +35,7 @@ function deleteStaff() {
 	        contentType: "application/json",
 	        url: url,
 	        headers: {
-                'JWT_TOKEN_HEADER': `Bearer ${token}`,
+                'JWT_TOKEN_HEADER': getJwt(),
             },
 	        cache: false,
 	        timeout: 60000,
@@ -102,7 +102,7 @@ function init() {
         dataType: 'json',
         cache: false,
         headers: {
-            'JWT_TOKEN_HEADER': `Bearer ${token}`,
+            'JWT_TOKEN_HEADER': getJwt(),
         },
         timeout: 600,
         success: function (data, textStatus, xhr) {
@@ -166,7 +166,7 @@ function saveChanges() {
             data: JSON.stringify(form_data),
             dataType: 'json',
             headers: {
-                'JWT_TOKEN_HEADER': `Bearer ${token}`,
+                'JWT_TOKEN_HEADER': getJwt(),
             },
             cache: false,
             timeout: 60000,
@@ -208,7 +208,7 @@ function saveAdminChanges() {
         contentType: "application/json",
         url: post_url,
         headers: {
-            'JWT_TOKEN_HEADER': `Bearer ${token}`,
+            'JWT_TOKEN_HEADER': getJwt(),
         },
         data: JSON.stringify(form_data),
         dataType: 'json',

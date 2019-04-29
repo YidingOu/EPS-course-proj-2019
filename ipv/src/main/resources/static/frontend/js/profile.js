@@ -211,7 +211,7 @@ function saveChanges() {
     $("#user-profile").submit(function(event){
         event.preventDefault(); //prevent default action
         if (!validFields()) return;
-        var post_url = "/api/users/update_pass"
+        var post_url = "/api/users"
         var request_method = "PUT";
         var main_url = "/frontend/src/main.html";
         var form_data = {

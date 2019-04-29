@@ -174,7 +174,7 @@ function saveChanges() {
     $("#staff-profile").submit(function(event){
         event.preventDefault(); //prevent default action
         if (!validFields()) return;
-        var post_url = "/api/users/update_pass"
+        var post_url = "/api/users"
         var request_method = "PUT";
         var main_url = "/frontend/src/staff/chat.html";
         var form_data = {
@@ -199,6 +199,7 @@ function saveChanges() {
             },
             success: function (data, textStatus, xhr) {
                 console.log("success");
+                console.log(data);
                 if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
                 alert("Profile successfully updated!");
                 $(location).attr("href", main_url);
