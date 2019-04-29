@@ -329,9 +329,9 @@ function getLocationInfo(postId) {
             $("#location").html(text);
         },
         error: function (e) {
-            alert("Session expired, please login again.");
+            alert("Error, please try again.");
             console.log(e);
-            logout();
+            //logout();
         }
     });
 }

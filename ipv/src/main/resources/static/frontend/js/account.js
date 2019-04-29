@@ -201,6 +201,7 @@ function submitRegistration() {
         	$(location).attr("href", main_url);
         },
         error: function (e) {
+            console.log("fail");
             console.log(e);
         	alert("The username is taken, please try a different username.");
         }
