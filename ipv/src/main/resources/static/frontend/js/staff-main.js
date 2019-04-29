@@ -83,8 +83,8 @@ function getChatDetails() {
         error: function (e) {
             console.log("fail");
             console.log(e);
-            alert("Session expired, please login again.");
-            logout();
+            //alert("Session expired, please login again.");
+            //logout();
         }
     });
 }
@@ -122,8 +122,8 @@ function getPostMessages(postId) {
         error: function (e) {
             console.log("fail");
             console.log(e);
-            alert("Session expired, please login again.")
-            logout();
+            //alert("Session expired, please login again.")
+            //logout();
         }
     });
 }
@@ -299,8 +299,8 @@ function sendMessageToServer(msg) {
         error: function (e) {
             console.log("fail");
             console.log(e);
-            alert("Session expired, please login again. ")
-            logout();
+            //alert("Session expired, please login again. ")
+            //logout();
         }
     });
 }
@@ -329,7 +329,7 @@ function getLocationInfo(postId) {
             $("#location").html(text);
         },
         error: function (e) {
-            alert("Error, please try again.");
+            //alert("Error, please refresh the page again.");
             console.log(e);
             //logout();
         }
