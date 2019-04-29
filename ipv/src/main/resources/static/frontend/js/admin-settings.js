@@ -161,7 +161,7 @@ function validFields() {
 function saveChanges() {
     $("#admin-profile").submit(function(event){
         if (!validFields()) return;
-        var post_url = "/api/users/update_pass"
+        var post_url = "/api/users"
         var request_method = "PUT";
         var main_url = "/frontend/src/admin/dashboard.html";
         var form_data = {
