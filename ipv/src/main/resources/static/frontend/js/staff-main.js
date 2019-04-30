@@ -308,7 +308,7 @@ function sendMessageToServer(msg) {
 
 /** Get location information that the user corresponding to @param post has sent */
 function getLocationInfo(postId) {
-    var url = "/api/contact/by_post/" + postId;
+    var url = "/api/contacts/by_post/" + postId;
     var request_method = "GET";
     console.log(url);
 
@@ -325,19 +325,27 @@ function getLocationInfo(postId) {
             console.log("success");
             if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
-            if (data.address != null) {
-                $("#location").removeClass("hidden");
-                var text = "<b> Location information from user (will be deleted after 1 week): </b> <br> " + data.address;
-                $("#location").html(text);
-            }
+            if (data.address == null) hideLocation();
+            else showLocation(data.address);
 
         },
         error: function (e) {
-            //alert("Error, please refresh the page again.");
+            alert("Error, please refresh the page again.");
             console.log(e);
             //logout();
         }
     });
+}
+
+
+function hideLocation() {
+    $("#location").addClass("hidden");
+}
+
+function showLocation(location) {
+    $("#location").removeClass("hidden");
+    var text = "<b> Location information from user (will be automatically deleted after a week): </b> <br> " + location;
+    $("#location").html(text);
 }
 
 /** Gets the jwt of the current user */
