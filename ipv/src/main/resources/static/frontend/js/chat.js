@@ -100,8 +100,6 @@ function getPosts(userId) {
     var post_url = "/api/posts/by_user/" + userId;
     var request_method = "GET";
 
-    console.log(getJwt());
-    
     $.ajax({
         type: request_method,
         contentType: "application/json",
@@ -326,8 +324,9 @@ function sendLocation() {
     var post_data = {
         address: location,
         postId: postId,
-        locationId: locationId
+        id: locationId
     };
+    console.log(post_data);
 
     $.ajax({
         type: request_method,
