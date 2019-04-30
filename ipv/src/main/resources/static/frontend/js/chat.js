@@ -117,6 +117,7 @@ function getPosts(userId) {
             if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
             postId = data.id;
+            locationId = data.contact.id;
             if (data.status == 10) {
                 //conversation is paused
                 console.log("is paused");
@@ -324,7 +325,8 @@ function sendLocation() {
     var request_method = "PUT";
     var post_data = {
         address: location,
-        postId: postId
+        postId: postId,
+        locationId: locationId
     };
 
     $.ajax({
