@@ -1,14 +1,5 @@
 package com.ipv.service.imple;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
-import org.jasypt.util.text.BasicTextEncryptor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.ipv.entity.Contact;
 import com.ipv.entity.Conversation;
 import com.ipv.entity.Post;
@@ -24,6 +15,13 @@ import com.ipv.util.Constant;
 import com.ipv.util.Util;
 import com.ipv.util.wrapper.PauseAndResumeWrapper;
 import com.ipv.util.wrapper.PostCount;
+import org.jasypt.util.text.BasicTextEncryptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Data persistence business logic layer
@@ -79,8 +77,8 @@ public class PostServiceImple extends BaseImple<Post> implements PostService {
         post = postRepository.save(post);
         
         Contact contact = new Contact();
-        contact.setAddress("Not given");
-        contact.setNumber("Not given");
+        contact.setAddress(null);
+        contact.setNumber(null);
         contact.setPostId(post.getId());
         contactService.save(contact);
 

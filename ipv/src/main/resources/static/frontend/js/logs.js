@@ -16,7 +16,7 @@ function getLogs() {
         },
         dataType: 'json',
         cache: false,
-        timeout: 600,
+        timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
             if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');

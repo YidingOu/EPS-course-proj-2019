@@ -1,21 +1,5 @@
 package com.ipv.rest;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ipv.entity.User;
 import com.ipv.exception.NotFoundException;
 import com.ipv.reporsitory.UserRepository;
@@ -23,6 +7,11 @@ import com.ipv.service.AuditService;
 import com.ipv.service.UserService;
 import com.ipv.util.Util;
 import com.ipv.util.wrapper.ValidateResponseWapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 
@@ -121,7 +110,7 @@ public class UserRestAPI {
 
 	// validate for staffs
 	@SuppressWarnings("null")
-	@PostMapping("staffs/validate")
+	@PostMapping("/staffs/validate")
 	public ValidateResponseWapper validateStaff(@RequestBody User user, HttpServletResponse response) {
 		User resultUser = service.validateStaff(user.getName(), user.getPass(), response);
 		if (resultUser != null) {
@@ -130,8 +119,27 @@ public class UserRestAPI {
 			return new ValidateResponseWapper(resultUser.getRole(), resultUser, "Success");
 		} else {
 			//Add audit
-			auditService.addAudit(resultUser.getId(), null, "Staff logins failed with id = " + resultUser.getId());
-			return new ValidateResponseWapper(0, null, "The althentication failed");
+			auditService.addAudit(resultUser.getId(), null, "Staff login failed with id = " + resultUser.getId());
+			return new ValidateResponseWapper(0, null, "Authentication failed");
+		}
+	}
+
+	@PostMapping("/staffs/update")
+	public ValidateResponseWapper updateStaff(@RequestBody User user, HttpServletResponse response) {
+		User requestedUser = service.findById(user.getId());
+		if (requestedUser != null) {
+			//update first and last name
+			requestedUser.setFirstName(user.getFirstName());
+			requestedUser.setLastName(user.getLastName());
+			requestedUser = service.changePass(requestedUser, user.getPass());
+			Util.processUser(requestedUser, service.getUserRepository());
+			//Add audit
+			auditService.addAudit(requestedUser.getId(), null, "Staff updated profile success with id = " + requestedUser.getId());
+			return new ValidateResponseWapper(requestedUser.getRole(), requestedUser, "Success");
+		} else {
+			//Add audit
+			auditService.addAudit(requestedUser.getId(), null, "Staff updated profile failed with id = " + requestedUser.getId());
+			return new ValidateResponseWapper(0, null, "Update failed");
 		}
 	}
 

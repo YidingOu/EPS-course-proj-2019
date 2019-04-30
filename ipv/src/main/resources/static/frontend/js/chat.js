@@ -375,7 +375,7 @@ function getLocationInfo() {
             console.log(data);
             locationId = data.id;
             console.log(locationId);
-            displayLocationInfo(data.address);
+            if (data.address != null) displayLocationInfo(data.address);
         },
         error: function (e) {
             console.log("fail");

@@ -150,7 +150,7 @@ function submitStaffLogin() {
         data: JSON.stringify(form_data),
         dataType: 'json',
         cache: false,
-        timeout: 600,
+        timeout: 60000,
         success: function (data, textStatus, xhr) {
             localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
         	if (data.state == 1) {
@@ -192,7 +192,7 @@ function submitRegistration() {
         data: JSON.stringify(form_data),
         dataType: 'json',
         cache: false,
-        timeout: 600,
+        timeout: 60000,
         success: function (data, textStatus, xhr) {
         	console.log("success");
             console.log(data);

@@ -324,9 +324,12 @@ function getLocationInfo(postId) {
             console.log("success");
             if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
             console.log(data);
-            $("#location").removeClass("hidden");
-            var text = "<b> Location information from user (will be deleted after 1 week): </b> <br> " + data.address;
-            $("#location").html(text);
+            if (data.address != null) {
+                $("#location").removeClass("hidden");
+                var text = "<b> Location information from user (will be deleted after 1 week): </b> <br> " + data.address;
+                $("#location").html(text);
+            }
+
         },
         error: function (e) {
             //alert("Error, please refresh the page again.");

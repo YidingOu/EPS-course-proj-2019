@@ -174,8 +174,8 @@ function saveChanges() {
     $("#staff-profile").submit(function(event){
         event.preventDefault(); //prevent default action
         if (!validFields()) return;
-        var post_url = "/api/users"
-        var request_method = "PUT";
+        var post_url = "/api/users/staffs/update"
+        var request_method = "POST";
         var main_url = "/frontend/src/staff/chat.html";
         var form_data = {
             firstName:$("#first_name").val(),
