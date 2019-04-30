@@ -1,5 +1,7 @@
 package com.ipv.service.imple;
 
+import java.util.Optional;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +42,14 @@ public class ContactServiceImple extends BaseImple<Contact> implements ContactSe
 	public Contact findByPostId(int id) {
 		return contactRepository.findByPostId(id);
 	}
+	
+	// Delete entity with input id in repository
+	@Override
+    public void deleteById(int id) {
+        Contact contact = repository.findById(id).get();
+        contact.setAddress(null);
+        contact.setNumber(null);
+        repository.save(contact);
+    }
 
 }
