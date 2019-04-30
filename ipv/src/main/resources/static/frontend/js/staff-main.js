@@ -107,6 +107,7 @@ function getPostMessages(postId) {
         success: function (data, textStatus, xhr) {
             console.log("success");
             if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
+            console.log(data);
             var convo = data.conversations;
             var msgs = [];
             for (var j=0; j<convo.length; j++) {

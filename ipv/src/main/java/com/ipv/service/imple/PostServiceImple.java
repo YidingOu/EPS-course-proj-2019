@@ -92,7 +92,9 @@ public class PostServiceImple extends BaseImple<Post> implements PostService {
     public Post findById(int id) {
         Post post = super.findById(id);
         if (post != null) {
-            post.setConversations(conversationRepository.findByPostId(id));
+            List<Conversation> list = conversationRepository.findByPostId(id);
+            list.stream().forEach(c -> c.setData(encrytionService.decrypt(c.getData())));
+            post.setConversations(list);
             post.setContact(contactService.findByPostId(id));
         }
         return post;
