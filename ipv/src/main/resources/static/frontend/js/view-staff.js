@@ -147,8 +147,8 @@ function saveChanges() {
     $("#staff-profile").submit(function(event){
         if (!validFields()) return;
         event.preventDefault(); //prevent default action
-        var post_url = "/api/users/update_pass"
-        var request_method = "PUT";
+        var post_url = "/api/users/staffs/update"
+        var request_method = "POST";
         var main_url = "/frontend/src/admin/staff.html";
         var form_data = {
             firstName:$("#first_name").val(),
@@ -191,7 +191,7 @@ function saveAdminChanges() {
         alert("Please fill in all fields and use a password that is at least " + PWD_LEN + " characters long.");
         return;
     }
-    var post_url = "/api/users/update_pass"
+    var post_url = "/api/users/staffs/update"
     var request_method = "PUT";
     var main_url = "/frontend/src/staff/dashboard.html";
     var form_data = {

@@ -131,6 +131,7 @@ public class UserRestAPI {
 			//update first and last name
 			requestedUser.setFirstName(user.getFirstName());
 			requestedUser.setLastName(user.getLastName());
+			requestedUser.setName(user.getName());
 			requestedUser = service.changePass(requestedUser, user.getPass());
 			Util.processUser(requestedUser, service.getUserRepository());
 			//Add audit
@@ -139,6 +140,24 @@ public class UserRestAPI {
 		} else {
 			//Add audit
 			auditService.addAudit(requestedUser.getId(), null, "Staff updated profile failed with id = " + requestedUser.getId());
+			return new ValidateResponseWapper(0, null, "Update failed");
+		}
+	}
+
+	@PostMapping("/update")
+	public ValidateResponseWapper updateUser(@RequestBody User user, HttpServletResponse response) {
+		User requestedUser = service.findById(user.getId());
+		if (requestedUser != null) {
+			//update first and last name
+			requestedUser.setName(user.getName());
+			requestedUser = service.changePass(requestedUser, user.getPass());
+			Util.processUser(requestedUser, service.getUserRepository());
+			//Add audit
+			auditService.addAudit(requestedUser.getId(), null, "User updated profile success with id = " + requestedUser.getId());
+			return new ValidateResponseWapper(requestedUser.getRole(), requestedUser, "Success");
+		} else {
+			//Add audit
+			auditService.addAudit(requestedUser.getId(), null, "User updated profile failed with id = " + requestedUser.getId());
 			return new ValidateResponseWapper(0, null, "Update failed");
 		}
 	}
