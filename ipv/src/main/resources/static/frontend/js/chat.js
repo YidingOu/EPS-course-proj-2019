@@ -321,7 +321,7 @@ function sendLocation() {
         return;
     }
     if (location == null) return;
-    var request_method = "POST";
+    var request_method = "PUT";
     var post_data = {
         address: location,
         postId: postId
