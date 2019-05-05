@@ -70,8 +70,6 @@ public class ContactRestAPI {
 	//update the contact
 	@PutMapping
 	public Contact update(@RequestBody Contact contact) {
-		System.out.println("LOOK HEREE");
-		System.out.println(contact.getId());
 		service.save(contact);
 		
 		// Add audit

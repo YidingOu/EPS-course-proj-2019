@@ -252,10 +252,33 @@ a {
     color: white;
 }
 
+.footer {
+    width: 80%;
+    margin: auto
+}
+
+.footer a {
+    color: black !important;
+}
+
 .hidden {
     display: none;
 }
 
 label.error {
     color: red !important;
+}
+
+.locked-chat {
+    position: fixed;
+    height: 100%;
+    z-index: 1;
+    width: 80%;
+    right: 0;
+    background: white;
+}
+
+.locked-chat div {
+    text-align:center;
+    padding-top:30%
 }

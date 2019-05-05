@@ -156,6 +156,7 @@ function populateView(users) {
      //populate chat box, by default show the first conversation
     var postIdKeyArr = Object.keys(users);
     if (currPostId == -1 && getPostIdFromUrl() == -1) {
+        console.log(currPostId);
         //default, staff just logged in without selecting any chat
         if (postIdKeyArr.length >= 1) {
             //if there is at least 1 user, populate with the first chat
@@ -194,12 +195,16 @@ function populateChat(postId) {
     $("#user" + postId).addClass("active");
     if (isLocked[postId]) {
         //chat is locked
-        $(".chat_window").html("<div style='text-align:center; padding-top:40%'> " +
-            "This chat is currently paused by the user. </div>");
+        $("#locked-box").removeClass("hidden");
         return;
     }
+    else $("#locked-box").addClass("hidden");
     getPostMessages(postId);
     getLocationInfo(postId);
+}
+
+function showLockedMsg() {
+
 }
 
 /** Defines message object */

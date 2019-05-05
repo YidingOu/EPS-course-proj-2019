@@ -313,7 +313,9 @@ function redirect() {
 /** Prompts user to input location and sends information to server. */
 function sendLocation() {
     var location = prompt("Please enter the location you wish to share. " +
-        "This information is strictly confidential and will be automatically deleted after a week.");
+        "By sharing a location, you consent to sharing this information with staff involved " +
+        "in coordinating your pickup. " +
+        "It will also be automatically deleted after a week.");
     var url = "/api/contacts";
     if (location == "") {
         alert("Input cannot be empty!")
