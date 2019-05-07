@@ -140,6 +140,7 @@ public class PostRestAPI {
 	//resume the post
 	@PostMapping("/resume")
 	public Post resume(@RequestBody PauseAndResumeWrapper wrapper) {
+		
 		//Add audit
 		auditService.addAudit(null, wrapper.getId(), "Post resumed with id = " + wrapper.getId() );
 		return service.resume(wrapper);

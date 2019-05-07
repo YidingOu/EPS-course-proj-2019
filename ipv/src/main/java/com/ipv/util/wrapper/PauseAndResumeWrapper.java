@@ -16,4 +16,10 @@ public class PauseAndResumeWrapper {
 	public void setKey(String key) {
 		this.key = key;
 	}
+	@Override
+	public String toString() {
+		return "PauseAndResumeWrapper [id=" + id + ", key=" + key + "]";
+	}
+	
+	
 }

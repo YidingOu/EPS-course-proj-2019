@@ -59,7 +59,6 @@ public class UserRestAPI {
 	//get user by id
 	@GetMapping("{id}")
 	public User get(@PathVariable int id, HttpServletRequest req) {
-		Util.authorizationStaff(req);
 		User user = service.findById(id);
 		if (user == null) {
 			throw new NotFoundException("User id not found - " + id);

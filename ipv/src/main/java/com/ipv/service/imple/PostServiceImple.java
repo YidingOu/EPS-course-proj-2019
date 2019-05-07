@@ -37,163 +37,164 @@ import java.util.List;
 @Service
 public class PostServiceImple extends BaseImple<Post> implements PostService {
 
-    //Spring Dependency injection
-    @Autowired
-    private PostRepository postRepository;
+	//Spring Dependency injection
+	@Autowired
+	private PostRepository postRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Autowired
-    private ConversationRepository conversationRepository;
+	@Autowired
+	private ConversationRepository conversationRepository;
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @Autowired
-    private ContactService contactService;
+	@Autowired
+	private ContactService contactService;
 
-    @Autowired
-    private EncryptionService encrytionService;
+	@Autowired
+	private EncryptionService encrytionService;
 
-    //After the injection is done, override the repository in the super class
-    @PostConstruct
-    public void initParent() {
-        super.repository = postRepository;
-    }
+	//After the injection is done, override the repository in the super class
+	@PostConstruct
+	public void initParent() {
+		super.repository = postRepository;
+	}
 
-    // Initialize a post with input user id
-    @Override
-    public Post initPost(int userId) {
+	// Initialize a post with input user id
+	@Override
+	public Post initPost(int userId) {
 
-        Post post = new Post();
-        post.setId(0);
-        post.setUserId(userId);
-        post.setStaffId(userService.loadBalancerForGettingAStaffId());
-        post.setStatus(Constant.POST_STATUS_ON_GOING);
-        post.setUpdated(Constant.POST_UPDATE_NO);
-        post.setStartDate(new Date());
-        post.setUpdatedDate(new Date());
-        post = postRepository.save(post);
-        
-        Contact contact = new Contact();
-        contact.setAddress(null);
-        contact.setNumber(null);
-        contact.setPostId(post.getId());
-        contactService.save(contact);
+		Post post = new Post();
+		post.setId(0);
+		post.setUserId(userId);
+		post.setStaffId(userService.loadBalancerForGettingAStaffId());
+		post.setStatus(Constant.POST_STATUS_ON_GOING);
+		post.setUpdated(Constant.POST_UPDATE_NO);
+		post.setStartDate(new Date());
+		post.setUpdatedDate(new Date());
+		post = postRepository.save(post);
 
-        post.setContact(contact);
+		Contact contact = new Contact();
+		contact.setAddress(null);
+		contact.setNumber(null);
+		contact.setPostId(post.getId());
+		contactService.save(contact);
 
-        return post;
-    }
+		post.setContact(contact);
 
-    // Find the post with input user id
-    @Override
-    public Post findById(int id) {
-        Post post = super.findById(id);
-        if (post != null) {
-            List<Conversation> list = conversationRepository.findByPostId(id);
-            list.stream().forEach(c -> c.setData(encrytionService.decrypt(c.getData())));
-            post.setConversations(list);
-            post.setContact(contactService.findByPostId(id));
-        }
-        return post;
-    }
+		return post;
+	}
 
-    // Pause the post with input wrapper
-    @Override
-    public Post pause(PauseAndResumeWrapper wrapper) {
-        Post post = findById(wrapper.getId());
-        post.setStatus(Constant.POST_STATUS_PAUSED);
-        encrypt(post, wrapper.getKey());
-        repository.save(post);
-        return post;
-    }
+	// Find the post with input user id
+	@Override
+	public Post findById(int id) {
+		Post post = super.findById(id);
+		if (post != null) {
+			List<Conversation> list = conversationRepository.findByPostId(id);
+			//            list.stream().forEach(c -> c.setData(encrytionService.decrypt(c.getData())));
+			post.setConversations(list);
+			post.setContact(contactService.findByPostId(id));
+		}
+		return post;
+	}
 
-    // Resume the post with input wrapper
-    @Override
-    public Post resume(PauseAndResumeWrapper wrapper) {
-        Post post = findById(wrapper.getId());
-        post.setStatus(Constant.POST_STATUS_ON_GOING);
-        decrypt(post, wrapper.getKey());
-        repository.save(post);
-        return post;
-    }
+	// Pause the post with input wrapper
+	@Override
+	public Post pause(PauseAndResumeWrapper wrapper) {
+		Post post = findById(wrapper.getId());
+		post.setStatus(Constant.POST_STATUS_PAUSED);
+		encrypt(wrapper.getId(), wrapper.getKey());
+		repository.save(post);
+		return post;
+	}
 
-    // Close the post with input id
-    @Override
-    public Post close(int id) {
-        Post post = findById(id);
-        post.setStatus(Constant.POST_STATUS_CLOSED);
-        post.setUserId(0);
-        repository.save(post);
+	// Resume the post with input wrapper
+	@Override
+	public Post resume(PauseAndResumeWrapper wrapper) {
+		decrypt(wrapper.getId(), wrapper.getKey());
+		Post post = findById(wrapper.getId());
+		post.setStatus(Constant.POST_STATUS_ON_GOING);
+		repository.save(post);
+		return post;
+	}
 
-        //remove conversations
-        List<Conversation> list = conversationRepository.findByPostId(post.getId());
-        list.stream().forEach(c -> {
-            conversationRepository.delete(c);
-        });
-        //remove contact
-        contactService.deleteById(contactService.findByPostId(id).getId());
+	// Close the post with input id
+	@Override
+	public Post close(int id) {
+		Post post = findById(id);
+		post.setStatus(Constant.POST_STATUS_CLOSED);
+		post.setUserId(0);
+		repository.save(post);
 
-        return post;
-    }
+		//remove conversations
+		List<Conversation> list = conversationRepository.findByPostId(post.getId());
+		list.stream().forEach(c -> {
+			conversationRepository.delete(c);
+		});
+		//remove contact
+		contactService.deleteById(contactService.findByPostId(id).getId());
 
-    // Get the post with input user id
-    @Override
-    public Post getByUserId(int userId) {
-        Post post = postRepository.findByUserId(userId);
-        if (post != null) {
-            post.setConversations(conversationRepository.findByPostId(post.getId()));
-            post.setStaff(userRepository.findById(post.getStaffId()).get());
-            post.setContact(contactService.findByPostId(post.getId()));
-        }
-        return post;
-    }
+		return post;
+	}
 
-    // Get a list of posts with input staff id
-    @Override
-    public List<Post> getByStaffId(int id) {
-        List<Post> posts = postRepository.findByStaffId(id);
-        for (Post post : posts) {
-            User user = userService.findById(post.getUserId());
-            User staff = userService.findById(post.getStaffId());
-            Util.processUser(user, userRepository);
-            Util.processUser(staff, userRepository);
-            post.setUser(user);
-            post.setStaff(staff);
-        }
-        return posts;
-    }
+	// Get the post with input user id
+	@Override
+	public Post getByUserId(int userId) {
+		Post post = postRepository.findByUserId(userId);
+		if (post != null) {
+			post.setConversations(conversationRepository.findByPostId(post.getId()));
+			post.setStaff(userRepository.findById(post.getStaffId()).get());
+			post.setContact(contactService.findByPostId(post.getId()));
+		}
+		return post;
+	}
 
-    // Count total posts
-    @Override
-    public PostCount getCounts() {
-        PostCount count = new PostCount();
-        count.setOnGoingPost(postRepository.countByStatus(Constant.POST_STATUS_ON_GOING));
-        count.setClosedPost(postRepository.countByStatus(Constant.POST_STATUS_CLOSED));
-        count.setPausedPost(postRepository.countByStatus(Constant.POST_STATUS_PAUSED));
-        return count;
-    }
+	// Get a list of posts with input staff id
+	@Override
+	public List<Post> getByStaffId(int id) {
+		List<Post> posts = postRepository.findByStaffId(id);
+		for (Post post : posts) {
+			User user = userService.findById(post.getUserId());
+			User staff = userService.findById(post.getStaffId());
+			Util.processUser(user, userRepository);
+			Util.processUser(staff, userRepository);
+			post.setUser(user);
+			post.setStaff(staff);
+		}
+		return posts;
+	}
 
-    // Decrypt the input post with input key
-    private void decrypt(Post post, String key) {
-        BasicTextEncryptor encryptor = encrytionService.createAnEncryptor(key);
-        List<Conversation> list = conversationRepository.findByPostId(post.getId());
-        list.stream().forEach(c -> {
-            c.setData(encrytionService.decrypt(encryptor, c.getData()));
-            conversationRepository.save(c);
-        });
-    }
+	// Count total posts
+	@Override
+	public PostCount getCounts() {
+		PostCount count = new PostCount();
+		count.setOnGoingPost(postRepository.countByStatus(Constant.POST_STATUS_ON_GOING));
+		count.setClosedPost(postRepository.countByStatus(Constant.POST_STATUS_CLOSED));
+		count.setPausedPost(postRepository.countByStatus(Constant.POST_STATUS_PAUSED));
+		return count;
+	}
 
-    // Encrypt the input post with input key
-    private void encrypt(Post post, String key) {
-        BasicTextEncryptor encryptor = encrytionService.createAnEncryptor(key);
-        List<Conversation> list = conversationRepository.findByPostId(post.getId());
-        list.stream().forEach(c -> {
-            c.setData(encrytionService.encrypt(encryptor, c.getData()));
-            conversationRepository.save(c);
-        });
+	// Decrypt the input post with input key
+	private void decrypt(int postId, String key) {
+		BasicTextEncryptor encryptor = encrytionService.createAnEncryptor(key);
+		List<Conversation> list = conversationRepository.findByPostId(postId);
+		list.stream().forEach(c -> {
+			String edata = encrytionService.decrypt(encryptor, c.getData());
+			c.setData(edata);
+			conversationRepository.save(c);
+		});
+	}
 
-    }
+	// Encrypt the input post with input key
+	private void encrypt(int postId, String key) {
+		BasicTextEncryptor encryptor = encrytionService.createAnEncryptor(key);
+		List<Conversation> list = conversationRepository.findByPostId(postId);
+		list.stream().forEach(c -> {
+			c.setData(encrytionService.encrypt(encryptor, c.getData()));
+			conversationRepository.save(c);
+		});
+
+	}
 }

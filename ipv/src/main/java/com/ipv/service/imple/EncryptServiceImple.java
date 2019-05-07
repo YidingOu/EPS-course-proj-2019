@@ -42,20 +42,22 @@ public class EncryptServiceImple implements EncryptionService {
     // Encrypt the input text with input encryptor
     @Override
     public String encrypt(BasicTextEncryptor encryptor, String text) {
+    	
         return encryptor.encrypt(text);
     }
 
     // Decrypt the input text with input encryptor
     @Override
     public String decrypt(BasicTextEncryptor encryptor, String text) {
-        return encryptor.decrypt(text);
+    	String t = encryptor.decrypt(text);
+        return t;
     }
 
     // Create an encryptor with input key
     @Override
     public BasicTextEncryptor createAnEncryptor(String key) {
         BasicTextEncryptor newEncryptor = new BasicTextEncryptor();
-        newEncryptor.setPassword(key);
+        newEncryptor.setPasswordCharArray(key.toCharArray());
         return newEncryptor;
     }
 
