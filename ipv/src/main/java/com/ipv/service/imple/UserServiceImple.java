@@ -200,7 +200,8 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         user.setSalt(salt);
         byte[] salts = salt.getBytes();
         String newPwd = saltPassword(updatePass, salts);
-//		System.out.println(newPwd);
+//		System.out.println("newPwd:" + newPwd);
+//		System.out.println("salt:" + salt);
         user.setPass(newPwd);
         user = repository.save(user);
         Util.processUser(user, userRepository);

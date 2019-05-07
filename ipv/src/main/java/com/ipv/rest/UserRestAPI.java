@@ -33,7 +33,6 @@ import com.ipv.util.wrapper.ValidateResponseWapper;
  * For the interactions related to the user entity
  * 
  */
-@CrossOrigin(origins = "*", maxAge = 3600) //cors issue, for the development usage
 @RestController
 @RequestMapping("/api/users")
 public class UserRestAPI {
