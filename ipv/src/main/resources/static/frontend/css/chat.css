@@ -282,3 +282,13 @@ label.error {
     text-align:center;
     padding-top:30%
 }
+
+.fa-trash-alt {
+    font-size: 40px;
+    padding-top: 1%;
+}
+
+.fa-trash-alt:hover {
+    cursor: pointer;
+    color: red;
+}

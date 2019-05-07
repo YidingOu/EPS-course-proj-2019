@@ -65,14 +65,19 @@ function isFirstVisit() {
  *  on the right, else message appears on the left.)
  */
 Message = function (arg) {
-    this.text = arg.text, this.senderId = arg.senderId;
+    this.text = arg.text, this.senderId = arg.senderId, this.id = arg.id;
     this.draw = function (_this) {
         return function () {
             var $message;
             message_side = (_this.senderId == uid) ? "right" : "left"
             $message = $($('.message_template').clone().html());
+            $message.attr('id', "msg-" + arg.id);
             $message.addClass(message_side).find('.text').html(_this.text);
             $('.messages').append($message);
+            $message.click(function () {
+                if (_this.senderId == uid) toggleDelete(this, arg.id);
+                return;
+            });
             return setTimeout(function () {
                 return $message.addClass('appeared');
             }, 0);
@@ -201,7 +206,8 @@ function getMessages(postId) {
             for (var i=0; i<data.length; i++) {
                 msg = new Message({
                     text: data[i].data,
-                    senderId : data[i].userId
+                    senderId : data[i].userId,
+                    id: data[i].id
                 });
                 posts.push(msg);
             }
@@ -216,23 +222,7 @@ function getMessages(postId) {
     });
 }
 
-function test() {
-    var arr = []
-    var msg = new Message({
-                            text: "hi",
-                            senderId : 1
-                        });
-    arr.push(msg);
-
-    msg = new Message({
-                            text: "bye",
-                            senderId : uid
-                        });
-    arr.push(msg);
-    return arr;
-}
-
-/** Draws all @param posts, where posts are msg objects */
+/** Draws all @param posts, where posts are msg objects.*/
 function drawPosts(posts) {
     for (var i=0; i<posts.length; i++) {
         posts[i].draw();
@@ -248,33 +238,23 @@ function getMessageText() {
 
 /** Sends @param text to server and draws the message sent on screen */
 function sendMessage(text) {
-    var $messages, message;
     if (text.trim() === '') {
         return;
     }
     $('.message_input').val('');
-    $messages = $('.messages');
-    senderId = uid
-    message = new Message({
-        text: text,
-        senderId: uid
-    });
+    senderId = uid;
     console.log("sending");
     //send message to server, draw on success
-    if (addPost(message)) {
-        posts.push(message);
-        message.draw();
-        return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
-    }
+    addPost(text);
    return;
 }
 
 /** Creates a new post using @param message and sends it to the server */
-function addPost(message) {
+function addPost(text) {
     var url = "/api/conversations";
     var request_method = "POST";
     var post_data = {
-        data: message.text,
+        data: text,
         postId: postId,
         userId:uid
     };
@@ -292,7 +272,17 @@ function addPost(message) {
         timeout: 60000,
         success: function (data, textStatus, xhr) {
             console.log("success");
+            console.log(data);
             if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
+            var message = new Message({
+                    text: text,
+                    senderId: uid,
+                    id: data.id
+            });
+            var $messages = $('.messages');
+            posts.push(message);
+            message.draw();
+            return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
             return true;
         },
         error: function (e) {
@@ -481,4 +471,45 @@ function deleteLocation() {
 function logout() {
     localStorage.clear();
     $(location).attr("href", "login.html");
+}
+
+function toggleDelete(element, msgId) {
+    var trash = document.getElementById("trash-" + msgId);
+    if (!element.contains(trash)) {
+        element.innerHTML += '<i id="trash-' + msgId + '"s onclick="deleteMsg(' + msgId + ')" class="fas fa-trash-alt"></i>';
+    } else {
+        element.removeChild(trash);
+    }
+}
+
+function deleteMsg(msgId) {
+    console.log(msgId);
+    var cfm = confirm("Are you sure you want to delete this message? ")
+        var url = "/api/conversations/" + msgId;
+        if (!cfm) return;
+
+        var request_method = "DELETE";
+
+        $.ajax({
+            type: request_method,
+            contentType: "application/json",
+            url: url,
+            headers: {
+                "JWT_TOKEN_HEADER": getJwt()
+            },
+            cache: false,
+            timeout: 60000,
+            success: function (data, textStatus, xhr) {
+                console.log("success");
+                if (xhr.getResponseHeader('JWT_TOKEN_HEADER') != null) localStorage.jwt = xhr.getResponseHeader('JWT_TOKEN_HEADER');
+                console.log(data);
+                $("#msg-" + msgId).html("<div style='text-align: center; color: red'> ---Message deleted--- </div>");
+            },
+            error: function (e) {
+                console.log("fail");
+                console.log(e);
+                alert("Error, please try again.");
+            }
+        });
+        return;
 }

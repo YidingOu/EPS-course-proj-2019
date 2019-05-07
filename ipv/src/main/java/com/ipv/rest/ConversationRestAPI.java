@@ -1,21 +1,13 @@
 package com.ipv.rest;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ipv.entity.Conversation;
 import com.ipv.exception.NotFoundException;
 import com.ipv.service.AuditService;
 import com.ipv.service.ConversationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 
@@ -84,7 +76,7 @@ public class ConversationRestAPI {
 	//delete the conversation
 	@DeleteMapping("{id}")
 	public String delete(@PathVariable int id) {
-		
+		System.out.println(id);
 		Conversation conversation = service.findById(id);
 		if (conversation == null) {
 			throw new NotFoundException("conversation id not found - " + id);
