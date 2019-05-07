@@ -1,5 +1,7 @@
 package com.ipv.rest;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,6 +72,7 @@ public class ContactRestAPI {
 	//update the contact
 	@PutMapping
 	public Contact update(@RequestBody Contact contact) {
+		contact.setDate(new Date());
 		service.save(contact);
 		
 		// Add audit
