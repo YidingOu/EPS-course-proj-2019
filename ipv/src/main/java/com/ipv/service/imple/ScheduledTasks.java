@@ -27,8 +27,7 @@ public class ScheduledTasks {
 	@Autowired
 	private AuditRepository auditRepository;
 	
-	final static int WEEK = 1000 * 60 * 60 * 24 * 7;
-	final static int MONTH = 1000 * 60 * 60 * 24 * 7 * 4;
+	static final long WEEK = 1000 * 60 * 60 * 24 * 7;
 	
 	//The deletion will be excuted in every week
     @Scheduled(fixedRate = WEEK) // 1 week
@@ -45,10 +44,10 @@ public class ScheduledTasks {
     	}
     }
     
-    //The deletion will be excuted in every month
-    @Scheduled(fixedRate = MONTH) // 1 week
+    //The deletion will be excuted in every 2 weeks
+    @Scheduled(fixedRate = WEEK * 2) // 2 week
     public void removingExpiredLogs() {
-    	Date line = new Date(System.currentTimeMillis() - MONTH);
+    	Date line = new Date(System.currentTimeMillis() - WEEK * 2);
     	List<Audit> audits = auditRepository.findAll();
     	for (Audit audit : audits) {
     		if (audit.getDate().before(line)) {
