@@ -1,11 +1,16 @@
 package com.ipv.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /*
@@ -31,8 +36,26 @@ public class Contact {
 	
 	@Column(name="number")
 	private String number;
-
 	
+	@Column(name="date_time")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date date;
+
+	@PrePersist
+	void createdAt() {
+		this.date = new Date();
+	}
+	
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+
+
 
 	public int getId() {
 		return id;

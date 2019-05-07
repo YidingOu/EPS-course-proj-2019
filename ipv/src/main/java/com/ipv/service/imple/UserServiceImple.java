@@ -122,7 +122,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         String pwd = user.getPass();
         byte[] salts = salt.getBytes();
         String newPwd = saltPassword(pwd, salts);
-        System.out.println("pwd: " + newPwd + " salt: " + salt);
+//        System.out.println("pwd: " + newPwd + " salt: " + salt);
         user.setPass(newPwd);
         user = repository.save(user);
         Post post = postService.initPost(user.getId());
@@ -132,7 +132,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         String jwt = jwtService.createJWT(user);
         JWTUserInfoWrapper info = jwtService.validate(jwt);
         System.out.println(info.getNewJWT());
-        response.setHeader(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
+//        response.setHeader(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
         
         return user;
     }

@@ -1,17 +1,28 @@
 package com.ipv.rest;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ipv.entity.User;
+import com.ipv.exception.InvalidException;
 import com.ipv.exception.NotFoundException;
 import com.ipv.reporsitory.UserRepository;
 import com.ipv.service.AuditService;
 import com.ipv.service.UserService;
 import com.ipv.util.Util;
 import com.ipv.util.wrapper.ValidateResponseWapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * 
@@ -56,11 +67,11 @@ public class UserRestAPI {
 	// create an user, the function will be completed later
 	@PostMapping("/create_user")
 	public User add(@RequestBody User user, HttpServletResponse response) {
-
-		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
+		checkPassValidation(user);
 		user.setId(0);
 		service.save(user, response);
-
+		
+		
 		//Add audit
 		auditService.addAudit(user.getId(), null, "User created with id = " + user.getId());
 
@@ -72,6 +83,7 @@ public class UserRestAPI {
 	public User addStaff(@RequestBody User user, HttpServletResponse response) {
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
 		user.setId(0);
+		checkPassValidation(user);
 		service.addStaff(user, response);
 
 		//Add audit
@@ -83,7 +95,9 @@ public class UserRestAPI {
 	// validate
 	@PostMapping("/validate")
 	public ValidateResponseWapper validate(@RequestBody User user, HttpServletResponse response) {
+		checkPassValidation(user);
 		User resultUser = service.validate(user.getName(), user.getPass(), response);
+		
 		if (resultUser != null) {
 			//Add audit
 			auditService.addAudit(resultUser.getId(), null, "User logins success with id = " + resultUser.getId());
@@ -112,6 +126,7 @@ public class UserRestAPI {
 	@SuppressWarnings("null")
 	@PostMapping("/staffs/validate")
 	public ValidateResponseWapper validateStaff(@RequestBody User user, HttpServletResponse response) {
+		checkPassValidation(user);
 		User resultUser = service.validateStaff(user.getName(), user.getPass(), response);
 		if (resultUser != null) {
 			//Add audit
@@ -183,6 +198,7 @@ public class UserRestAPI {
 	// update password for the user
 	@PutMapping("/update_pass")
 	public User updatePass(@RequestBody User user) {
+		checkPassValidation(user);
 		User olduser = service.findById(user.getId());
 		if (olduser == null) {
 			throw new NotFoundException("User id not found - " + user.getId());
@@ -211,6 +227,14 @@ public class UserRestAPI {
 		auditService.addAudit(user.getId(), null, "User is deleted with id = " + user.getId());
 
 		return "Deleted User id - " + id;
+	}
+	
+	private void checkPassValidation(User user) {
+		String pass = user.getPass();
+		if (pass == null || pass.length() < 8 || pass.length() > 20) {
+			throw new InvalidException("User Password invalid");
+		}
+		
 	}
 
 

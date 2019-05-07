@@ -28,8 +28,8 @@ import com.ipv.util.wrapper.JWTUserInfoWrapper;
  * The filter for validating / reassigning the jwt token
  * 
  * */
-@Component
-@Order(1)
+//@Component
+//@Order(1)
 public class JWTFilter implements Filter{
 	
 	@Autowired

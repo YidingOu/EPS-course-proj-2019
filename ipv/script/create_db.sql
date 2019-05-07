@@ -87,6 +87,7 @@ DROP TABLE IF EXISTS `pivdb`.`contact` ;
 CREATE TABLE IF NOT EXISTS `pivdb`.`contact` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `address` TEXT NULL DEFAULT NULL,
+  `date_time` DATETIME NOT NULL,
   `number` VARCHAR(45) NULL DEFAULT NULL,
   `postId` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
