@@ -43,17 +43,16 @@ public class JWTFilter implements Filter{
 		JWTUserInfoWrapper jwtInfo = null;
 		
 		// validate the token 
-		System.out.println("====="+req.getRequestURI());
+//		System.out.println("====="+req.getRequestURI());
 		if (req.getRequestURI().contains("api") 
 				&& !req.getRequestURI().contains("validate") 
 				&& !req.getRequestURI().contains("create_user")
 				&& !req.getRequestURI().contains("swagger-ui")) {
-			System.out.println("+++ enter filter");
+//			System.out.println("+++ enter filter");
 			String token = req.getHeader(Constant.JWT_TOKEN_HEADER);
 			if (token == null || (jwtInfo = jwtService.validate(token)) == null) {
 				res.sendError(HttpStatus.FORBIDDEN.value(), "Token is invalid or expired");
 				return;
-//				throw new TokenValidateFailedException("Token is invalid or expired");
 			}
 			req.getSession().setAttribute("token", jwtInfo);
 			res.setHeader(Constant.JWT_TOKEN_HEADER, jwtInfo.getNewJWT());
@@ -61,11 +60,6 @@ public class JWTFilter implements Filter{
 		// continue the process
 		chain.doFilter(request, response);
 		
-//		// renew the token
-//		if (res != null && jwtInfo != null) {
-//			System.out.println("Enter new token--");
-//			
-//		}
 	}
 
 }

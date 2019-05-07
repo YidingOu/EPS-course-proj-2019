@@ -18,6 +18,7 @@ import com.ipv.entity.Post;
 import com.ipv.exception.NotFoundException;
 import com.ipv.service.AuditService;
 import com.ipv.service.PostService;
+import com.ipv.util.Util;
 import com.ipv.util.wrapper.PauseAndResumeWrapper;
 import com.ipv.util.wrapper.PostCount;
 
@@ -68,7 +69,8 @@ public class PostRestAPI {
 	
 	//get the post by user id
 	@GetMapping("/transfer/{postId}/{newStaffId}")
-	public Post postTransfer(@PathVariable int postId, @PathVariable int newStaffId) {
+	public Post postTransfer(@PathVariable int postId, @PathVariable int newStaffId, HttpServletRequest req) {
+		Util.authorizationStaff(req);
 		Post post = service.findById(postId);
 		if (post == null) {
 			throw new NotFoundException("Post id not found - " + postId);
@@ -153,7 +155,8 @@ public class PostRestAPI {
 	
 	//get the posts by staff id
 	@GetMapping("/count_info")
-	public PostCount getCountInfo() {
+	public PostCount getCountInfo(HttpServletRequest req) {
+		Util.authorizationAdmin(req);
 		return service.getCounts();
 	}
 

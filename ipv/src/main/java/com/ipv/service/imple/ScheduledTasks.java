@@ -17,6 +17,9 @@ import com.ipv.reporsitory.ContactRepository;
  * Utilizing the Spring schedule work to periodically remove the expired contact information 
  * and the system logs for the privacy protection
  * 
+ * References:
+ * https://spring.io/guides/gs/scheduling-tasks/
+ * 
  * */
 @Component
 public class ScheduledTasks {

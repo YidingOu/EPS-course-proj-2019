@@ -2,6 +2,7 @@ package com.ipv.rest;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,17 +46,20 @@ public class UserRestAPI {
 
 	//get all users for the admin
 	@GetMapping
-	public List<User> findAll() {
+	public List<User> findAll(HttpServletRequest req) {
+		Util.authorizationStaff(req);
 		List<User> list = service.findAll();
 		UserRepository userRepository = service.getUserRepository();
 		list.stream().forEach(user -> Util.processUser(user, userRepository));
 		return list;
 	}
 
+	
+
 	//get user by id
 	@GetMapping("{id}")
-	public User get(@PathVariable int id) {
-
+	public User get(@PathVariable int id, HttpServletRequest req) {
+		Util.authorizationStaff(req);
 		User user = service.findById(id);
 		if (user == null) {
 			throw new NotFoundException("User id not found - " + id);
@@ -80,7 +84,8 @@ public class UserRestAPI {
 
 	// create an staff
 	@PostMapping("/staffs/create_user")
-	public User addStaff(@RequestBody User user, HttpServletResponse response) {
+	public User addStaff(@RequestBody User user, HttpServletResponse response, HttpServletRequest req) {
+		Util.authorizationAdmin(req);
 		// just in case they pass an id in JSON ... set id to 0 this is to force a save of new item ... instead of update
 		user.setId(0);
 		checkPassValidation(user);
@@ -92,7 +97,7 @@ public class UserRestAPI {
 		return user;
 	}
 
-	// validate
+	// validate 
 	@PostMapping("/validate")
 	public ValidateResponseWapper validate(@RequestBody User user, HttpServletResponse response) {
 		checkPassValidation(user);
@@ -112,20 +117,23 @@ public class UserRestAPI {
 
 	//get all staffs
 	@GetMapping("/staffs")
-	public List<User> findAllStaffs() {
+	public List<User> findAllStaffs(HttpServletRequest req) {
+		Util.authorizationAdmin(req);
 		return service.getStaffs();
 	}
 
 	//get all staffs
 	@GetMapping("/customers")
-	public List<User> findAllNormalUsers() {
+	public List<User> findAllNormalUsers(HttpServletRequest req) {
+		Util.authorizationStaff(req);
 		return service.getNormalUsers();
 	}
 
 	// validate for staffs
 	@SuppressWarnings("null")
 	@PostMapping("/staffs/validate")
-	public ValidateResponseWapper validateStaff(@RequestBody User user, HttpServletResponse response) {
+	public ValidateResponseWapper validateStaff(@RequestBody User user, HttpServletResponse response, HttpServletRequest req) {
+		Util.authorizationStaff(req);
 		checkPassValidation(user);
 		User resultUser = service.validateStaff(user.getName(), user.getPass(), response);
 		if (resultUser != null) {
@@ -215,8 +223,9 @@ public class UserRestAPI {
 
 	// delete a user (delete account)
 	@DeleteMapping("{id}")
-	public String delete(@PathVariable int id) {
-
+	public String delete(@PathVariable int id, HttpServletRequest req) {
+		Util.authorizationAdmin(req);
+		
 		User user = service.findById(id);
 		if (user == null) {
 			throw new NotFoundException("user id not found - " + id);
