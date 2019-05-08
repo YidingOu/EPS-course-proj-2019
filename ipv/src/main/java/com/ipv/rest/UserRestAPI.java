@@ -131,7 +131,6 @@ public class UserRestAPI {
 	@SuppressWarnings("null")
 	@PostMapping("/staffs/validate")
 	public ValidateResponseWapper validateStaff(@RequestBody User user, HttpServletResponse response, HttpServletRequest req) {
-		Util.authorizationStaff(req);
 		checkPassValidation(user);
 		User resultUser = service.validateStaff(user.getName(), user.getPass(), response);
 		if (resultUser != null) {

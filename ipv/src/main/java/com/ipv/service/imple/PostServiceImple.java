@@ -93,7 +93,7 @@ public class PostServiceImple extends BaseImple<Post> implements PostService {
 		Post post = super.findById(id);
 		if (post != null) {
 			List<Conversation> list = conversationRepository.findByPostId(id);
-			//            list.stream().forEach(c -> c.setData(encrytionService.decrypt(c.getData())));
+			list.stream().forEach(c -> c.setData(encrytionService.decrypt(c.getData())));
 			post.setConversations(list);
 			post.setContact(contactService.findByPostId(id));
 		}
@@ -103,7 +103,7 @@ public class PostServiceImple extends BaseImple<Post> implements PostService {
 	// Pause the post with input wrapper
 	@Override
 	public Post pause(PauseAndResumeWrapper wrapper) {
-		Post post = findById(wrapper.getId());
+		Post post = super.findById(wrapper.getId());
 		post.setStatus(Constant.POST_STATUS_PAUSED);
 		encrypt(wrapper.getId(), wrapper.getKey());
 		repository.save(post);
@@ -114,7 +114,7 @@ public class PostServiceImple extends BaseImple<Post> implements PostService {
 	@Override
 	public Post resume(PauseAndResumeWrapper wrapper) {
 		decrypt(wrapper.getId(), wrapper.getKey());
-		Post post = findById(wrapper.getId());
+		Post post = super.findById(wrapper.getId());
 		post.setStatus(Constant.POST_STATUS_ON_GOING);
 		repository.save(post);
 		return post;
@@ -123,7 +123,7 @@ public class PostServiceImple extends BaseImple<Post> implements PostService {
 	// Close the post with input id
 	@Override
 	public Post close(int id) {
-		Post post = findById(id);
+		Post post = super.findById(id);
 		post.setStatus(Constant.POST_STATUS_CLOSED);
 		post.setUserId(0);
 		repository.save(post);
