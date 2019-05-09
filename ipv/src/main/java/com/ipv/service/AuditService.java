@@ -11,7 +11,7 @@ import com.ipv.entity.Audit;
  * There are many common interfaces between the services(like CRUD), so the common part is define in a BaseService
  * 
  * The service interface get the common methods by extends the BaseService
- * The other interfaces will be added later
+ * The other required interfaces are added here
  * 
  */
 public interface AuditService extends BaseService<Audit>{

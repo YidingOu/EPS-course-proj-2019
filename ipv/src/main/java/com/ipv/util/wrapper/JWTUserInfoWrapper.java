@@ -1,7 +1,11 @@
 package com.ipv.util.wrapper;
 
 import java.util.Date;
-
+/**
+ * 
+ * The model for the user info with JWT
+ * 
+ */
 public class JWTUserInfoWrapper {
 	int id;	//user id
 	int role; //user role

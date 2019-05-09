@@ -15,7 +15,6 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /*
  * The data mapping class -> DB.TABLE into Spring Entity Bean
- * The relationships (One-One, One-Many ect, will be added later)
  * 
  * */
 @Entity
@@ -48,8 +47,6 @@ public class Conversation {
 	void createdAt() {
 		this.date = new Date();
 	}
-	
-	
 
 	public int getUserId() {
 		return userId;

@@ -8,7 +8,7 @@ import com.ipv.entity.Contact;
  * There are many common interfaces between the services(like CRUD), so the common part is define in a BaseService
  * <p>
  * The service interface get the common methods by extends the BaseService
- * The other interfaces will be added later
+ * The other required interfaces are added here
  */
 public interface ContactService extends BaseService<Contact> {
     // Return the contact repository with input post id

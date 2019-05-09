@@ -27,8 +27,6 @@ import com.ipv.util.Constant;
  * There are many common method between the services(like CRUD), so the common part is define in a BaseImple
  * This service implements get the common methods by extends the BaseService
  * The E is the Entity type of the service
- * <p>
- * The further methods will be implements here in later
  */
 @Service
 public class ConversationServiceImple extends BaseImple<Conversation> implements ConversationService {
@@ -36,16 +34,18 @@ public class ConversationServiceImple extends BaseImple<Conversation> implements
     //Spring Dependency injection
     @Autowired
     private ConversationRepository conversationRepository;
-
+    
+    //Spring Dependency injection
     @Autowired
     private PostRepository postRepository;
-
+    
+    //Spring Dependency injection
     @Autowired
     private UserRepository userRepository;
-
+    
+    //Spring Dependency injection
     @Autowired
     private EncryptionService encrytionService;
-
 
     //After the injection is done, override the repository in the super class
     @PostConstruct

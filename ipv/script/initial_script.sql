@@ -1,3 +1,2 @@
 INSERT INTO `pivdb`.`user` (`name`, `first_name`,`last_name`, `role`, `pass`, `salt`) VALUES ('admin', 'yang', 'zhou', '2', '0a7b4cc9e653bd9a9d74b21ee9aab11f06ea4936964c7049c767d7cfc5ef3a7d', '1db312c6cb35d284');
-INSERT INTO `pivdb`.`user` (`name`, `first_name`,`last_name`, `role`, `pass`, `salt`) VALUES ('staff', 'staff', 'li', '1', '52df440678fccfc5efe27a4bb40d0f3d313807c1f952d4af31d5afda2d2ff431', 'd946a1997416ffbd');
-INSERT INTO `pivdb`.`user` (`name`, `first_name`,`last_name`, `role`, `pass`, `salt`) VALUES ('user', 'user', 'di', '0', 'd77d2d4a1d397242217a5dcd6dd54f18a9f7462e2b9c246446f4d9e7e6052bcf', 'af48ca5fddc6d38f');
+INSERT INTO `pivdb`.`user` (`name`, `first_name`,`last_name`, `role`, `pass`, `salt`) VALUES ('staff_yang', 'Yang', 'Zhou', '1', '52df440678fccfc5efe27a4bb40d0f3d313807c1f952d4af31d5afda2d2ff431', 'd946a1997416ffbd');

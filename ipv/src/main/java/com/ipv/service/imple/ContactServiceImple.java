@@ -21,8 +21,6 @@ import com.ipv.service.ContactService;
  * This service implements get the common methods by extends the BaseService
  * The E is the Entity type of the service
  * 
- * The further methods will be implements here in later
- * 
  */
 @Service
 public class ContactServiceImple extends BaseImple<Contact> implements ContactService{

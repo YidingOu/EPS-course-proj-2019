@@ -12,7 +12,6 @@ import com.ipv.util.wrapper.ErrorResponseWrapper;
 
 /**
  * The global exception handler for the backend
- * The more handler will be added later
  */
 //@ControllerAdvice
 public class AggregatedExceptionHandler {

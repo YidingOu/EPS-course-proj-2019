@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 /**
  *  CustomizedRepository for session detach
  */
-
 @Repository
 public class CustomizedRepositoryImpl<E> implements CustomizedRepository<E> {
     @PersistenceContext

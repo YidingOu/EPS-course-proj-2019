@@ -7,7 +7,7 @@ import org.jasypt.util.text.BasicTextEncryptor;
  * The interface-implementation architechture is required by the Spring framework (the multiple implementation is allowed)
  * There are many common interfaces between the services(like CRUD), so the common part is define in a BaseService
  * <p>
- * The service for the encryption and the decryption
+ * The other required interfaces are added here
  */
 public interface EncryptionService {
 

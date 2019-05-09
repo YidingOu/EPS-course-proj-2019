@@ -15,11 +15,10 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
+ * 
  * The data mapping class -> DB.TABLE into Spring Entity Bean
- * The relationships (One-One, One-Many ect, will be added later)
  * 
  * */
-
 @Entity
 @Table(name="audit")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -48,9 +47,6 @@ public class Audit {
 		this.date = new Date();
 	}
 	
-	
-	
-
 	@Override
 	public String toString() {
 		return "Audit [id=" + id + ", userId=" + userId + ", postId=" + postId + ", date=" + date + ", action=" + action

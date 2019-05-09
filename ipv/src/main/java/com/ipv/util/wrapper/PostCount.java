@@ -1,5 +1,10 @@
 package com.ipv.util.wrapper;
 
+/**
+ * 
+ * The model for the count of the posts
+ * 
+ */
 public class PostCount {
 	int closedPost;
 	int onGoingPost;

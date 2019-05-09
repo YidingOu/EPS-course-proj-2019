@@ -13,6 +13,6 @@ import com.ipv.entity.Audit;
  */
 public interface AuditRepository extends JpaRepository<Audit, Integer> {
     public List<Audit> findByPostId(int id);
-
+    
     public List<Audit> findByUserId(int id);
 }

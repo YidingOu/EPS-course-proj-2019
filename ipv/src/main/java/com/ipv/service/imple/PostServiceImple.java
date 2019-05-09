@@ -32,7 +32,6 @@ import java.util.List;
  * This service implements get the common methods by extends the BaseService
  * The E is the Entity type of the service
  * <p>
- * The further methods will be implements here in later
  */
 @Service
 public class PostServiceImple extends BaseImple<Post> implements PostService {
@@ -40,19 +39,24 @@ public class PostServiceImple extends BaseImple<Post> implements PostService {
 	//Spring Dependency injection
 	@Autowired
 	private PostRepository postRepository;
-
+	
+	//Spring Dependency injection
 	@Autowired
 	private UserRepository userRepository;
-
+	
+	//Spring Dependency injection
 	@Autowired
 	private ConversationRepository conversationRepository;
-
+	
+	//Spring Dependency injection
 	@Autowired
 	private UserService userService;
-
+	
+	//Spring Dependency injection
 	@Autowired
 	private ContactService contactService;
-
+	
+	//Spring Dependency injection
 	@Autowired
 	private EncryptionService encrytionService;
 

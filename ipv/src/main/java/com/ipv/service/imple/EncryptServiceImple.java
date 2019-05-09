@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ipv.service.EncryptionService;
 
 /**
- *The function body for the encrytion service
+ *The function body for the encryption service
  */
 @Service
 public class EncryptServiceImple implements EncryptionService {

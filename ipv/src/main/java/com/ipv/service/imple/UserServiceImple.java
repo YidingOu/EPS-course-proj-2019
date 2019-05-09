@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,6 @@ import com.ipv.util.wrapper.JWTUserInfoWrapper;
  * This service implements get the common methods by extends the BaseService
  * The E is the Entity type of the service
  * <p>
- * The further methods will be implements here in later
  */
 @Service
 public class UserServiceImple extends BaseImple<User> implements UserService {
@@ -42,12 +40,15 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    //Spring Dependency injection
     @Autowired
     private PostRepository postRepository;
 
+    //Spring Dependency injection
     @Autowired
     private PostService postService;
 
+    //Spring Dependency injection
     @Autowired
     private JWTService jwtService;
 
@@ -60,10 +61,6 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
 
     /*
      * Validate the passwords
-     * It's dummy one without hashing, the actual function will be done later
-     *
-     * Also, after the first authentication, the token based authentication mechanism will be implement in later
-     *
      * */
     @Override
     public User validate(String name, String pass, HttpServletResponse response) {
@@ -83,15 +80,10 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
 
     //A complete function with hashing and checking will be updated later
     private boolean checkPass(User user, String pass) {
-
         String dbPass = user.getPass();
-
         String salt = user.getSalt();
-
         byte[] byteSalt = salt.getBytes();
-
         String hashedPass = saltPassword(pass, byteSalt);
-
         return dbPass.equals(hashedPass);
     }
 
@@ -104,9 +96,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         } else {
         	String jwt = jwtService.createJWT(user);
             JWTUserInfoWrapper info = jwtService.validate(jwt);
-            System.out.println(info.getNewJWT());
             response.setHeader(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
-            
             Util.processUser(user, userRepository);
             user.setPostForStaff(postRepository.findByStaffId(user.getId()));
             return user;
@@ -131,7 +121,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         
         String jwt = jwtService.createJWT(user);
         JWTUserInfoWrapper info = jwtService.validate(jwt);
-        System.out.println(info.getNewJWT());
+//        System.out.println(info.getNewJWT());
         response.setHeader(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
         
         return user;
@@ -223,7 +213,7 @@ public class UserServiceImple extends BaseImple<User> implements UserService {
         
         String jwt = jwtService.createJWT(user);
         JWTUserInfoWrapper info = jwtService.validate(jwt);
-        System.out.println(info.getNewJWT());
+//        System.out.println(info.getNewJWT());
         response.setHeader(Constant.JWT_TOKEN_HEADER, info.getNewJWT());
         
         return user;

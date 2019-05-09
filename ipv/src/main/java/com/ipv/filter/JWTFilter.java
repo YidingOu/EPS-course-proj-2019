@@ -20,12 +20,11 @@ import com.ipv.service.JWTService;
 import com.ipv.util.Constant;
 import com.ipv.util.wrapper.JWTUserInfoWrapper;
 
-//reference https://www.baeldung.com/spring-boot-add-filter
-
-
 /**
  * 
  * The filter for validating / reassigning the jwt token
+ * 
+ * reference https://www.baeldung.com/spring-boot-add-filter
  * 
  * */
 @Component
@@ -48,7 +47,6 @@ public class JWTFilter implements Filter{
 				&& !req.getRequestURI().contains("validate") 
 				&& !req.getRequestURI().contains("create_user")
 				&& !req.getRequestURI().contains("swagger-ui")) {
-//			System.out.println("+++ enter filter");
 			String token = req.getHeader(Constant.JWT_TOKEN_HEADER);
 			System.out.println("token:"+token);
 			if (token == null || (jwtInfo = jwtService.validate(token)) == null) {
@@ -58,6 +56,7 @@ public class JWTFilter implements Filter{
 			req.getSession().setAttribute("token", jwtInfo);
 			res.setHeader(Constant.JWT_TOKEN_HEADER, jwtInfo.getNewJWT());
 		}
+		
 		// continue the process
 		chain.doFilter(request, response);
 		

@@ -10,7 +10,7 @@ import com.ipv.entity.Conversation;
  * There are many common interfaces between the services(like CRUD), so the common part is define in a BaseService
  * <p>
  * The service interface get the common methods by extends the BaseService
- * The other interfaces will be added later
+ * The other required interfaces are added here
  */
 public interface ConversationService extends BaseService<Conversation> {
     // Return a list of conversations with input post id

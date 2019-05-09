@@ -53,8 +53,6 @@ public class UserRestAPI {
 		return list;
 	}
 
-	
-
 	//get user by id
 	@GetMapping("{id}")
 	public User get(@PathVariable int id, HttpServletRequest req) {
@@ -72,7 +70,6 @@ public class UserRestAPI {
 		checkPassValidation(user);
 		user.setId(0);
 		service.save(user, response);
-		
 		
 		//Add audit
 		auditService.addAudit(user.getId(), null, "User created with id = " + user.getId());
@@ -143,7 +140,8 @@ public class UserRestAPI {
 			return new ValidateResponseWapper(0, null, "Authentication failed");
 		}
 	}
-
+	
+	// udpate staff information
 	@PostMapping("/staffs/update")
 	public ValidateResponseWapper updateStaff(@RequestBody User user, HttpServletResponse response) {
 		User requestedUser = service.findById(user.getId());
@@ -163,7 +161,8 @@ public class UserRestAPI {
 			return new ValidateResponseWapper(0, null, "Update failed");
 		}
 	}
-
+	
+	//update user info
 	@PostMapping("/update")
 	public ValidateResponseWapper updateUser(@RequestBody User user, HttpServletResponse response) {
 		User requestedUser = service.findById(user.getId());
@@ -235,12 +234,12 @@ public class UserRestAPI {
 		return "Deleted User id - " + id;
 	}
 	
+	//Check the length of the password
 	private void checkPassValidation(User user) {
 		String pass = user.getPass();
 		if (pass == null || pass.length() < 8 || pass.length() > 20) {
 			throw new InvalidException("User Password invalid");
 		}
-		
 	}
 
 

@@ -19,8 +19,6 @@ import com.ipv.service.AuditService;
  * There are many common method between the services(like CRUD), so the common part is define in a BaseImple
  * This service implements get the common methods by extends the BaseService
  * The E is the Entity type of the service
- * <p>
- * The further methods will be implements here in later
  */
 @Service
 public class AuditServiceImple extends BaseImple<Audit> implements AuditService {
@@ -35,11 +33,6 @@ public class AuditServiceImple extends BaseImple<Audit> implements AuditService 
         super.repository = auditRepository;
     }
 
-    //A scheduling function that deleting the expired logs
-    private void logExpiring() {
-
-    }
-	
     // Add an audit
     @Override
     public void addAudit(Integer userId, Integer postId, String action) {

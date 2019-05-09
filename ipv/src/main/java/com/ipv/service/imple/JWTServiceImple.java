@@ -19,6 +19,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 /**
  *The function body JWT service
+ *Reference 
+ *https://developer.okta.com/blog/2018/10/31/jwts-with-java
  */
 @Service
 public class JWTServiceImple implements JWTService {
@@ -88,7 +90,6 @@ public class JWTServiceImple implements JWTService {
 
     //create jwt, set fields
     private String createJWTHelper(String id, String issuer, int role, int uid) {
-        //https://developer.okta.com/blog/2018/10/31/jwts-with-java
 
         //create JWT algorithm
         SignatureAlgorithm algorithm = SignatureAlgorithm.HS256;

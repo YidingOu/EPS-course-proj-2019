@@ -1,5 +1,10 @@
 package com.ipv.util.wrapper;
 
+/**
+ * 
+ * The model for pause and resume use
+ * 
+ */
 public class PauseAndResumeWrapper {
 	int id;
 	String key;

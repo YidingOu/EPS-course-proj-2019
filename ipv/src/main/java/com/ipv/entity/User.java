@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /*
  * The data mapping class -> DB.TABLE into Spring Entity Bean
- * The relationships (One-One, One-Many ect, will be added later)
  * 
  * */
 @Entity
@@ -46,12 +45,6 @@ public class User {
 	@Column(name = "pass")
 	private String pass;
 
-//	@OneToOne(mappedBy = "user", 
-//			targetEntity=Email.class,
-//			cascade = CascadeType.ALL,
-//			fetch = FetchType.EAGER)
-//	private Email email;
-
 	@Transient
 	private Post post;
 
@@ -79,14 +72,6 @@ public class User {
 	public void setPostForStaff(List<Post> postForStaff) {
 		this.postForStaff = postForStaff;
 	}
-
-//	public Email getEmail() {
-//		return email;
-//	}
-//
-//	public void setEmail(Email email) {
-//		this.email = email;
-//	}
 
 	public int getId() {
 		return id;
