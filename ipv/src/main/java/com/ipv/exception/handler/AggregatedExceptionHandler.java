@@ -13,7 +13,7 @@ import com.ipv.util.wrapper.ErrorResponseWrapper;
 /**
  * The global exception handler for the backend
  */
-//@ControllerAdvice
+@ControllerAdvice
 public class AggregatedExceptionHandler {
 
 	//Not found exception
